@@ -6,6 +6,7 @@
   - [x] Forget password
   - [x] Reset password
   - [ ] OTP Login
+- [x] Application shared layout
 - [ ] Profile Settings
 - [ ] Dashboard
 - [ ] Candidate
