@@ -53,34 +53,30 @@ function ResetPassword() {
     console.log({...values})
   }
   return (
-    <>
-      <Container mt="30px">
-        <Paper className={classes.paper}>
-          <Title align="center" weight="normal" mb="24px">
-            Create new password
-          </Title>
-          <form onSubmit={handleSubmit(onSubmit)}>
-            <Text color="gray.6" size="sm" mb="sm">
-              your new password must be different from previous used password
-            </Text>
-            <TextInput
-              label="Email address"
-              mb="md"
-              error={errors.password && errors.password.message}
-              {...register('password')}
-            />
-
-            <Button fullWidth mt="20px" type="submit">
-              Send
-            </Button>
-            <Link href="/signup" passHref>
-              <a className={classes.link}>Back to sign in</a>
-            </Link>
-          </form>
-        </Paper>
-      </Container>
-    </>
+    <Container mt="30px">
+      <Paper className={classes.paper}>
+        <Title align="center" weight="normal" mb="24px">
+          Create new password
+        </Title>
+        <form onSubmit={handleSubmit(onSubmit)}>
+          <Text color="gray.7" size="sm" mb="sm">
+            your new password must be different from previous used password
+          </Text>
+          <TextInput
+            label="New Password"
+            mb="md"
+            error={errors.password && errors.password.message}
+            {...register('password')}
+          />
+          <Button fullWidth mt="20px" type="submit">
+            Reset Password
+          </Button>
+          <Link href="/signup" passHref>
+            <a className={classes.link}>Back to sign in</a>
+          </Link>
+        </form>
+      </Paper>
+    </Container>
   )
 }
-
 export default ResetPassword
