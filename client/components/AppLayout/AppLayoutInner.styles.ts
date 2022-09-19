@@ -37,25 +37,22 @@ export default createStyles(theme => ({
 
   content: {
     minHeight: 'calc(100vh - 280px)',
-  },
-  wrapper: {
-    position: 'relative',
-    zIndex: 4,
+    paddingLeft: theme.spacing.lg, // * 2
+    paddingRight: theme.spacing.lg, // * 2
     backgroundColor:
       theme.colorScheme === 'dark'
         ? theme.colors.dark[8]
         : theme.colors.gray[0],
-    paddingLeft: theme.spacing.xl * 2,
-    paddingRight: theme.spacing.xl * 2,
-    paddingTop: 50,
-    maxWidth: 1082,
-    marginLeft: 'auto',
-    marginRight: 'auto',
-    paddingBottom: theme.spacing.xl * 1.5,
-
     [`@media (max-width: ${1080}px)`]: {
       paddingLeft: theme.spacing.xl,
       paddingRight: theme.spacing.xl,
     },
+  },
+  wrapper: {
+    paddingTop: 50,
+    // maxWidth: 1082,
+    // marginLeft: 'auto',
+    // marginRight: 'auto',
+    paddingBottom: theme.spacing.xl * 1.5,
   },
 }))

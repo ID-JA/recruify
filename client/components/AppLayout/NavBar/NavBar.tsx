@@ -1,6 +1,6 @@
+import {ScrollArea} from '@mantine/core'
 import mainLinks from './main-links'
 import NavBarMainLink from './NavBarMainLink/NavBarMainLink'
-import {ScrollArea} from '@mantine/core'
 
 import {createStyles, MantineTheme} from '@mantine/core'
 

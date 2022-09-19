@@ -1,4 +1,4 @@
-import {Avatar, Box, Burger} from '@mantine/core'
+import {Avatar, Burger} from '@mantine/core'
 import useStyles from './HeaderDesktop.styles'
 
 interface HeaderProps {
@@ -8,6 +8,7 @@ interface HeaderProps {
 
 export function HeaderDesktop({navbarOpened, toggleNavbar}: HeaderProps) {
   const {classes} = useStyles()
+
   return (
     <div className={classes.header}>
       <Burger
@@ -22,9 +23,8 @@ export function HeaderDesktop({navbarOpened, toggleNavbar}: HeaderProps) {
           <div className={classes.logo}>FastRecruiter</div>
         </div>
       </div>
-      <Box pr="md">
-        <Avatar radius="xl" color="blue" />
-      </Box>
+
+      <Avatar radius="xl" color="blue" mr="md" />
     </div>
   )
 }

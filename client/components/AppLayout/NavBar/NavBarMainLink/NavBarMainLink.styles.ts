@@ -7,11 +7,8 @@ export default createStyles((theme: MantineTheme) => ({
     display: 'flex',
     alignItems: 'center',
     textDecoration: 'none',
-    color:
-      theme.colorScheme === 'dark'
-        ? theme.colors.dark[1]
-        : theme.colors.gray[7],
-    fontWeight: 700,
+    color: 'hsl(212,20%,16%)',
+    fontWeight: 600,
     fontSize: '15px',
     lineHeight: '24px',
     padding: 12,

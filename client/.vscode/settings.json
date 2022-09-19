@@ -1,11 +1,12 @@
 {
   "cSpell.words": ["clsx", "Mantine", "Signin"],
-  "spellright.language": ["en"],
+  "spellright.language": ["ar", "en", "fr"],
   "spellright.documentTypes": [
     "markdown",
     "plaintext",
     "mdx",
-    "typescriptreact"
+    "typescriptreact",
+    "typescript"
   ],
   "spellright.parserByClass": {
     "mdx": {

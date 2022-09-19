@@ -1,4 +1,3 @@
-import {Title} from '@mantine/core'
 import AppLayout from '../components/AppLayout/AppLayout'
 import {NextPageWithLayout} from './_app'
 

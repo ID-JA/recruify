@@ -6,7 +6,7 @@ export const HEADER_HEIGHT = 60
 export default createStyles(theme => ({
   header: {
     top: 0,
-    lef: 0,
+    left: 0,
     right: 0,
     position: 'fixed',
     width: '100%',
