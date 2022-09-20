@@ -37,8 +37,8 @@ export default createStyles(theme => ({
 
   content: {
     minHeight: 'calc(100vh - 280px)',
-    // paddingLeft: theme.spacing.lg, // * 2
-    // paddingRight: theme.spacing.lg, // * 2
+    paddingLeft: theme.spacing.lg, // * 2
+    paddingRight: theme.spacing.lg, // * 2
     backgroundColor:
       theme.colorScheme === 'dark'
         ? theme.colors.dark[8]

@@ -20,7 +20,6 @@ export default function NavBarMainLink({
 }: NavBarMainLinkProps) {
   const {classes, cx} = useStyles()
   const router = useRouter()
-
   return (
     <Link href={to}>
       <a

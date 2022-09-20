@@ -1,6 +1,18 @@
-import {Briefcase, Dashboard, Mail, Settings, Users} from 'tabler-icons-react'
+import {
+  Briefcase,
+  Dashboard,
+  Mail,
+  Plus,
+  Settings,
+  Users,
+} from 'tabler-icons-react'
 
 const mainLinksArr = [
+  {
+    to: '/my-jobs/create',
+    label: 'Post a Job',
+    icon: Plus,
+  },
   {
     to: '/dashboard',
     label: 'Dashboard',

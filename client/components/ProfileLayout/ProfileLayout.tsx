@@ -9,10 +9,10 @@ interface ProfileLayoutProps {
 function ProfileLayout({children}: ProfileLayoutProps) {
   const {classes} = useStyles()
   return (
-    <div className={classes.wrapper}>
+    <>
       <ProfileNavBar />
       <section className={classes.content}>{children}</section>
-    </div>
+    </>
   )
 }
 

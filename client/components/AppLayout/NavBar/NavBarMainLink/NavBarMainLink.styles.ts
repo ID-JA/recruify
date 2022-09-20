@@ -7,8 +7,8 @@ export default createStyles((theme: MantineTheme) => ({
     display: 'flex',
     alignItems: 'center',
     textDecoration: 'none',
-    color: 'hsl(212,20%,16%)',
-    fontWeight: 600,
+    color: '#344054', //'hsl(212,20%,16%)',
+    fontWeight: 700,
     fontSize: '15px',
     lineHeight: '24px',
     padding: 12,
@@ -16,6 +16,8 @@ export default createStyles((theme: MantineTheme) => ({
     marginRight: -5,
     borderRadius: theme.radius.sm,
     userSelect: 'none',
+    fontFamily:
+      '-apple-system,BlinkMacSystemFont,"Helvetica Neue",Arial,Roboto,Oxygen-Sans,Ubuntu,Cantarell,sans-serif',
   },
 
   active: {
