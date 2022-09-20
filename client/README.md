@@ -7,7 +7,8 @@
   - [x] Reset password
   - [ ] OTP Login
 - [x] Application shared layout
-- [ ] Profile Settings
+- [x] User Profile
+- [x] Company Profile
 - [ ] Dashboard
 - [ ] Candidate
 - [ ] New Job
