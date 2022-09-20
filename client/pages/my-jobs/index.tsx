@@ -1,5 +1,5 @@
 import AppLayout from '../../components/AppLayout/AppLayout'
-import {NextPageWithLayout} from '../_app'
+import { NextPageWithLayout } from '../_app'
 
 const MyJobs: NextPageWithLayout = () => {
   return (

@@ -7,8 +7,6 @@ import {
   Textarea,
   TextInput,
 } from '@mantine/core'
-import {useDebouncedValue} from '@mantine/hooks'
-import {useEffect, useState} from 'react'
 import RichTextEditor from '../RichTextEditor'
 
 const useStyles = createStyles(() => ({
@@ -33,49 +31,49 @@ const useStyles = createStyles(() => ({
 }))
 
 const employmentTypes = [
-  {value: 'full_time', label: 'Full Time'},
-  {value: 'part_time', label: 'Part Time'},
-  {value: 'contract', label: 'Contract'},
-  {value: 'temporary', label: 'Temporary'},
-  {value: 'internship', label: 'Internship'},
-  {value: 'other', label: 'Other'},
+  { value: 'full_time', label: 'Full Time' },
+  { value: 'part_time', label: 'Part Time' },
+  { value: 'contract', label: 'Contract' },
+  { value: 'temporary', label: 'Temporary' },
+  { value: 'internship', label: 'Internship' },
+  { value: 'other', label: 'Other' },
 ]
 
-var myHeaders = new Headers()
+let myHeaders = new Headers()
 myHeaders.append('apikey', 'R4At1uZ6M6JgqFsQqALK4B8BTk5hdE49')
 
-const requestOptions = {
-  method: 'GET',
-  // redirect: 'follow',
-  headers: myHeaders,
-}
+// const requestOptions = {
+//   method: 'GET',
+//   // redirect: 'follow',
+//   headers: myHeaders,
+// }
 
-const fetchSkills = async (skill?: string) => {
-  const response = await fetch(
-    `https://api.apilayer.com/skills?q=${skill}&count=5`,
-    requestOptions,
-  )
-  return response.json()
-}
+// const fetchSkills = async (skill?: string) => {
+//   const response = await fetch(
+//     `https://api.apilayer.com/skills?q=${skill}&count=5`,
+//     requestOptions,
+//   )
+//   return response.json()
+// }
 
 function CreateJobForm() {
-  const {classes} = useStyles()
-  const [skill, setSkill] = useState<string>('')
-  const [skills, setSkills] = useState<string[]>([])
-  const [debounced] = useDebouncedValue(skill, 200)
+  const { classes } = useStyles()
+  // const [skill, setSkill] = useState<string>('')
+  // const [skills, setSkills] = useState<string[]>([])
+  // const [debounced] = useDebouncedValue(skill, 200)
 
-  const handleChange = (value: string) => {
-    setSkill(value)
-    console.log('setting value...')
-  }
-  useEffect(() => {
-    if (debounced) {
-      console.log('fetching autocomplete...')
-      // fetchSkills(debounced)
-      //   .then(response => setSkills([...response]))
-      //   .catch(error => console.error(error))
-    }
-  }, [debounced])
+  // const handleChange = (value: string) => {
+  //   setSkill(value)
+  //   console.log('setting value...')
+  // }
+  // useEffect(() => {
+  //   if (debounced) {
+  //     console.log('fetching autocomplete...')
+  //     // fetchSkills(debounced)
+  //     //   .then(response => setSkills([...response]))
+  //     //   .catch(error => console.error(error))
+  //   }
+  // }, [debounced])
 
   return (
     <div className={classes.wrapper}>

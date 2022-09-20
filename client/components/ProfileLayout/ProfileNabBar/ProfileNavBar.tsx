@@ -1,12 +1,12 @@
-import {Divider} from '@mantine/core'
+import { Divider } from '@mantine/core'
 import ProfileNavBarLink from './ProfileNabLink/ProfileNavBarLink'
 import useStyles from './ProfileNavBar.styles'
 import userLinks from './user-links'
 
 function ProfileNavBar() {
-  const {classes} = useStyles()
+  const { classes } = useStyles()
 
-  const main = userLinks.map(link => {
+  const main = userLinks.map((link) => {
     return (
       <ProfileNavBarLink
         to={link.to}

@@ -1,8 +1,8 @@
-import {createStyles} from '@mantine/core'
+import { createStyles } from '@mantine/core'
 
 export const PROFILE_SUBNAV_WIDTH = 200
 
-export default createStyles(theme => ({
+export default createStyles(() => ({
   subNav: {
     width: '100%',
     // marginBottom: theme.spacing.sm,

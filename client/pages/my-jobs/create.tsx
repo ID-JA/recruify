@@ -1,7 +1,7 @@
-import {Divider, Title} from '@mantine/core'
+import { Divider, Title } from '@mantine/core'
 import AppLayout from '../../components/AppLayout/AppLayout'
 import CreateJobForm from '../../components/Jobs/CreateJobForm'
-import {NextPageWithLayout} from '../_app'
+import { NextPageWithLayout } from '../_app'
 
 const CreateNewJob: NextPageWithLayout = () => {
   return (

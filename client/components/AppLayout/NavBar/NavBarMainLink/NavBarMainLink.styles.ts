@@ -1,4 +1,4 @@
-import {createStyles, MantineTheme} from '@mantine/core'
+import { createStyles, MantineTheme } from '@mantine/core'
 
 export default createStyles((theme: MantineTheme) => ({
   mainLink: {

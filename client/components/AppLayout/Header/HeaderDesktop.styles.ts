@@ -1,9 +1,9 @@
-import {createStyles} from '@mantine/core'
-import {NAVBAR_BREAKPOINT} from '../NavBar/NavBar'
+import { createStyles } from '@mantine/core'
+import { NAVBAR_BREAKPOINT } from '../NavBar/NavBar'
 
 export const HEADER_HEIGHT = 60
 
-export default createStyles(theme => ({
+export default createStyles((theme) => ({
   header: {
     top: 0,
     left: 0,

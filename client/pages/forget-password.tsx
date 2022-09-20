@@ -1,20 +1,18 @@
+import { yupResolver } from '@hookform/resolvers/yup'
 import {
-  Container,
-  Paper,
-  Title,
-  Box,
-  TextInput,
-  Text,
-  createStyles,
   Button,
-  Notification,
+  Container,
+  createStyles,
+  Paper,
+  Text,
+  TextInput,
+  Title,
 } from '@mantine/core'
-import {useForm} from 'react-hook-form'
 import Link from 'next/link'
-import {yupResolver} from '@hookform/resolvers/yup'
+import { useForm } from 'react-hook-form'
 import * as yup from 'yup'
 
-const useStyles = createStyles(theme => ({
+const useStyles = createStyles((theme) => ({
   paper: {
     margin: 'auto',
     maxWidth: '512px',
@@ -44,9 +42,9 @@ const defaultValues = {
 }
 
 function ForgetPassword() {
-  const {classes} = useStyles()
+  const { classes } = useStyles()
   const {
-    formState: {errors, isSubmitting},
+    formState: { errors, isSubmitting },
     handleSubmit,
     register,
     reset,
@@ -55,7 +53,7 @@ function ForgetPassword() {
     resolver: yupResolver(validationSchema),
   })
   const onSubmit = (value: typeof defaultValues) => {
-    return new Promise<void>(resolve => {
+    return new Promise<void>((resolve) => {
       console.log(`Sending Email to ${value.email}`)
       setTimeout(() => {
         resolve()

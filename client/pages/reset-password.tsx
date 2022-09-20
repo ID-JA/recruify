@@ -1,19 +1,18 @@
+import { yupResolver } from '@hookform/resolvers/yup'
 import {
-  Container,
-  Paper,
-  Title,
-  Box,
-  TextInput,
-  Text,
-  createStyles,
   Button,
+  Container,
+  createStyles,
+  Paper,
+  Text,
+  TextInput,
+  Title,
 } from '@mantine/core'
-import {useForm} from 'react-hook-form'
 import Link from 'next/link'
-import {yupResolver} from '@hookform/resolvers/yup'
+import { useForm } from 'react-hook-form'
 import * as yup from 'yup'
 
-const useStyles = createStyles(theme => ({
+const useStyles = createStyles((theme) => ({
   paper: {
     margin: 'auto',
     maxWidth: '512px',
@@ -40,9 +39,9 @@ const validationSchema = yup.object().shape({
 })
 
 function ResetPassword() {
-  const {classes} = useStyles()
+  const { classes } = useStyles()
   const {
-    formState: {errors},
+    formState: { errors },
     handleSubmit,
     register,
   } = useForm({
@@ -50,7 +49,7 @@ function ResetPassword() {
     resolver: yupResolver(validationSchema),
   })
   const onSubmit = (values: typeof defaultValues) => {
-    console.log({...values})
+    console.log({ ...values })
   }
   return (
     <Container mt="30px">

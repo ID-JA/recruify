@@ -1,4 +1,4 @@
-import {yupResolver} from '@hookform/resolvers/yup'
+import { yupResolver } from '@hookform/resolvers/yup'
 import {
   Avatar,
   Button,
@@ -8,15 +8,15 @@ import {
   TextInput,
 } from '@mantine/core'
 
-import {useForm} from 'react-hook-form'
+import { useForm } from 'react-hook-form'
 import * as yup from 'yup'
 
 import SettingContainer from '../SettingsContainer'
 
-import {Dropzone, MIME_TYPES} from '@mantine/dropzone'
-import {CloudUpload, Download, X} from 'tabler-icons-react'
+import { Dropzone, MIME_TYPES } from '@mantine/dropzone'
+import { CloudUpload, Download, X } from 'tabler-icons-react'
 
-const useStyles = createStyles(theme => ({
+const useStyles = createStyles((theme) => ({
   wrapper: {
     position: 'relative',
     marginBottom: 30,
@@ -59,7 +59,7 @@ const defaultValues = {
 
 function PersonalInfo() {
   const {
-    formState: {errors},
+    formState: { errors },
     handleSubmit,
     register,
     reset,
@@ -75,7 +75,7 @@ function PersonalInfo() {
   const onCancel = () => {
     reset()
   }
-  const {classes, theme} = useStyles()
+  const { classes, theme } = useStyles()
   return (
     <SettingContainer
       title="Personal Info"
@@ -98,15 +98,15 @@ function PersonalInfo() {
           />
           <div className={classes.wrapper}>
             <Dropzone
-              onDrop={files => console.log('accepted files', files)}
-              onReject={files => console.log('rejected files', files)}
+              onDrop={(files) => console.log('accepted files', files)}
+              onReject={(files) => console.log('rejected files', files)}
               className={classes.dropzone}
               radius="md"
               accept={[MIME_TYPES.png, MIME_TYPES.jpeg]}
               maxSize={2 * 1024 ** 2}
               multiple={false}
             >
-              <div style={{pointerEvents: 'none'}}>
+              <div style={{ pointerEvents: 'none' }}>
                 <Group position="center">
                   <Dropzone.Accept>
                     <Download

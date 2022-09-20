@@ -1,4 +1,4 @@
-import type {NextPage} from 'next'
+import type { NextPage } from 'next'
 import Link from 'next/link'
 
 // TODO: Simple Navbar for navigation

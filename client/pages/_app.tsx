@@ -1,7 +1,7 @@
-import {NextPage} from 'next'
-import {AppProps} from 'next/app'
+import { NextPage } from 'next'
+import { AppProps } from 'next/app'
 import Head from 'next/head'
-import {ReactElement, ReactNode} from 'react'
+import { ReactElement, ReactNode } from 'react'
 
 export type NextPageWithLayout<P = {}, IP = P> = NextPage<P, IP> & {
   getLayout?: (page: ReactElement) => ReactNode
@@ -12,8 +12,8 @@ type AppPropsWithLayout = AppProps & {
 }
 
 export default function App(props: AppPropsWithLayout) {
-  const {Component, pageProps, router} = props
-  const getLayout = Component.getLayout ?? (page => page)
+  const { Component, pageProps, router } = props
+  const getLayout = Component.getLayout ?? ((page) => page)
 
   return getLayout(
     <>
@@ -26,6 +26,6 @@ export default function App(props: AppPropsWithLayout) {
       </Head>
 
       <Component {...pageProps} />
-    </>,
+    </>
   )
 }

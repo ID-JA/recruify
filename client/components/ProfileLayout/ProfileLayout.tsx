@@ -6,8 +6,8 @@ interface ProfileLayoutProps {
   children: React.ReactNode
 }
 
-function ProfileLayout({children}: ProfileLayoutProps) {
-  const {classes} = useStyles()
+function ProfileLayout({ children }: ProfileLayoutProps) {
+  const { classes } = useStyles()
   return (
     <>
       <ProfileNavBar />

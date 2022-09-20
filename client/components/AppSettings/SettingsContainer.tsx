@@ -1,4 +1,4 @@
-import {createStyles} from '@mantine/core'
+import { createStyles } from '@mantine/core'
 
 interface SettingsContainerProp {
   children: React.ReactNode
@@ -6,7 +6,7 @@ interface SettingsContainerProp {
   description?: string
 }
 
-const useStyles = createStyles(theme => ({
+const useStyles = createStyles((theme) => ({
   wrapper: {
     display: 'flex',
     gap: 20,
@@ -40,7 +40,7 @@ const SettingsContainer = ({
   title,
   description,
 }: SettingsContainerProp) => {
-  const {classes, cx} = useStyles()
+  const { classes } = useStyles()
   return (
     <div className={classes.wrapper}>
       <div className={classes.left}>

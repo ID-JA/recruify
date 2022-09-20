@@ -1,6 +1,6 @@
-import {yupResolver} from '@hookform/resolvers/yup'
-import {Button, Group, TextInput} from '@mantine/core'
-import {useForm} from 'react-hook-form'
+import { yupResolver } from '@hookform/resolvers/yup'
+import { Button, Group, TextInput } from '@mantine/core'
+import { useForm } from 'react-hook-form'
 import * as yup from 'yup'
 import SettingsContainer from '../SettingsContainer'
 
@@ -16,7 +16,7 @@ const defaultValues = {
 }
 function ChangePassword() {
   const {
-    formState: {errors},
+    formState: { errors },
     handleSubmit,
     register,
     reset,

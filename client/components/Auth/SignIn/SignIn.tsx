@@ -1,4 +1,4 @@
-import {yupResolver} from '@hookform/resolvers/yup'
+import { yupResolver } from '@hookform/resolvers/yup'
 import {
   Box,
   Button,
@@ -14,12 +14,12 @@ import {
   Title,
 } from '@mantine/core'
 import Link from 'next/link'
-import {useState} from 'react'
-import {useForm} from 'react-hook-form'
-import {BrandGoogle} from 'tabler-icons-react'
+import { useState } from 'react'
+import { useForm } from 'react-hook-form'
+import { BrandGoogle } from 'tabler-icons-react'
 import * as yup from 'yup'
 
-const useStyles = createStyles(theme => ({
+const useStyles = createStyles((theme) => ({
   paper: {
     margin: 'auto',
     maxWidth: '512px',
@@ -48,7 +48,7 @@ const defaultValues = {
 
 export function SignIn() {
   const [activeTab, setActiveTab] = useState('job_seeker')
-  const {classes} = useStyles()
+  const { classes } = useStyles()
   const methods = useForm({
     defaultValues,
     resolver: yupResolver(validationSchema),
@@ -57,9 +57,8 @@ export function SignIn() {
   const {
     handleSubmit,
     register,
-    clearErrors,
     reset,
-    formState: {errors},
+    formState: { errors },
   } = methods
 
   const onSubmit = (values: typeof defaultValues) => {
@@ -80,7 +79,7 @@ export function SignIn() {
         <StyledSegmentedControl
           mb="24px"
           value={activeTab}
-          onChange={value => handleChange(value)}
+          onChange={(value) => handleChange(value)}
           data={[
             {
               label: 'I am an Employer',
@@ -165,7 +164,7 @@ const useSegmentedControlStyles = createStyles(() => ({
     margin: '0 2px',
     borderBottom: '2px solid transparent',
     boxShadow: 'none',
-    '&:hover': {backgroundColor: '#f8f9fa', borderColor: '#dee2e6'},
+    '&:hover': { backgroundColor: '#f8f9fa', borderColor: '#dee2e6' },
   },
   labelActive: {
     fontWeight: 700,
@@ -176,7 +175,7 @@ const useSegmentedControlStyles = createStyles(() => ({
   },
   controlActive: {
     boxShadow: 'none',
-    '&:hover': {borderColor: 'transparent'},
+    '&:hover': { borderColor: 'transparent' },
     '&::before': {
       borderRadius: '4px 4px 0 0',
       content: '" "',
@@ -192,8 +191,8 @@ const useSegmentedControlStyles = createStyles(() => ({
   },
 }))
 
-const StyledSegmentedControl = ({data, ...props}: SegmentedControlProps) => {
-  const {classes} = useSegmentedControlStyles()
+const StyledSegmentedControl = ({ data, ...props }: SegmentedControlProps) => {
+  const { classes } = useSegmentedControlStyles()
   return (
     <SegmentedControl
       classNames={{

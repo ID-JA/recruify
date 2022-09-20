@@ -1,4 +1,4 @@
-import {Avatar, Burger} from '@mantine/core'
+import { Avatar, Burger } from '@mantine/core'
 import useStyles from './HeaderDesktop.styles'
 
 interface HeaderProps {
@@ -6,8 +6,8 @@ interface HeaderProps {
   toggleNavbar(): void
 }
 
-export function HeaderDesktop({navbarOpened, toggleNavbar}: HeaderProps) {
-  const {classes} = useStyles()
+export function HeaderDesktop({ navbarOpened, toggleNavbar }: HeaderProps) {
+  const { classes } = useStyles()
 
   return (
     <div className={classes.header}>

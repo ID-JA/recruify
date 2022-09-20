@@ -1,8 +1,8 @@
-import {ScrollArea} from '@mantine/core'
+import { ScrollArea } from '@mantine/core'
 import mainLinks from './main-links'
 import NavBarMainLink from './NavBarMainLink/NavBarMainLink'
 
-import {createStyles, MantineTheme} from '@mantine/core'
+import { createStyles, MantineTheme } from '@mantine/core'
 
 export const NAVBAR_WIDTH = 260
 export const NAVBAR_BREAKPOINT = 760
@@ -53,10 +53,10 @@ interface NavBarProps {
   onClose(): void
 }
 
-export default function NavBar({onClose, opened}: NavBarProps) {
-  const {classes, cx} = useStyles()
+export default function NavBar({ onClose, opened }: NavBarProps) {
+  const { classes, cx } = useStyles()
 
-  const main = mainLinks.map(item => (
+  const main = mainLinks.map((item) => (
     <NavBarMainLink
       key={item.to}
       to={item.to}
@@ -67,8 +67,8 @@ export default function NavBar({onClose, opened}: NavBarProps) {
     </NavBarMainLink>
   ))
   return (
-    <nav className={cx(classes.navbar, {[classes.opened]: opened})}>
-      <ScrollArea style={{height: '100vh'}} type="scroll">
+    <nav className={cx(classes.navbar, { [classes.opened]: opened })}>
+      <ScrollArea style={{ height: '100vh' }} type="scroll">
         <div className={classes.body}>{main}</div>
       </ScrollArea>
     </nav>

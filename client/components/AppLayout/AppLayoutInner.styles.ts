@@ -1,8 +1,8 @@
-import {createStyles} from '@mantine/core'
-import {HEADER_HEIGHT} from './Header/HeaderDesktop.styles'
-import {NAVBAR_BREAKPOINT, NAVBAR_WIDTH} from './NavBar/NavBar'
+import { createStyles } from '@mantine/core'
+import { HEADER_HEIGHT } from './Header/HeaderDesktop.styles'
+import { NAVBAR_BREAKPOINT, NAVBAR_WIDTH } from './NavBar/NavBar'
 
-export default createStyles(theme => ({
+export default createStyles((theme) => ({
   '@global': {
     '#nprogress': {
       zIndex: 100000,

@@ -1,5 +1,5 @@
-import {Button, Divider, Group, TextInput} from '@mantine/core'
-import {BrandFacebook, BrandLinkedin, BrandTwitter} from 'tabler-icons-react'
+import { Button, Divider, Group, TextInput } from '@mantine/core'
+import { BrandFacebook, BrandLinkedin, BrandTwitter } from 'tabler-icons-react'
 import SettingsContainer from '../SettingsContainer'
 
 const CompanySocials = () => {

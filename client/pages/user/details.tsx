@@ -1,9 +1,9 @@
-import {Divider} from '@mantine/core'
+import { Divider } from '@mantine/core'
 import AppLayout from '../../components/AppLayout/AppLayout'
 import ChangePassword from '../../components/AppSettings/UserSettings/ChangePassword'
 import GeneralInformation from '../../components/AppSettings/UserSettings/PersonalInfo'
 import ProfileLayout from '../../components/ProfileLayout/ProfileLayout'
-import {NextPageWithLayout} from '../_app'
+import { NextPageWithLayout } from '../_app'
 
 const Details: NextPageWithLayout = () => {
   return (
@@ -15,7 +15,7 @@ const Details: NextPageWithLayout = () => {
   )
 }
 
-Details.getLayout = page => {
+Details.getLayout = (page) => {
   return (
     <AppLayout>
       <ProfileLayout>{page}</ProfileLayout>

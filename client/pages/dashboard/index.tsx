@@ -1,6 +1,6 @@
-import {Text, Title} from '@mantine/core'
+import { Text, Title } from '@mantine/core'
 import AppLayout from '../../components/AppLayout/AppLayout'
-import {NextPageWithLayout} from '../_app'
+import { NextPageWithLayout } from '../_app'
 const Dashboard: NextPageWithLayout = () => {
   return (
     <>

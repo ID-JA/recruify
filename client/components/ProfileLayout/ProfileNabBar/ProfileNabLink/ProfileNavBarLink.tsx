@@ -1,5 +1,5 @@
 import Link from 'next/link'
-import {useRouter} from 'next/router'
+import { useRouter } from 'next/router'
 import React from 'react'
 import useStyles from './ProfileNavBarLink.styles'
 
@@ -16,12 +16,12 @@ function ProfileNavBarLink({
   className,
   disabled,
 }: ProfileNavBarLinkProps) {
-  const {classes, cx} = useStyles()
+  const { classes, cx } = useStyles()
   const router = useRouter()
   return (
     <Link href={to}>
       <a
-        className={cx(classes.subLink, {
+        className={cx(classes.subLink, className, {
           [classes.active]: router.pathname === to,
           [classes.disabled]: disabled,
         })}

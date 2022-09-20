@@ -1,3 +1,3 @@
-import { EmployerSignUp } from '../components/Auth';
+import { EmployerSignUp } from '../components/Auth'
 
-export default EmployerSignUp;
+export default EmployerSignUp

@@ -1,6 +1,6 @@
-import {createStyles} from '@mantine/core'
+import { createStyles } from '@mantine/core'
 
-export default createStyles(theme => ({
+export default createStyles((theme) => ({
   wrapper: {
     // display: 'flex',
     // padding: '0px 25px',
