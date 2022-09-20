@@ -1,9 +1,14 @@
 import AppLayout from '../../components/AppLayout/AppLayout'
+import CompanyProfile from '../../components/AppSettings/CompanySettings/CompanyProfile'
 import ProfileLayout from '../../components/ProfileLayout/ProfileLayout'
 import {NextPageWithLayout} from '../_app'
 
 const CompanyInfo: NextPageWithLayout = () => {
-  return <div>CompanyInfo Page</div>
+  return (
+    <>
+      <CompanyProfile />
+    </>
+  )
 }
 
 CompanyInfo.getLayout = page => {

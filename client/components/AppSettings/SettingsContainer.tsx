@@ -17,11 +17,10 @@ const useStyles = createStyles(theme => ({
   },
   left: {
     width: '100%',
-    minWidth: '450px',
+    maxWidth: '450px',
   },
   right: {
     width: '100%',
-    minWidth: 'calc(100% - 450px)',
   },
   title: {
     color: '#344054',

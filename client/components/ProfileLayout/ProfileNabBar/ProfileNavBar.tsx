@@ -8,7 +8,11 @@ function ProfileNavBar() {
 
   const main = userLinks.map(link => {
     return (
-      <ProfileNavBarLink to={link.to} key={`${link.to}-${link.label}`}>
+      <ProfileNavBarLink
+        to={link.to}
+        key={`${link.to}-${link.label}`}
+        disabled={link.disabled}
+      >
         {link.label}
       </ProfileNavBarLink>
     )

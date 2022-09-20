@@ -37,16 +37,16 @@ export default createStyles(theme => ({
 
   content: {
     minHeight: 'calc(100vh - 280px)',
-    paddingLeft: theme.spacing.lg, // * 2
-    paddingRight: theme.spacing.lg, // * 2
+    // paddingLeft: theme.spacing.lg, // * 2
+    // paddingRight: theme.spacing.lg, // * 2
     backgroundColor:
       theme.colorScheme === 'dark'
         ? theme.colors.dark[8]
         : theme.colors.gray[0],
-    [`@media (max-width: ${1080}px)`]: {
-      paddingLeft: theme.spacing.xl,
-      paddingRight: theme.spacing.xl,
-    },
+    // [`@media (max-width: ${1080}px)`]: {
+    //   paddingLeft: theme.spacing.xl,
+    //   paddingRight: theme.spacing.xl,
+    // },
   },
   wrapper: {
     paddingTop: 50,

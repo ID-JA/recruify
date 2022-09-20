@@ -11,11 +11,13 @@ export default createStyles(theme => ({
     fontWeight: 600,
     fontSize: '15px',
     lineHeight: '24px',
-    padding: ' 5px 15px',
-    paddingBottom: '15px',
+    padding: '10px',
     borderRadius: '4px',
     userSelect: 'none',
     position: 'relative',
+    '&:hover': {
+      color: theme.colors.blue,
+    },
   },
 
   active: {
@@ -30,6 +32,10 @@ export default createStyles(theme => ({
       width: '100%',
       backgroundColor: theme.colors.blue,
     },
+  },
+  disabled: {
+    pointerEvents: 'none',
+    opacity: 0.4,
   },
 
   body: {

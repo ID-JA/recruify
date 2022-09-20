@@ -75,10 +75,10 @@ function ChangePassword() {
           mb="lg"
         />
         <Group position="right" mt="lg">
-          <Button variant="light" size="md" onClick={onCancel}>
+          <Button variant="light" onClick={onCancel}>
             Cancel
           </Button>
-          <Button ml="sm" size="md" type="submit">
+          <Button ml="sm" type="submit">
             Save
           </Button>
         </Group>
