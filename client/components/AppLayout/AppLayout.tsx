@@ -8,7 +8,22 @@ export interface AppLayoutProps {
 
 function AppLayout({ children }: AppLayoutProps) {
   return (
-    <MantineProvider withGlobalStyles withNormalizeCSS>
+    <MantineProvider
+      withGlobalStyles
+      withNormalizeCSS
+      theme={{
+        components: {
+          TextInput: {
+            styles: {
+              description: {
+                color: '#667085',
+                marginBottom: '10px',
+              },
+            },
+          },
+        },
+      }}
+    >
       <AppLayoutInner>{children}</AppLayoutInner>
     </MantineProvider>
   )

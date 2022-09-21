@@ -42,7 +42,7 @@ const useStyles = createStyles(() => ({
     WebkitTapHighlightColor: 'transparent',
   },
   description: {
-    color: '#868e96',
+    color: '#667085',
     fontSize: '12px',
     lineHeight: '1.55',
     textDecoration: 'none',
@@ -187,7 +187,14 @@ function CreateJobForm() {
         />
 
         <div className={classes.fieldWrapper}>
-          <label className={classes.label}>Job Description</label>
+          <label
+            className={classes.label}
+            style={{
+              marginBottom: '10px',
+            }}
+          >
+            Job Description
+          </label>
           <RichTextEditor
             mb={5}
             controls={[
@@ -226,6 +233,9 @@ function CreateJobForm() {
             defaultOptions
             loadOptions={promiseOptions}
             id="creatable-select"
+            aria-label="select-skills"
+            inputId="input-select-skills-"
+            aria-live="assertive"
           />
         </div>
 
@@ -259,7 +269,7 @@ function CreateJobForm() {
           }
           {...register('company_description')}
         />
-        <Text mb="md" color="dimmed" size="xs">
+        <Text mb="md" color="#667085" size="xs">
           By clicking Save & Post Now, I agree that ZipRecruiter may publish
           and/or distribute my job advertisement on its site and through its
           distribution partners.
