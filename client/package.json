@@ -22,6 +22,7 @@
     "@mantine/hooks": "^5.2.4",
     "@mantine/next": "^5.2.4",
     "@mantine/rte": "^5.4.0",
+    "@tanstack/react-table": "^8.5.13",
     "next": "12.3.0",
     "react": "18.2.0",
     "react-dom": "18.2.0",

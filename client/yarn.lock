@@ -708,6 +708,18 @@
   resolved "https://registry.yarnpkg.com/@tabler/icons/-/icons-1.96.0.tgz#ff3cb1a5ddc38b96f54a54b9c0b5e1ed88c24da7"
   integrity sha512-ZAQ64CHi5sOFQE7COoBmZbhIBtTX+4XNuiVZsr8kcqJX1bmrw6dFU0W9ONJamt/2TO997uVfSqxr2o0WZqZr/g==
 
+"@tanstack/react-table@^8.5.13":
+  version "8.5.13"
+  resolved "https://registry.yarnpkg.com/@tanstack/react-table/-/react-table-8.5.13.tgz#a394c4db1cbcd63eb0c5fa2244a963da28f246c4"
+  integrity sha512-k52HsnonKwDZMCIy59HfehTnkJYlqkqyvC+BAV0DyWdN9WmSbVq+Kf+luJVENQnXcnEX47dBHiHAjqZu592ZLQ==
+  dependencies:
+    "@tanstack/table-core" "8.5.13"
+
+"@tanstack/table-core@8.5.13":
+  version "8.5.13"
+  resolved "https://registry.yarnpkg.com/@tanstack/table-core/-/table-core-8.5.13.tgz#7ad94fcc9db72f3eb0ed7dbb9c511a6bd7ff9a06"
+  integrity sha512-kvDRjC7LrLNNNgUMfsBz3nHOwbBLFdosWQ16dfbD9D/OJrvFHRXoUIPzF0MNqqSPghaj7/18fnwXHGypvzoh9Q==
+
 "@types/json-schema@^7.0.5", "@types/json-schema@^7.0.9":
   version "7.0.11"
   resolved "https://registry.yarnpkg.com/@types/json-schema/-/json-schema-7.0.11.tgz#d421b6c527a3037f7c84433fd2c4229e016863d3"
