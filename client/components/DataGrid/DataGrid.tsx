@@ -1,4 +1,5 @@
 import { Box, createStyles, ScrollArea, Table } from '@mantine/core'
+import { getCoreRowModel, useReactTable } from '@tanstack/react-table'
 import { DataGridProps } from './DataGrid.props'
 import DataGridHeader from './DataGridHeader'
 import DataGridRow from './DataGridRow'
@@ -21,21 +22,21 @@ const useStyles = createStyles((theme) => {
 export function DataGrid<T>({ data, columns }: DataGridProps<T>) {
   const { classes, cx } = useStyles()
 
+  const table = useReactTable({
+    columns,
+    data,
+    getCoreRowModel: getCoreRowModel(),
+  })
+
   return (
     <Box className={cx(classes.root)}>
       <ScrollArea>
         <Table>
-          <DataGridHeader<T> columns={columns} />
+          <DataGridHeader headerGroups={table.getHeaderGroups()} />
           <tbody>
-            {data?.map((record, recordIndex) => {
-              return (
-                <DataGridRow
-                  key={`${record}-${recordIndex}`}
-                  columns={columns}
-                  record={record}
-                />
-              )
-            })}
+            {table.getRowModel().rows.map((row) => (
+              <DataGridRow key={row.id} row={row} />
+            ))}
           </tbody>
         </Table>
       </ScrollArea>

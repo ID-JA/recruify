@@ -1,21 +1,15 @@
-import { DataGridColumn } from './DataGrid.props'
+import { Row } from '@tanstack/react-table'
 import DataGridRowCell from './DataGridRowCell'
 
 type DataGridRowProps<T> = {
-  record: T
-  columns: DataGridColumn<T>[]
+  row: Row<T>
 }
 
-function DataGridRow<T>({ columns, record }: DataGridRowProps<T>) {
+function DataGridRow<T>({ row }: DataGridRowProps<T>) {
   return (
     <tr>
-      {columns.map(({ accessor, render }) => (
-        <DataGridRowCell
-          key={accessor}
-          accessor={accessor}
-          record={record}
-          render={render}
-        />
+      {row.getAllCells().map((cell) => (
+        <DataGridRowCell key={cell.id} cell={cell} />
       ))}
     </tr>
   )

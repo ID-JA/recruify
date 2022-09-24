@@ -5,12 +5,13 @@ export type DataGridProps<T> = {
   /**
    * Visible columns
    */
-  columns: DataGridColumn<T>[]
+  // eslint-disable-next-line @typescript-eslint/no-explicit-any
+  columns: any //DataGridColumn<T>[]
 
   /**
    * Visible records; the `DataGrid` component will try to infer its row type from here
    */
-  data?: T[]
+  data: T[]
 
   withColumnBorder?: boolean
 

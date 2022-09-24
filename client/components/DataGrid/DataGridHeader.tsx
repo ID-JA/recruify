@@ -1,25 +1,20 @@
-import { CSSObject } from '@mantine/core'
-import { DataGridColumn } from './DataGrid.props'
+import { HeaderGroup } from '@tanstack/react-table'
 import DataGridHeaderCell from './DataGridHeaderCell'
 
-export type DataGridHeader<T> = {
-  columns: DataGridColumn<T>[]
-  style?: CSSObject
+type DataGridHeader<T> = {
+  headerGroups: HeaderGroup<T>[]
 }
 
-function DataGridHeader<T>({ columns }: DataGridHeader<T>) {
+function DataGridHeader<T>({ headerGroups }: DataGridHeader<T>) {
   return (
     <thead>
-      <tr>
-        {columns.map(({ accessor, textAlignment, title }) => (
-          <DataGridHeaderCell
-            key={accessor}
-            accessor={accessor}
-            title={title}
-            textAlignment={textAlignment}
-          />
-        ))}
-      </tr>
+      {headerGroups.map((headerGroup) => (
+        <tr key={headerGroup.id}>
+          {headerGroup.headers.map((header) => (
+            <DataGridHeaderCell key={header.id} header={header} />
+          ))}
+        </tr>
+      ))}
     </thead>
   )
 }

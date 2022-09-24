@@ -1,12 +1,13 @@
-import { ReactNode } from 'react'
-import { DataGridColumn } from './DataGrid.props'
+import { flexRender, Header } from '@tanstack/react-table'
 
 type DataTableHeaderCell<T> = {
-  title: ReactNode | undefined
-} & Pick<DataGridColumn<T>, 'accessor' | 'textAlignment'>
+  header: Header<T, unknown>
+}
 
-function DataGridHeaderCell<T>({ title }: DataTableHeaderCell<T>) {
-  return <th>{title}</th>
+function DataGridHeaderCell<T>({ header }: DataTableHeaderCell<T>) {
+  return (
+    <th>{flexRender(header.column.columnDef.header, header.getContext())}</th>
+  )
 }
 
 export default DataGridHeaderCell
