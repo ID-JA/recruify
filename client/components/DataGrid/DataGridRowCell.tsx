@@ -5,7 +5,11 @@ type DataGridRowCellProps<T> = {
 }
 
 function DataGridRowCell<T>({ cell }: DataGridRowCellProps<T>) {
-  return <td>{flexRender(cell.column.columnDef.cell, cell.getContext())}</td>
+  return (
+    <td className="this is cell">
+      {flexRender(cell.column.columnDef.cell, cell.getContext())}
+    </td>
+  )
 }
 
 export default DataGridRowCell

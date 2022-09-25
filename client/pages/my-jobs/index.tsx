@@ -1,52 +1,22 @@
-import { Badge } from '@mantine/core'
-import { createColumnHelper } from '@tanstack/react-table'
-import AppLayout from '../../components/AppLayout/AppLayout'
+import { Badge, Checkbox } from '@mantine/core'
+import { v4 as uuidv4 } from 'uuid'
+
+import {
+  ColumnDef,
+  getCoreRowModel,
+  getFilteredRowModel,
+  getPaginationRowModel,
+  useReactTable,
+} from '@tanstack/react-table'
+import { useMemo, useState } from 'react'
+import { Edit, Trash } from 'tabler-icons-react'
+import AppLayout from '../../components/AppLayout/AppLayoutInner'
 import { DataGrid } from '../../components/DataGrid'
 import { NextPageWithLayout } from '../_app'
 
-// [
-//   {
-//     accessor: 'title',
-//     title: 'Title',
-//   },
-//   {
-//     accessor: 'location',
-//     title: 'Location',
-//   },
-//   {
-//     accessor: 'company',
-//     title: 'Company',
-//   },
-//   {
-//     accessor: 'createdAt',
-//     title: 'Created At',
-//   },
-//   {
-//     accessor: 'status',
-//     title: 'Status',
-//     render: ({ status }) => (
-//       <Badge color="orange" size="md">
-//         {status}
-//       </Badge>
-//     ),
-//   },
-//   {
-//     accessor: 'createdBy',
-//     title: 'Created By',
-//   },
-//   {
-//     accessor: 'candidates',
-//     title: 'Candidate',
-//   },
-//   {
-//     accessor: 'visitors',
-//     title: 'Visitors',
-//   },
-// ]
-
 // Create a type for data
 type Job = {
-  id: number
+  id: string
   title: string
   location: string
   company: string
@@ -54,12 +24,12 @@ type Job = {
   createdBy: string
   status: string
   candidates: number
-  visitors: number
+  employees: number
 }
 
 const MOCK_JOBS: Job[] = [
   {
-    id: 1,
+    id: uuidv4(),
     title: 'JavaScript developer',
     location: 'Aurora, CO, USA',
     company: 'Google Labs',
@@ -67,10 +37,10 @@ const MOCK_JOBS: Job[] = [
     createdBy: 'Kent Smith',
     status: 'draft',
     candidates: 5,
-    visitors: 20,
+    employees: 20,
   },
   {
-    id: 2,
+    id: uuidv4(),
     title: 'Data Analytic Engineer',
     location: 'Aurora, CO, USA',
     company: 'Google Labs',
@@ -78,10 +48,10 @@ const MOCK_JOBS: Job[] = [
     createdBy: 'Kent Smith',
     status: 'active',
     candidates: 5,
-    visitors: 12,
+    employees: 12,
   },
   {
-    id: 3,
+    id: uuidv4(),
     title: 'Back end developer',
     location: 'Aurora, CO, USA',
     company: 'Google Labs',
@@ -89,7 +59,7 @@ const MOCK_JOBS: Job[] = [
     createdBy: 'Kent Smith',
     status: 'blabla', // should render as badge
     candidates: 0,
-    visitors: 2,
+    employees: 2,
   },
 ]
 
@@ -107,47 +77,172 @@ const renderStatus = (status: string) => {
 }
 
 const MyJobs: NextPageWithLayout = () => {
-  const columnHelper = createColumnHelper<Job>()
+  const [rowSelection, setRowSelection] = useState({})
 
-  const columns = [
-    columnHelper.accessor('title', {
-      header: 'Title',
-      cell: (c) => c.renderValue(),
-    }),
-    columnHelper.accessor('company', {
-      header: 'Company',
-      cell: (c) => c.renderValue(),
-    }),
-    columnHelper.accessor('location', {
-      header: 'Location',
-      cell: (c) => c.renderValue(),
-    }),
-    columnHelper.accessor('status', {
-      header: 'Status',
-      cell: (c) => renderStatus(c.getValue()),
-    }),
-    columnHelper.accessor('createdAt', {
-      header: 'Created At',
-      cell: (c) => c.renderValue(),
-    }),
-    columnHelper.accessor('createdBy', {
-      header: 'Created By',
-      cell: (c) => c.renderValue(),
-    }),
-    columnHelper.accessor('visitors', {
-      header: 'Visitors',
-      cell: (c) => c.renderValue(),
-    }),
-    columnHelper.accessor('candidates', {
-      header: 'Candidates',
-      cell: (c) => c.renderValue(),
-    }),
-  ]
+  const columns = useMemo<ColumnDef<Job>[]>(
+    () => [
+      {
+        accessorKey: 'select',
+        header: ({ table }) => {
+          // TODO: Check if there's any way to remove this handler
+          const handleHeaderSelectionChange = () => {
+            const value =
+              (!table.getIsAllRowsSelected() &&
+                table.getIsSomeRowsSelected()) ||
+              !table.getIsAllRowsSelected()
+            console.log(value)
+
+            table.toggleAllRowsSelected(value)
+          }
+          return (
+            <Checkbox
+              sx={{
+                cursor: 'pointer',
+              }}
+              {...{
+                checked: table.getIsAllRowsSelected(),
+                indeterminate:
+                  !table.getIsAllRowsSelected() &&
+                  table.getIsSomeRowsSelected(),
+                onChange: handleHeaderSelectionChange,
+              }}
+              onClick={(e) => e.stopPropagation()}
+            />
+          )
+        },
+
+        cell: ({ row }) => (
+          <Checkbox
+            sx={{
+              cursor: 'pointer',
+            }}
+            {...{
+              checked: row.getIsSelected(),
+              indeterminate: row.getIsSomeSelected(),
+              onChange: row.getToggleSelectedHandler(),
+            }}
+            onClick={(e) => e.stopPropagation()}
+          />
+        ),
+      },
+      {
+        id: 'title',
+        accessorFn: (row) => row.title,
+        accessorKey: 'Title',
+        cell: (info) => info.getValue(),
+      },
+
+      {
+        accessorFn: (row) => row.company,
+        accessorKey: 'Company',
+        cell: (info) => info.getValue(),
+      },
+
+      {
+        accessorFn: (row) => row.location,
+        accessorKey: 'Location',
+        cell: (info) => info.getValue(),
+      },
+      {
+        accessorFn: (row) => row.createdAt,
+        accessorKey: 'Created At',
+        cell: (info) => info.getValue(),
+      },
+      {
+        accessorFn: (row) => row.createdBy,
+        accessorKey: 'Created By',
+        cell: (info) => info.getValue(),
+      },
+
+      {
+        accessorFn: (row) => row.status,
+        accessorKey: 'Status',
+        cell: (info) => renderStatus(info.getValue() as string),
+      },
+      {
+        accessorFn: (row) => row.employees,
+        accessorKey: 'Employees',
+        cell: (info) => info.getValue(),
+      },
+
+      {
+        accessorFn: (row) => row.candidates,
+        accessorKey: 'Candidates',
+        cell: (info) => info.getValue(),
+      },
+    ],
+    []
+  )
+
+  const table = useReactTable({
+    data: MOCK_JOBS,
+    columns,
+    state: {
+      rowSelection,
+    },
+    onRowSelectionChange: setRowSelection,
+    getCoreRowModel: getCoreRowModel(),
+    getFilteredRowModel: getFilteredRowModel(),
+    getPaginationRowModel: getPaginationRowModel(),
+  })
+
+  const handleRowClick = (record: Job) => {
+    console.log(record)
+  }
 
   return (
-    <>
-      <DataGrid columns={columns} data={MOCK_JOBS} />
-    </>
+    <div>
+      <DataGrid
+        table={table}
+        onRowClick={(record) => handleRowClick(record)}
+        rowContextMenu={{
+          items: ({ id, title, company }) => {
+            return [
+              {
+                key: 'edit',
+                icon: <Edit size={14} />,
+                title: `Edit ${title}`,
+                onClick: () =>
+                  console.log(
+                    `you want to edit ${title} - ${company} job post`
+                  ),
+              },
+              {
+                key: 'delete',
+                icon: <Trash size={14} />,
+                title: `Delete ${title}`,
+                color: 'red',
+                onClick: () =>
+                  console.log(
+                    `you want to delete ${title} - ${company} job post`
+                  ),
+              },
+              { key: 'divider-1', divider: true },
+              {
+                key: 'deleteMany',
+                hidden:
+                  table.getSelectedRowModel().flatRows.length <= 1 ||
+                  !table
+                    .getSelectedRowModel()
+                    .rows.map((r) => r.original.id)
+                    .includes(id),
+                title: `Delete ${
+                  table.getSelectedRowModel().flatRows.length
+                } selected records`,
+                icon: <Trash size={14} />,
+                color: 'red',
+                onClick: () =>
+                  console.log(
+                    `you want to delete ${
+                      table.getSelectedRowModel().flatRows.length
+                    } records`
+                  ),
+              },
+            ]
+          },
+        }}
+      />
+    </div>
   )
 }
 
