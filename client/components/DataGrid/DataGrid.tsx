@@ -1,6 +1,7 @@
 import { Box, createStyles, Divider, ScrollArea, Table } from '@mantine/core'
 import { MouseEventHandler, useState } from 'react'
 import { DataGridProps } from './DataGrid.props'
+import DataGridFooter from './DataGridFooter'
 import DataGridHeader from './DataGridHeader'
 import DataGridRow from './DataGridRow'
 import DataGridRowMenu from './DataGridRowMenu'
@@ -25,6 +26,13 @@ export function DataGrid<T>({
   table,
   onRowClick,
   rowContextMenu,
+  onPageChange,
+  paginationText = ({ from, to, totalRecords }) =>
+    `${from} - ${to} / ${totalRecords}`,
+  page,
+  paginationSize,
+  recordsPerPage,
+  totalRecords,
 }: DataGridProps<T>) {
   const { classes, cx } = useStyles()
   const [rowContextMenuInfo, setRowContextMenuInfo] = useState<{
@@ -33,6 +41,11 @@ export function DataGrid<T>({
     record: T
   } | null>(null)
 
+  const handlePageChange = (page: number) => {
+    onPageChange!(page)
+  }
+
+  const recordsLength = table.getRowModel().rows.length
   return (
     <Box className={cx(classes.root)}>
       <ScrollArea>
@@ -145,6 +158,15 @@ export function DataGrid<T>({
             )}
         </DataGridRowMenu>
       )}
+      <DataGridFooter
+        page={page}
+        paginationSize={paginationSize}
+        onPageChange={handlePageChange}
+        recordsLength={recordsLength}
+        recordsPerPage={recordsPerPage}
+        totalRecords={totalRecords}
+        paginationText={paginationText}
+      />
     </Box>
   )
 }

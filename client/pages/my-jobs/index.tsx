@@ -61,6 +61,127 @@ const MOCK_JOBS: Job[] = [
     candidates: 0,
     employees: 2,
   },
+  {
+    id: uuidv4(),
+    title: 'Back end developer',
+    location: 'Aurora, CO, USA',
+    company: 'Google Labs',
+    createdAt: '09/01/23',
+    createdBy: 'Kent Smith',
+    status: 'blabla', // should render as badge
+    candidates: 0,
+    employees: 2,
+  },
+  {
+    id: uuidv4(),
+    title: 'Back end developer',
+    location: 'Aurora, CO, USA',
+    company: 'Google Labs',
+    createdAt: '09/01/23',
+    createdBy: 'Kent Smith',
+    status: 'blabla', // should render as badge
+    candidates: 0,
+    employees: 2,
+  },
+  {
+    id: uuidv4(),
+    title: 'Back end developer',
+    location: 'Aurora, CO, USA',
+    company: 'Google Labs',
+    createdAt: '09/01/23',
+    createdBy: 'Kent Smith',
+    status: 'blabla', // should render as badge
+    candidates: 0,
+    employees: 2,
+  },
+  {
+    id: uuidv4(),
+    title: 'Back end developer',
+    location: 'Aurora, CO, USA',
+    company: 'Google Labs',
+    createdAt: '09/01/23',
+    createdBy: 'Kent Smith',
+    status: 'blabla', // should render as badge
+    candidates: 0,
+    employees: 2,
+  },
+  {
+    id: uuidv4(),
+    title: 'Back end developer',
+    location: 'Aurora, CO, USA',
+    company: 'Google Labs',
+    createdAt: '09/01/23',
+    createdBy: 'Kent Smith',
+    status: 'blabla', // should render as badge
+    candidates: 0,
+    employees: 2,
+  },
+  {
+    id: uuidv4(),
+    title: 'Back end developer',
+    location: 'Aurora, CO, USA',
+    company: 'Google Labs',
+    createdAt: '09/01/23',
+    createdBy: 'Kent Smith',
+    status: 'blabla', // should render as badge
+    candidates: 0,
+    employees: 2,
+  },
+  {
+    id: uuidv4(),
+    title: 'Back end developer',
+    location: 'Aurora, CO, USA',
+    company: 'Google Labs',
+    createdAt: '09/01/23',
+    createdBy: 'Kent Smith',
+    status: 'blabla', // should render as badge
+    candidates: 0,
+    employees: 2,
+  },
+  {
+    id: uuidv4(),
+    title: 'Back end developer',
+    location: 'Aurora, CO, USA',
+    company: 'Google Labs',
+    createdAt: '09/01/23',
+    createdBy: 'Kent Smith',
+    status: 'blabla', // should render as badge
+    candidates: 0,
+    employees: 2,
+  },
+  {
+    id: uuidv4(),
+    title: 'Back end developer',
+    location: 'Aurora, CO, USA',
+    company: 'Google Labs',
+    createdAt: '09/01/23',
+    createdBy: 'Kent Smith',
+    status: 'blabla', // should render as badge
+    candidates: 0,
+    employees: 2,
+  },
+  {
+    id: uuidv4(),
+    title: 'Back end developer',
+    location: 'Aurora, CO, USA',
+    company: 'Google Labs',
+    createdAt: '09/01/23',
+    createdBy: 'Kent Smith',
+    status: 'blabla', // should render as badge
+    candidates: 0,
+    employees: 2,
+  },
+  {
+    id: uuidv4(),
+    title: 'DotNet developer',
+    location: 'Aurora, CO, USA',
+    company: 'Google Labs',
+    createdAt: '09/01/23',
+    createdBy: 'Kent Smith',
+    status: 'blabla', // should render as badge
+    candidates: 0,
+    employees: 2,
+  },
 ]
 
 // TODO: Render badge component base on status
@@ -78,7 +199,6 @@ const renderStatus = (status: string) => {
 
 const MyJobs: NextPageWithLayout = () => {
   const [rowSelection, setRowSelection] = useState({})
-
   const columns = useMemo<ColumnDef<Job>[]>(
     () => [
       {
@@ -88,11 +208,11 @@ const MyJobs: NextPageWithLayout = () => {
           const handleHeaderSelectionChange = () => {
             const value =
               (!table.getIsAllRowsSelected() &&
-                table.getIsSomeRowsSelected()) ||
-              !table.getIsAllRowsSelected()
+                table.getIsSomePageRowsSelected()) ||
+              !table.getIsAllPageRowsSelected()
             console.log(value)
 
-            table.toggleAllRowsSelected(value)
+            table.toggleAllPageRowsSelected(value)
           }
           return (
             <Checkbox
@@ -100,10 +220,10 @@ const MyJobs: NextPageWithLayout = () => {
                 cursor: 'pointer',
               }}
               {...{
-                checked: table.getIsAllRowsSelected(),
+                checked: table.getIsAllPageRowsSelected(),
                 indeterminate:
-                  !table.getIsAllRowsSelected() &&
-                  table.getIsSomeRowsSelected(),
+                  !table.getIsAllPageRowsSelected() &&
+                  table.getIsSomePageRowsSelected(),
                 onChange: handleHeaderSelectionChange,
               }}
               onClick={(e) => e.stopPropagation()}
@@ -190,11 +310,20 @@ const MyJobs: NextPageWithLayout = () => {
     console.log(record)
   }
 
+  const handlePageChange = (pageNumber: number) => {
+    table.setPageIndex(pageNumber - 1)
+  }
+
   return (
     <div>
       <DataGrid
         table={table}
         onRowClick={(record) => handleRowClick(record)}
+        page={table.getState().pagination.pageIndex + 1}
+        onPageChange={handlePageChange}
+        recordsPerPage={10}
+        paginationSize="sm"
+        totalRecords={table.getCoreRowModel().rows.length}
         rowContextMenu={{
           items: ({ id, title, company }) => {
             return [
