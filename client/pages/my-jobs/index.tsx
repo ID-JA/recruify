@@ -214,6 +214,7 @@ const renderActions = (record: Job) => {
   return (
     <Group spacing={4} position="center">
       <ActionIcon
+        aria-label="edit record"
         color="blue"
         onClick={(e: MouseEvent<HTMLButtonElement>): void => {
           e.stopPropagation()
@@ -223,6 +224,7 @@ const renderActions = (record: Job) => {
         <Edit size={16} />
       </ActionIcon>
       <ActionIcon
+        aria-label="delete record"
         color="red"
         onClick={(e: MouseEvent<HTMLButtonElement>): void => {
           e.stopPropagation()
@@ -232,6 +234,7 @@ const renderActions = (record: Job) => {
         <Trash size={16} />
       </ActionIcon>
       <ActionIcon
+        aria-label="archive record"
         color="orange"
         onClick={(e: MouseEvent<HTMLButtonElement>): void => {
           e.stopPropagation()
@@ -266,6 +269,7 @@ const MyJobs: NextPageWithLayout = () => {
           }
           return (
             <Checkbox
+              aria-label="header selector "
               sx={{
                 cursor: 'pointer',
               }}
@@ -283,6 +287,7 @@ const MyJobs: NextPageWithLayout = () => {
         size: 40,
         cell: ({ row }) => (
           <Checkbox
+            aria-label="cell selector"
             sx={{
               cursor: 'pointer',
             }}

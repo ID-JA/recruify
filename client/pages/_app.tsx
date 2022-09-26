@@ -23,6 +23,10 @@ export default function App(props: AppPropsWithLayout) {
           name="viewport"
           content="minimum-scale=1, initial-scale=1, width=device-width"
         />
+        <meta
+          name="description"
+          content="fast recruiter platform helps you to share job offers and search for candidates"
+        />
       </Head>
 
       <Component {...pageProps} />
