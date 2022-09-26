@@ -8,7 +8,7 @@ import {
   useReactTable,
 } from '@tanstack/react-table'
 
-import { useMemo, useState } from 'react'
+import { MouseEvent, useMemo, useState } from 'react'
 import { Archive, Edit, Trash } from 'tabler-icons-react'
 import { v4 as uuidv4 } from 'uuid'
 
@@ -215,7 +215,7 @@ const renderActions = (record: Job) => {
     <Group spacing={4} position="center">
       <ActionIcon
         color="blue"
-        onClick={(e) => {
+        onClick={(e: MouseEvent<HTMLButtonElement>): void => {
           e.stopPropagation()
           console.log(`edit row with id: ${record.id}`)
         }}
@@ -224,7 +224,7 @@ const renderActions = (record: Job) => {
       </ActionIcon>
       <ActionIcon
         color="red"
-        onClick={(e) => {
+        onClick={(e: MouseEvent<HTMLButtonElement>): void => {
           e.stopPropagation()
           console.log(`delete row with id: ${record.id}`)
         }}
@@ -233,7 +233,7 @@ const renderActions = (record: Job) => {
       </ActionIcon>
       <ActionIcon
         color="orange"
-        onClick={(e) => {
+        onClick={(e: MouseEvent<HTMLButtonElement>): void => {
           e.stopPropagation()
           console.log(`archive row with id: ${record.id}`)
         }}
