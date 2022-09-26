@@ -6,7 +6,13 @@ type DataGridRowCellProps<T> = {
 
 function DataGridRowCell<T>({ cell }: DataGridRowCellProps<T>) {
   return (
-    <td className="this is cell">
+    <td
+      style={{
+        width: cell.column.getSize(),
+        minWidth: cell.column.getSize(),
+      }}
+      role="cell"
+    >
       {flexRender(cell.column.columnDef.cell, cell.getContext())}
     </td>
   )

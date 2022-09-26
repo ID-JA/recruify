@@ -6,7 +6,15 @@ type DataTableHeaderCell<T> = {
 
 function DataGridHeaderCell<T>({ header }: DataTableHeaderCell<T>) {
   return (
-    <th>{flexRender(header.column.columnDef.header, header.getContext())}</th>
+    <th
+      style={{
+        width: header.getSize(),
+        maxWidth: header.getSize(),
+      }}
+      role="columnheader"
+    >
+      {flexRender(header.column.columnDef.header, header.getContext())}
+    </th>
   )
 }
 

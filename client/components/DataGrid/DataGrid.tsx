@@ -1,5 +1,14 @@
-import { Box, createStyles, Divider, ScrollArea, Table } from '@mantine/core'
+import {
+  Box,
+  createStyles,
+  Divider,
+  MantineTheme,
+  ScrollArea,
+  Table,
+} from '@mantine/core'
+
 import { MouseEventHandler, useState } from 'react'
+
 import { DataGridProps } from './DataGrid.props'
 import DataGridFooter from './DataGridFooter'
 import DataGridHeader from './DataGridHeader'
@@ -7,20 +16,88 @@ import DataGridRow from './DataGridRow'
 import DataGridRowMenu from './DataGridRowMenu'
 import DataGridRowMenuItem from './DataGridRowMenuItem'
 
-const useStyles = createStyles((theme) => {
-  return {
-    root: {
-      position: 'relative',
-      display: 'flex',
-      flexDirection: 'column',
-      overflow: 'hidden',
-      tr: {
-        backgroundColor:
-          theme.colorScheme === 'dark' ? theme.colors.dark[7] : theme.white,
+const useStyles = createStyles(
+  (
+    theme,
+    {
+      borderColor,
+      rowBorderColor,
+    }: {
+      borderColor: string | ((theme: MantineTheme) => string)
+      rowBorderColor: string | ((theme: MantineTheme) => string)
+    }
+  ) => {
+    const borderColorValue =
+      typeof borderColor === 'function' ? borderColor(theme) : borderColor
+    const rowBorderColorValue =
+      typeof rowBorderColor === 'function'
+        ? rowBorderColor(theme)
+        : rowBorderColor
+
+    return {
+      root: {
+        heigh: '100vh',
+        position: 'relative',
+        display: 'flex',
+        flexDirection: 'column',
+        overflow: 'hidden',
+        borderRadius: theme.radius.sm,
+        width: '100%',
+
+        tr: {
+          backgroundColor:
+            theme.colorScheme === 'dark' ? theme.colors.dark[7] : theme.white,
+        },
+        '&&': {
+          'thead tr th': {
+            borderBottomColor: borderColorValue,
+          },
+          'tbody tr td': {
+            borderBottomColor: rowBorderColorValue,
+          },
+        },
       },
-    },
+      lastRowBorderBottomVisible: {
+        'tbody tr:last-of-type td': {
+          borderBottom: `1px solid ${rowBorderColorValue}`,
+        },
+      },
+      textSelectionDisabled: {
+        userSelect: 'none',
+      },
+      table: {
+        borderCollapse: 'separate',
+        borderSpacing: 0,
+        height: '100%',
+        width: '100%',
+      },
+      scrollArea: {
+        position: 'relative',
+        paddingBottom: theme.spacing.lg,
+      },
+      tableWithBorder: {
+        border: `1px solid ${borderColorValue}`,
+      },
+      tableWithColumnBorders: {
+        'th, td': {
+          ':not(:first-of-type)': {
+            borderLeft: `1px solid ${rowBorderColorValue}`,
+          },
+        },
+      },
+      verticalAlignmentTop: {
+        td: {
+          verticalAlign: 'top',
+        },
+      },
+      verticalAlignmentBottom: {
+        td: {
+          verticalAlign: 'bottom',
+        },
+      },
+    }
   }
-})
+)
 
 export function DataGrid<T>({
   table,
@@ -33,8 +110,19 @@ export function DataGrid<T>({
   paginationSize,
   recordsPerPage,
   totalRecords,
+  withBorder,
+  borderColor = (theme) =>
+    theme.colorScheme === 'dark' ? theme.colors.dark[4] : theme.colors.gray[3],
+  rowBorderColor = (theme) =>
+    theme.fn.rgba(
+      theme.colorScheme === 'dark'
+        ? theme.colors.dark[4]
+        : theme.colors.gray[3],
+      0.65
+    ),
 }: DataGridProps<T>) {
-  const { classes, cx } = useStyles()
+  const { cx, classes } = useStyles({ borderColor, rowBorderColor })
+
   const [rowContextMenuInfo, setRowContextMenuInfo] = useState<{
     top: number
     left: number
@@ -47,9 +135,13 @@ export function DataGrid<T>({
 
   const recordsLength = table.getRowModel().rows.length
   return (
-    <Box className={cx(classes.root)}>
-      <ScrollArea>
-        <Table>
+    <Box
+      className={cx(classes.root, {
+        [classes.tableWithBorder]: withBorder,
+      })}
+    >
+      <ScrollArea className={classes.scrollArea}>
+        <Table className={cx(classes.table)} horizontalSpacing="xl">
           <DataGridHeader headerGroups={table.getHeaderGroups()} />
           <tbody>
             {table.getRowModel().rows.map((row) => {
@@ -166,6 +258,8 @@ export function DataGrid<T>({
         recordsPerPage={recordsPerPage}
         totalRecords={totalRecords}
         paginationText={paginationText}
+        horizontalSpacing="lg"
+        topBorderColor="#EAECF0"
       />
     </Box>
   )

@@ -1,15 +1,17 @@
-import { Badge, Checkbox } from '@mantine/core'
-import { v4 as uuidv4 } from 'uuid'
-
+import { ActionIcon, Badge, Checkbox, Group } from '@mantine/core'
 import {
   ColumnDef,
+  createColumnHelper,
   getCoreRowModel,
   getFilteredRowModel,
   getPaginationRowModel,
   useReactTable,
 } from '@tanstack/react-table'
+
 import { useMemo, useState } from 'react'
-import { Edit, Trash } from 'tabler-icons-react'
+import { Archive, Edit, Trash } from 'tabler-icons-react'
+import { v4 as uuidv4 } from 'uuid'
+
 import AppLayout from '../../components/AppLayout/AppLayoutInner'
 import { DataGrid } from '../../components/DataGrid'
 import { NextPageWithLayout } from '../_app'
@@ -28,6 +30,17 @@ type Job = {
 }
 
 const MOCK_JOBS: Job[] = [
+  {
+    id: uuidv4(),
+    title: 'JavaScript developer',
+    location: 'Aurora, CO, USA',
+    company: 'Google Labs',
+    createdAt: '09/01/23',
+    createdBy: 'Kent Smith',
+    status: 'draft',
+    candidates: 5,
+    employees: 20,
+  },
   {
     id: uuidv4(),
     title: 'JavaScript developer',
@@ -197,8 +210,45 @@ const renderStatus = (status: string) => {
   }
 }
 
+const renderActions = (record: Job) => {
+  return (
+    <Group spacing={4} position="center">
+      <ActionIcon
+        color="blue"
+        onClick={(e) => {
+          e.stopPropagation()
+          console.log(`edit row with id: ${record.id}`)
+        }}
+      >
+        <Edit size={16} />
+      </ActionIcon>
+      <ActionIcon
+        color="red"
+        onClick={(e) => {
+          e.stopPropagation()
+          console.log(`delete row with id: ${record.id}`)
+        }}
+      >
+        <Trash size={16} />
+      </ActionIcon>
+      <ActionIcon
+        color="orange"
+        onClick={(e) => {
+          e.stopPropagation()
+          console.log(`archive row with id: ${record.id}`)
+        }}
+      >
+        <Archive size={16} />
+      </ActionIcon>
+    </Group>
+  )
+}
+
 const MyJobs: NextPageWithLayout = () => {
   const [rowSelection, setRowSelection] = useState({})
+
+  const columnHelper = createColumnHelper<Job>()
+
   const columns = useMemo<ColumnDef<Job>[]>(
     () => [
       {
@@ -230,7 +280,7 @@ const MyJobs: NextPageWithLayout = () => {
             />
           )
         },
-
+        size: 40,
         cell: ({ row }) => (
           <Checkbox
             sx={{
@@ -250,6 +300,7 @@ const MyJobs: NextPageWithLayout = () => {
         accessorFn: (row) => row.title,
         accessorKey: 'Title',
         cell: (info) => info.getValue(),
+        size: 220,
       },
 
       {
@@ -278,20 +329,28 @@ const MyJobs: NextPageWithLayout = () => {
         accessorFn: (row) => row.status,
         accessorKey: 'Status',
         cell: (info) => renderStatus(info.getValue() as string),
+        size: 50,
       },
       {
         accessorFn: (row) => row.employees,
         accessorKey: 'Employees',
         cell: (info) => info.getValue(),
+        size: 50,
       },
 
       {
         accessorFn: (row) => row.candidates,
         accessorKey: 'Candidates',
         cell: (info) => info.getValue(),
+        size: 50,
       },
+      columnHelper.display({
+        id: 'actions',
+        cell: (props) => renderActions(props.row.original),
+        size: 100,
+      }),
     ],
-    []
+    [columnHelper]
   )
 
   const table = useReactTable({
@@ -324,52 +383,7 @@ const MyJobs: NextPageWithLayout = () => {
         recordsPerPage={10}
         paginationSize="sm"
         totalRecords={table.getCoreRowModel().rows.length}
-        rowContextMenu={{
-          items: ({ id, title, company }) => {
-            return [
-              {
-                key: 'edit',
-                icon: <Edit size={14} />,
-                title: `Edit ${title}`,
-                onClick: () =>
-                  console.log(
-                    `you want to edit ${title} - ${company} job post`
-                  ),
-              },
-              {
-                key: 'delete',
-                icon: <Trash size={14} />,
-                title: `Delete ${title}`,
-                color: 'red',
-                onClick: () =>
-                  console.log(
-                    `you want to delete ${title} - ${company} job post`
-                  ),
-              },
-              { key: 'divider-1', divider: true },
-              {
-                key: 'deleteMany',
-                hidden:
-                  table.getSelectedRowModel().flatRows.length <= 1 ||
-                  !table
-                    .getSelectedRowModel()
-                    .rows.map((r) => r.original.id)
-                    .includes(id),
-                title: `Delete ${
-                  table.getSelectedRowModel().flatRows.length
-                } selected records`,
-                icon: <Trash size={14} />,
-                color: 'red',
-                onClick: () =>
-                  console.log(
-                    `you want to delete ${
-                      table.getSelectedRowModel().flatRows.length
-                    } records`
-                  ),
-              },
-            ]
-          },
-        }}
+        withBorder
       />
     </div>
   )

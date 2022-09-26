@@ -1,4 +1,4 @@
-import { MantineColor, MantineSize } from '@mantine/core'
+import { MantineColor, MantineSize, MantineTheme } from '@mantine/core'
 import { Table } from '@tanstack/react-table'
 import { ReactNode } from 'react'
 
@@ -116,6 +116,9 @@ export type DataGridColumn<T> = {
 export type DataGridProps<T> = {
   table: Table<T>
   onRowClick?: (record: T) => void
+  withBorder?: boolean
+  borderColor?: string | ((theme: MantineTheme) => string)
+  rowBorderColor?: string | ((theme: MantineTheme) => string)
   rowContextMenu?: {
     /**
      * Context menu trigger; defaults to `rightClick` for classic behavior
