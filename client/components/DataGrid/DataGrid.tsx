@@ -1,266 +1,184 @@
+import { ScrollArea, Table } from '@mantine/core'
 import {
-  Box,
-  createStyles,
-  Divider,
-  MantineTheme,
-  ScrollArea,
-  Table,
-} from '@mantine/core'
-
-import { MouseEventHandler, useState } from 'react'
-
+  flexRender,
+  functionalUpdate,
+  getCoreRowModel,
+  getPaginationRowModel,
+  OnChangeFn,
+  PaginationState,
+  RowData,
+  RowSelectionState,
+  useReactTable,
+} from '@tanstack/react-table'
+import { useCallback, useEffect } from 'react'
 import { DataGridProps } from './DataGrid.props'
-import DataGridFooter from './DataGridFooter'
-import DataGridHeader from './DataGridHeader'
-import DataGridRow from './DataGridRow'
-import DataGridRowMenu from './DataGridRowMenu'
-import DataGridRowMenuItem from './DataGridRowMenuItem'
+import useStyles from './DataGrid.styles'
+import Pagination from './Pagination'
+import { getRowSelectionColumn } from './RowSelection'
 
-const useStyles = createStyles(
-  (
-    theme,
-    {
-      borderColor,
-      rowBorderColor,
-    }: {
-      borderColor: string | ((theme: MantineTheme) => string)
-      rowBorderColor: string | ((theme: MantineTheme) => string)
-    }
-  ) => {
-    const borderColorValue =
-      typeof borderColor === 'function' ? borderColor(theme) : borderColor
-    const rowBorderColorValue =
-      typeof rowBorderColor === 'function'
-        ? rowBorderColor(theme)
-        : rowBorderColor
+export const DEFAULT_INITIAL_PAGE = 0
+export const DEFAULT_INITIAL_SIZE = 10
 
-    return {
-      root: {
-        heigh: '100vh',
-        position: 'relative',
-        display: 'flex',
-        flexDirection: 'column',
-        overflow: 'hidden',
-        borderRadius: theme.radius.sm,
-        width: '100%',
-
-        tr: {
-          backgroundColor:
-            theme.colorScheme === 'dark' ? theme.colors.dark[7] : theme.white,
-        },
-        '&&': {
-          'thead tr th': {
-            borderBottomColor: borderColorValue,
-          },
-          'tbody tr td': {
-            borderBottomColor: rowBorderColorValue,
-          },
-        },
-      },
-      lastRowBorderBottomVisible: {
-        'tbody tr:last-of-type td': {
-          borderBottom: `1px solid ${rowBorderColorValue}`,
-        },
-      },
-      textSelectionDisabled: {
-        userSelect: 'none',
-      },
-      table: {
-        borderCollapse: 'separate',
-        borderSpacing: 0,
-        height: '100%',
-        width: '100%',
-      },
-      scrollArea: {
-        position: 'relative',
-        paddingBottom: theme.spacing.lg,
-      },
-      tableWithBorder: {
-        border: `1px solid ${borderColorValue}`,
-      },
-      tableWithColumnBorders: {
-        'th, td': {
-          ':not(:first-of-type)': {
-            borderLeft: `1px solid ${rowBorderColorValue}`,
-          },
-        },
-      },
-      verticalAlignmentTop: {
-        td: {
-          verticalAlign: 'top',
-        },
-      },
-      verticalAlignmentBottom: {
-        td: {
-          verticalAlign: 'bottom',
-        },
-      },
-    }
-  }
-)
-
-export function DataGrid<T>({
-  table,
-  onRowClick,
-  rowContextMenu,
+function DataGrid<TData extends RowData>({
+  columns,
+  data,
+  initialState,
+  fontSize,
+  total,
+  withPagination,
+  withRowSelection,
   onPageChange,
-  paginationText = ({ from, to, totalRecords }) =>
-    `${from} - ${to} / ${totalRecords}`,
-  page,
-  paginationSize,
-  recordsPerPage,
-  totalRecords,
-  withBorder,
-  borderColor = (theme) =>
-    theme.colorScheme === 'dark' ? theme.colors.dark[4] : theme.colors.gray[3],
-  rowBorderColor = (theme) =>
-    theme.fn.rgba(
-      theme.colorScheme === 'dark'
-        ? theme.colors.dark[4]
-        : theme.colors.gray[3],
-      0.65
-    ),
-}: DataGridProps<T>) {
-  const { cx, classes } = useStyles({ borderColor, rowBorderColor })
+  onRowSelectionChange,
+  withBoarder,
+  striped,
+  highlightOnHover,
+  noEllipsis,
+}: DataGridProps<TData>) {
+  const table = useReactTable<TData>({
+    data,
+    columns: withRowSelection
+      ? [{ ...getRowSelectionColumn() }, ...columns]
+      : columns,
+    initialState,
 
-  const [rowContextMenuInfo, setRowContextMenuInfo] = useState<{
-    top: number
-    left: number
-    record: T
-  } | null>(null)
+    getCoreRowModel: getCoreRowModel(),
+    getPaginationRowModel: getPaginationRowModel(),
+  })
 
-  const handlePageChange = (page: number) => {
-    onPageChange!(page)
-  }
+  const handlePaginationChange: OnChangeFn<PaginationState> = useCallback(
+    (arg0) => {
+      const pagination = table.getState().pagination
+      const next = functionalUpdate(arg0, pagination)
+      if (
+        next.pageIndex !== pagination.pageIndex ||
+        next.pageSize !== pagination.pageSize
+      ) {
+        onPageChange && onPageChange(next)
+        table.setState((state) => ({
+          ...state,
+          pagination: next,
+        }))
+      }
+    },
+    [onPageChange]
+  )
 
-  const recordsLength = table.getRowModel().rows.length
+  const handleRowSelectionChange: OnChangeFn<RowSelectionState> = useCallback(
+    (arg0) => {
+      table.setState((state) => {
+        const next = functionalUpdate(arg0, state.rowSelection)
+        onRowSelectionChange && onRowSelectionChange(next)
+        return {
+          ...state,
+          rowSelection: next,
+        }
+      })
+    },
+    [onRowSelectionChange]
+  )
+
+  const pageCount =
+    withPagination && total
+      ? Math.ceil(total / table.getState().pagination.pageSize)
+      : undefined
+
+  table.setOptions((prev) => ({
+    ...prev,
+    pageCount,
+    onPaginationChange: handlePaginationChange,
+    onRowSelectionChange: handleRowSelectionChange,
+  }))
+
+  useEffect(() => {
+    if (withPagination) {
+      table.setPageSize(
+        initialState?.pagination?.pageSize || DEFAULT_INITIAL_SIZE
+      )
+    } else {
+      table.setPageSize(data.length)
+    }
+  }, [withPagination])
+
+  const { classes } = useStyles({ withBoarder, noEllipsis })
+
   return (
-    <Box
-      className={cx(classes.root, {
-        [classes.tableWithBorder]: withBorder,
-      })}
-    >
-      <ScrollArea className={classes.scrollArea}>
-        <Table className={cx(classes.table)} horizontalSpacing="xl">
-          <DataGridHeader headerGroups={table.getHeaderGroups()} />
-          <tbody>
-            {table.getRowModel().rows.map((row) => {
-              const selected =
-                Object.keys(table.getState().rowSelection).indexOf(row.id) !==
-                -1
-              let showContextMenuOnRightClick = false
-              let showContextMenuOnClick = false
-              if (rowContextMenu) {
-                const { hidden } = rowContextMenu
-
-                if (
-                  !hidden ||
-                  !(typeof hidden === 'function'
-                    ? hidden(row.original)
-                    : hidden)
-                ) {
-                  if (rowContextMenu.trigger === 'click') {
-                    showContextMenuOnClick = true
-                  } else {
-                    showContextMenuOnRightClick = true
-                  }
-                }
-              }
-
-              let handleClick:
-                | MouseEventHandler<HTMLTableRowElement>
-                | undefined
-              if (showContextMenuOnClick) {
-                handleClick = (e) => {
-                  setRowContextMenuInfo({
-                    top: e.clientY,
-                    left: e.clientX,
-                    record: row.original,
-                  })
-                  onRowClick?.(row.original)
-                }
-              } else if (onRowClick) {
-                handleClick = () => {
-                  onRowClick(row.original)
-                }
-              }
-
-              let handleContextMenu:
-                | MouseEventHandler<HTMLTableRowElement>
-                | undefined
-              if (showContextMenuOnRightClick) {
-                handleContextMenu = (e) => {
-                  e.preventDefault()
-                  setRowContextMenuInfo({
-                    top: e.clientY,
-                    left: e.clientX,
-                    record: row.original,
-                  })
-                }
-              }
-              return (
-                <DataGridRow
-                  withCursorPointer={!!onRowClick}
-                  key={row.id}
-                  row={row}
-                  selected={selected}
-                  onClick={handleClick}
-                  onContextMenu={handleContextMenu}
-                />
-              )
-            })}
+    <div className={classes.wrapper}>
+      <ScrollArea>
+        <Table
+          highlightOnHover={highlightOnHover}
+          fontSize={fontSize}
+          className={classes.table}
+          striped={striped}
+          horizontalSpacing="xl"
+        >
+          <thead>
+            {table.getHeaderGroups().map((headerGroup) => (
+              <tr key={headerGroup.id} role="row">
+                {headerGroup.headers.map((header) => (
+                  <th
+                    key={header.id}
+                    role="columnheader"
+                    style={{
+                      width: header.getSize(),
+                    }}
+                    colSpan={header.colSpan}
+                  >
+                    {header.isPlaceholder ? null : (
+                      <div className={classes.headerCell}>
+                        <div className={classes.headerCellContent}>
+                          {flexRender(
+                            header.column.columnDef.header,
+                            header.getContext()
+                          )}
+                        </div>
+                      </div>
+                    )}
+                  </th>
+                ))}
+              </tr>
+            ))}
+          </thead>
+          <tbody role="rowgroup" className={classes.tbody}>
+            {table.getRowModel().rows.length > 0 &&
+              table.getRowModel().rows.map((row) => {
+                return (
+                  <tr key={row.id} role="row">
+                    {row.getVisibleCells().map((cell) => {
+                      return (
+                        <td
+                          key={cell.id}
+                          style={{
+                            width: cell.column.getSize(),
+                          }}
+                          role="cell"
+                        >
+                          <div className={classes.dataCell}>
+                            <div className={classes.dataCellContent}>
+                              {flexRender(
+                                cell.column.columnDef.cell,
+                                cell.getContext()
+                              )}
+                            </div>
+                          </div>
+                        </td>
+                      )
+                    })}
+                  </tr>
+                )
+              })}
           </tbody>
         </Table>
       </ScrollArea>
-      {rowContextMenuInfo && rowContextMenuInfo && (
-        <DataGridRowMenu
-          zIndex={rowContextMenu?.zIndex}
-          top={rowContextMenuInfo.top}
-          left={rowContextMenuInfo.left}
-          onDestroy={() => setRowContextMenuInfo(null)}
-        >
-          {rowContextMenu
-            ?.items(rowContextMenuInfo.record)
-            .map(
-              ({
-                key,
-                color,
-                disabled,
-                divider,
-                icon,
-                onClick,
-                title,
-                hidden,
-              }) =>
-                divider ? (
-                  <Divider key={key} />
-                ) : hidden ? null : (
-                  <DataGridRowMenuItem
-                    key={key}
-                    title={title}
-                    icon={icon}
-                    disabled={disabled}
-                    onClick={() => {
-                      setRowContextMenuInfo(null)
-                      onClick()
-                    }}
-                    color={color}
-                  />
-                )
-            )}
-        </DataGridRowMenu>
+      {withPagination && (
+        <Pagination
+          table={table}
+          total={total}
+          fontSize={fontSize}
+          classes={[classes.pagination]}
+        />
       )}
-      <DataGridFooter
-        page={page}
-        paginationSize={paginationSize}
-        onPageChange={handlePageChange}
-        recordsLength={recordsLength}
-        recordsPerPage={recordsPerPage}
-        totalRecords={totalRecords}
-        paginationText={paginationText}
-        horizontalSpacing="lg"
-        topBorderColor="#EAECF0"
-      />
-    </Box>
+    </div>
   )
 }
+
+export default DataGrid
