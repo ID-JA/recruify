@@ -99,7 +99,7 @@ function DataGrid<TData extends RowData>({
     }
   }, [withPagination])
 
-  const { classes } = useStyles({ withBoarder, noEllipsis })
+  const { classes, cx } = useStyles({ withBoarder, noEllipsis })
 
   return (
     <div className={classes.wrapper}>
@@ -141,8 +141,17 @@ function DataGrid<TData extends RowData>({
           <tbody role="rowgroup" className={classes.tbody}>
             {table.getRowModel().rows.length > 0 &&
               table.getRowModel().rows.map((row) => {
+                const selected =
+                  Object.keys(table.getState().rowSelection).indexOf(row.id) !==
+                  -1
                 return (
-                  <tr key={row.id} role="row">
+                  <tr
+                    key={row.id}
+                    role="row"
+                    className={cx({
+                      [classes.rowSelected]: selected,
+                    })}
+                  >
                     {row.getVisibleCells().map((cell) => {
                       return (
                         <td

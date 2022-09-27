@@ -11,8 +11,6 @@ export const getRowSelectionColumn = <TData extends RowData>(): ColumnDef<
       const value =
         (!table.getIsAllRowsSelected() && table.getIsSomePageRowsSelected()) ||
         !table.getIsAllPageRowsSelected()
-      console.log(value)
-
       table.toggleAllPageRowsSelected(value)
     }
     return (

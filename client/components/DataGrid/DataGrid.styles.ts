@@ -64,6 +64,12 @@ export default createStyles(
           borderTop: '1px solid rgb(222, 226, 230)',
         }),
       },
+      rowSelected: {
+        backgroundColor: `${theme.fn.lighten(
+          theme.colors.blue[6],
+          0.85
+        )} !important`,
+      },
     }
   }
 )
