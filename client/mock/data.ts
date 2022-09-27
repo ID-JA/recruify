@@ -1,3 +1,5 @@
+import { faker } from '@faker-js/faker'
+
 export interface ProfessionalSkillOption {
   readonly value: string
   readonly label: string
@@ -3813,3 +3815,37 @@ export const professionalSkillOptions = [
     value: '.NET',
   },
 ]
+
+export type Job = {
+  id: string
+  title: string
+  location: string
+  company: string
+  createdAt: string
+  createdBy: string
+  status: string
+  candidates: number
+  visitors: number
+}
+
+const newJob = (): Job => {
+  return {
+    id: faker.datatype.uuid(),
+    title: faker.name.jobTitle(),
+    company: faker.company.name(),
+    location: faker.address.cityName(),
+    createdAt: faker.date.past(2).toLocaleDateString(),
+    createdBy: faker.name.fullName(),
+    candidates: faker.datatype.number({
+      max: 20,
+      min: 0,
+    }),
+    visitors: faker.datatype.number({
+      max: 20,
+      min: 0,
+    }),
+    status: faker.helpers.arrayElement(['draft', 'active', 'unknown']),
+  }
+}
+
+export const demoData: Job[] = new Array(20).fill({}).map(newJob)
