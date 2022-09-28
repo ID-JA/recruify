@@ -1,4 +1,4 @@
-import { ActionIcon, Badge, Group } from '@mantine/core'
+import { ActionIcon, Badge, Divider, Group, Title } from '@mantine/core'
 import { MouseEvent } from 'react'
 import { Archive, Edit, Trash } from 'tabler-icons-react'
 import AppLayout from '../../components/AppLayout/AppLayout'
@@ -57,6 +57,12 @@ const renderActions = (record: Job) => {
 const MyJobs: NextPageWithLayout = () => {
   return (
     <div>
+      <Group align="center">
+        <Title order={1} weight={600}>
+          Jobs
+        </Title>
+      </Group>
+      <Divider my="md" />
       <DataGrid
         data={demoData}
         columns={[
@@ -78,7 +84,6 @@ const MyJobs: NextPageWithLayout = () => {
             accessorFn: (row) => row.location,
             accessorKey: 'Location',
             cell: (info) => info.getValue(),
-            size: 90,
           },
           {
             accessorFn: (row) => row.createdAt,
