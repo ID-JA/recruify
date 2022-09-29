@@ -10,9 +10,10 @@ import {
   Title,
 } from '@mantine/core'
 import Link from 'next/link'
+import { useRouter } from 'next/router'
 import { Briefcase, CurrencyDollar } from 'tabler-icons-react'
-import AppLayout from '../../../components/AppLayout/AppLayout'
-import { NextPageWithLayout } from '../../_app'
+import AppLayout from '../../../../components/AppLayout/AppLayout'
+import { NextPageWithLayout } from '../../../_app'
 
 const useStyles = createStyles((theme) => ({
   wrapper: {},
@@ -55,6 +56,13 @@ const useStyles = createStyles((theme) => ({
 
 const JobPost: NextPageWithLayout = () => {
   const { classes } = useStyles()
+  const router = useRouter()
+
+  const { companyId, jobId } = router.query
+
+  const handleClick = () => {
+    router.push(`/jobs/apply?company=${companyId}&job=${jobId}`)
+  }
 
   return (
     <Container className={classes.wrapper}>
@@ -174,7 +182,9 @@ const JobPost: NextPageWithLayout = () => {
           </Link>
         </div>
         <Group position="center" mt="md">
-          <Button size="md">Apply Now</Button>
+          <Button size="md" onClick={handleClick}>
+            Apply Now
+          </Button>
         </Group>
       </Paper>
     </Container>
