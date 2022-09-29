@@ -9,9 +9,11 @@ import {
   Text,
   Title,
 } from '@mantine/core'
+
 import Link from 'next/link'
 import { useRouter } from 'next/router'
 import { Briefcase, CurrencyDollar } from 'tabler-icons-react'
+
 import AppLayout from '../../../../components/AppLayout/AppLayout'
 import { NextPageWithLayout } from '../../../_app'
 

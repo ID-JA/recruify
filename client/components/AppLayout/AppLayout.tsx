@@ -1,5 +1,6 @@
 import { MantineProvider } from '@mantine/core'
-import React from 'react'
+import { ModalsProvider } from '@mantine/modals'
+
 import AppLayoutInner from './AppLayoutInner'
 
 export interface AppLayoutProps {
@@ -9,7 +10,9 @@ export interface AppLayoutProps {
 function AppLayout({ children }: AppLayoutProps) {
   return (
     <MantineProvider withGlobalStyles withNormalizeCSS>
-      <AppLayoutInner>{children}</AppLayoutInner>
+      <ModalsProvider>
+        <AppLayoutInner>{children}</AppLayoutInner>
+      </ModalsProvider>
     </MantineProvider>
   )
 }

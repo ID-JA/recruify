@@ -81,9 +81,10 @@ type ISignUpFormData =
       phone_number: string
     }
 
+const steps = [EmployerAccount, CompanyDetails, FinalizeDetails]
+
 export function EmployerSignUp() {
   const [state, dispatch] = useStepper()
-  const steps = [EmployerAccount, CompanyDetails, FinalizeDetails]
 
   const methods = useForm<ISignUpFormData>({
     defaultValues: steps[state.activeStep].defaultValues,

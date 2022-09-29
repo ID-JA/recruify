@@ -444,6 +444,13 @@
     "@radix-ui/react-scroll-area" "1.0.0"
     react-textarea-autosize "8.3.4"
 
+"@mantine/dates@^5.4.2":
+  version "5.4.2"
+  resolved "https://registry.yarnpkg.com/@mantine/dates/-/dates-5.4.2.tgz#dd5da24c225b58b9db7ac5eeb8201c7fe340ee47"
+  integrity sha512-6gMGn5/uLa/MzPiT9XE8YdGmBtmAQIizvaaoS8we+FImnObbIjjvcjP2EBEi4KlJUfGNX3iXfKm/Cxh8jJCdfw==
+  dependencies:
+    "@mantine/utils" "5.4.2"
+
 "@mantine/dropzone@^5.4.0":
   version "5.4.0"
   resolved "https://registry.yarnpkg.com/@mantine/dropzone/-/dropzone-5.4.0.tgz#3af029e6686baf41ccadca6be9893a4185dbf659"
@@ -464,6 +471,13 @@
   version "5.3.2"
   resolved "https://registry.yarnpkg.com/@mantine/hooks/-/hooks-5.3.2.tgz#e1e3720a25b77bc6c596507f1e07dbfbe9236792"
   integrity sha512-vgAYobmnh52I37q/lm+mIpCbjSYxv5SuwHGzl7Ep0ww/0W+5rurZgoD/IVMhvdFO1/yeJgK+REDAZFFzfU2urw==
+
+"@mantine/modals@^5.4.2":
+  version "5.4.2"
+  resolved "https://registry.yarnpkg.com/@mantine/modals/-/modals-5.4.2.tgz#5edfd75523b586a29e717f9641edd761252f7b1a"
+  integrity sha512-9GX4wvptdOipU21hMSApxUDDgdC7rN1d1Kj8oUe4DFq8YjTInLANOo4/QDO3XO0/uF9xFqaWtkjc7K9DvDJaKA==
+  dependencies:
+    "@mantine/utils" "5.4.2"
 
 "@mantine/next@^5.2.4":
   version "5.3.2"
@@ -507,6 +521,11 @@
   version "5.4.0"
   resolved "https://registry.yarnpkg.com/@mantine/utils/-/utils-5.4.0.tgz#af60d6034833c26ac3c1e92e57c844bd468a8760"
   integrity sha512-XZE168OhQxrNz9wrFYFOdGDVxDH3wP0uZ5apBezHvf0D74qyUZjGzndkfXbvAq+/mVnMZA/fKju9ydo/IXMftg==
+
+"@mantine/utils@5.4.2":
+  version "5.4.2"
+  resolved "https://registry.yarnpkg.com/@mantine/utils/-/utils-5.4.2.tgz#5cb41263a37c1bdc019b2a08e20ef49faeaacae2"
+  integrity sha512-faKJd2VEsq9hw9jR7dYBlgS8gtwWtqYtgzAJ96V5tz+gjuoDkE7St+CbP+PoPGqOWTDE0T5faRiCHbnvaYAC/A==
 
 "@next/env@12.3.0":
   version "12.3.0"
@@ -1286,6 +1305,11 @@ damerau-levenshtein@^1.0.8:
   version "1.0.8"
   resolved "https://registry.yarnpkg.com/damerau-levenshtein/-/damerau-levenshtein-1.0.8.tgz#b43d286ccbd36bc5b2f7ed41caf2d0aba1f8a6e7"
   integrity sha512-sdQSFB7+llfUcQHUQO3+B8ERRj0Oa4w9POWMI/puGtuf7gFywGmkaLCElnudfTiKZV+NvHqL0ifzdrI8Ro7ESA==
+
+dayjs@^1.11.5:
+  version "1.11.5"
+  resolved "https://registry.yarnpkg.com/dayjs/-/dayjs-1.11.5.tgz#00e8cc627f231f9499c19b38af49f56dc0ac5e93"
+  integrity sha512-CAdX5Q3YW3Gclyo5Vpqkgpj8fSdLQcRuzfX6mC6Phy0nfJ0eGYOeS7m4mt2plDWLAtA4TqTakvbboHvUxfe4iA==
 
 debug@^2.6.9:
   version "2.6.9"
