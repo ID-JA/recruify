@@ -18,12 +18,20 @@ const months = getMonthsNames('en', 'MMMM').map((month) => ({
 const validationSchema = yup.object().shape({
   job_position: yup.string().required('this field is required'),
   company_name: yup.string().required('this field is required'),
-  // current: yup.bool(), //.required('this field is required'),
+  current: yup.bool(),
   start_year: yup.string().required('this field is required'),
   start_month: yup.string().required('this field is required'),
-  end_year: yup.string().required('this field is required'),
-  end_month: yup.string().required('this field is required'),
-  exp_description: yup.string().required('this field is required'),
+  end_year: yup.string().when('current', {
+    is: undefined,
+    then: yup.string().required('this field is required'),
+    otherwise: yup.string().notRequired(),
+  }),
+  end_month: yup.string().when('current', {
+    is: undefined,
+    then: yup.string().required('this field is required'),
+    otherwise: yup.string().notRequired(),
+  }),
+  exp_description: yup.string(),
 })
 
 const defaultValues = {
@@ -46,7 +54,7 @@ function Experience() {
   } = useFormContext<typeof defaultValues>()
 
   return (
-    <div>
+    <>
       <TextInput
         styles={{
           label: {
@@ -172,7 +180,7 @@ function Experience() {
         {...register('exp_description')}
         error={errors.exp_description && errors.exp_description.message}
       />
-    </div>
+    </>
   )
 }
 

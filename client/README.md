@@ -1,5 +1,7 @@
 ### Pages v1
 
+TODO : Clean up the project and refactor code
+
 - [ ] Auth Pages
   - [x] Sign up
   - [x] Sign in

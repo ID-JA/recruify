@@ -40,38 +40,44 @@ const useStyles = createStyles(() => ({
 
 const steps = [BasicInformation, Experience, Education]
 
-type IApplyForm =
-  | {
-      school: string
-      degree: string
-      current: string
-    }
-  | {
-      full_name: string
-      phone_number: string
-    }
-  | {
-      job_position: string
-      company_name: string
-      current: string
-      start_year: string
-      start_month: string
-      end_year: string
-      end_month: string
-      exp_description: string
-    }
+// type IApplyForm =
+//   | {
+//       full_name: string
+//       phone_number: string
+//     }
+//   | {
+//       job_position: string
+//       company_name: string
+//       current: string
+//       start_year: string
+//       start_month: string
+//       end_year: string
+//       end_month: string
+//       exp_description: string
+//     }
+//   | {
+//       school: string
+//       degree: string
+//       edu_current: boolean
+//       edu_description: string
+//     }
+
+type ApplyFormType =
+  | typeof BasicInformation.defaultValues
+  | typeof Experience.defaultValues
+  | typeof Education.defaultValues
 
 function AppLyForm() {
   const [active, setActive] = useState(0)
   const { classes } = useStyles()
-  const methods = useForm<IApplyForm>({
+  const methods = useForm<ApplyFormType>({
     defaultValues: steps[active].defaultValues,
     resolver: yupResolver(steps[active].validationSchema),
   })
 
   const { handleSubmit } = methods
 
-  const onSubmit = (values: IApplyForm) => {
+  const onSubmit = (values: ApplyFormType) => {
     if (active === 2) {
       console.log(values)
     } else {

@@ -6,15 +6,19 @@ import * as yup from 'yup'
 const validationSchema = yup.object().shape({
   school: yup.string().required('This field is required'),
   degree: yup.string().required('This field is required'),
-  // edu_current: yup.bool(),
-  degree_year: yup.string().required('This field is required'),
-  edu_description: yup.string().required('This field is required'),
+  edu_current: yup.bool(),
+  degree_year: yup.string().when('edu_current', {
+    is: undefined,
+    then: yup.string().required('This field is required'),
+    otherwise: yup.string().notRequired(),
+  }),
+  edu_description: yup.string(),
 })
 
 const defaultValues = {
   school: '',
   degree: '',
-  edu_current: 1,
+  edu_current: undefined,
   degree_year: '',
   edu_description: '',
 }
@@ -35,7 +39,7 @@ function Education() {
   } = useFormContext<typeof defaultValues>()
 
   return (
-    <div>
+    <>
       <TextInput
         styles={{
           label: {
@@ -102,7 +106,7 @@ function Education() {
         {...register('edu_description')}
         error={errors.edu_description && errors.edu_description.message}
       />
-    </div>
+    </>
   )
 }
 
