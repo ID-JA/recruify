@@ -3,21 +3,21 @@ import { useFormContext } from 'react-hook-form'
 import * as yup from 'yup'
 
 const validationSchema = yup.object().shape({
-  org_name: yup.string().required('Company Name is required'),
+  companyName: yup.string().required('Company Name is required'),
   location: yup.string().required(),
-  org_website: yup.string().notRequired(),
+  website: yup.string().notRequired(),
 })
 
 interface ICompanyDetails {
-  org_name: string
+  companyName: string
   location: string
-  org_website: string
+  website: string
 }
 
 const defaultValues = {
-  org_name: '',
+  companyName: '',
   location: '',
-  org_website: '',
+  website: '',
 }
 
 function CompanyDetails() {
@@ -35,8 +35,8 @@ function CompanyDetails() {
         label="Company Name"
         type="text"
         mb="20px"
-        {...register('org_name')}
-        error={errors.org_name && errors.org_name.message}
+        {...register('companyName')}
+        error={errors.companyName && errors.companyName.message}
       />
       <TextInput
         label="Location"
@@ -51,7 +51,7 @@ function CompanyDetails() {
         type="text"
         mb="20px"
         placeholder="Optional"
-        {...register('org_website')}
+        {...register('website')}
       />
     </>
   )

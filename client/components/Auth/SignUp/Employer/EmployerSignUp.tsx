@@ -7,10 +7,14 @@ import {
   Progress,
   Title,
 } from '@mantine/core'
+import { useMutation } from '@tanstack/react-query'
+import { AxiosError } from 'axios'
+import { useRouter } from 'next/router'
 
 import { useReducer } from 'react'
 import { FormProvider, useForm } from 'react-hook-form'
 
+import axios from 'utils/axios'
 import { CompanyDetails, EmployerAccount, FinalizeDetails } from './steps'
 
 type Action =
@@ -72,19 +76,26 @@ type ISignUpFormData =
       password: string
     }
   | {
-      org_name: string
-      zipCode: string
-      org_website: string
+      companyName: string
+      companyLocation: string
+      website: string
     }
   | {
-      position_user: string
-      phone_number: string
+      position: string
+      zipCode: string
+      phoneNumber: string
     }
 
 const steps = [EmployerAccount, CompanyDetails, FinalizeDetails]
 
+const createUserAction = async (body: Record<string, string>) => {
+  const res = await axios.post('/signup', body)
+  return res
+}
+
 export function EmployerSignUp() {
   const [state, dispatch] = useStepper()
+  const router = useRouter()
 
   const methods = useForm<ISignUpFormData>({
     defaultValues: steps[state.activeStep].defaultValues,
@@ -93,18 +104,17 @@ export function EmployerSignUp() {
 
   const { handleSubmit } = methods
 
-  const onSubmit = (values: Record<string, string | number>) => {
-    // TODO: Submit data to server after step 3
+  const mutate = useMutation(createUserAction, {
+    onSuccess: (response) => {
+      console.log(response.data)
+      router.push('/dashboard')
+    },
+    onError: (error: AxiosError) => console.log(error?.response?.data),
+  })
+
+  const onSubmit = (values: Record<string, string>) => {
     if (state.activeStep === 2) {
-      alert(
-        JSON.stringify(
-          {
-            ...values,
-          },
-          null,
-          2
-        )
-      )
+      mutate.mutate(values)
     } else {
       dispatch({
         type: 'setData',
@@ -138,7 +148,14 @@ export function EmployerSignUp() {
                     <Step.Component key={`create-multistep-${Step.key}`} />
                   )
               )}
-              <Button fullWidth size="md" radius="sm" type="submit" mb="md">
+              <Button
+                fullWidth
+                size="md"
+                radius="sm"
+                type="submit"
+                mb="md"
+                disabled={mutate.isLoading}
+              >
                 {state.activeStep > 0
                   ? state.activeStep === steps.length - 1
                     ? 'Create Account'

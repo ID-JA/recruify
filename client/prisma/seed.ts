@@ -16,25 +16,22 @@ async function seed() {
 
   const hashedPassword = await bcrypt.hash('fastRecruiter', 10)
 
-  // const users = await Promise.all(
-  // 	Array.from({ length: 100 }, async () => {
-  // 		const userData = createUser()
-  // 		const user = await prisma.user.create({
-  // 			data: {
-  // 				...userData,
-  // 				contactInfo: {
-  // 					create: createContactInfo(),
-  // 				},
-  // 				password: {
-  // 					create: {
-  // 						hash: bcrypt.hashSync(userData.username.toUpperCase(), 10),
-  // 					},
-  // 				},
-  // 			},
-  // 		})
-  // 		return user
-  // 	}),
-  // )
+  const users = await Promise.all(
+    Array.from({ length: 100 }, async () => {
+      const userData = createUser()
+      const user = await prisma.user.create({
+        data: {
+          ...userData,
+          password: {
+            create: {
+              hash: bcrypt.hashSync('superSecretKey@2022'.toUpperCase(), 10),
+            },
+          },
+        },
+      })
+      return user
+    })
+  )
 
   const idaissaUser = createUser()
 

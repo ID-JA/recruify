@@ -13,10 +13,14 @@ import {
   TextInput,
   Title,
 } from '@mantine/core'
+import { useMutation } from '@tanstack/react-query'
+import { AxiosError } from 'axios'
 import Link from 'next/link'
+import { useRouter } from 'next/router'
 import { useState } from 'react'
 import { useForm } from 'react-hook-form'
 import { BrandGoogle } from 'tabler-icons-react'
+import axios from 'utils/axios'
 import * as yup from 'yup'
 
 const useStyles = createStyles((theme) => ({
@@ -44,9 +48,13 @@ const defaultValues = {
   password: '',
 }
 
-// NOTE: Use `SegmentedControl` instead of Tabs to switch between "Candidate Form" & "Employer Form"to reduce sign up code
+const authenticateUser = async (body: Record<string, string>) => {
+  const res = await axios.post('/login', body)
+  return res
+}
 
 export function SignIn() {
+  const router = useRouter()
   const [activeTab, setActiveTab] = useState('job_seeker')
   const { classes } = useStyles()
   const methods = useForm({
@@ -61,8 +69,17 @@ export function SignIn() {
     formState: { errors },
   } = methods
 
+  const mutate = useMutation(authenticateUser, {
+    onSuccess: (response) => {
+      localStorage.setItem('user', JSON.stringify(response.data))
+      router.push('/dashboard')
+    },
+    onError: (error: AxiosError) => console.log(error?.response?.data),
+  })
+
   const onSubmit = (values: typeof defaultValues) => {
     console.log(values)
+    mutate.mutate(values)
   }
 
   const handleChange = (v: string) => {

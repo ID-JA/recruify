@@ -43,7 +43,7 @@ const steps = [BasicInformation, Experience, Education]
 // type IApplyForm =
 //   | {
 //       full_name: string
-//       phone_number: string
+//       phoneNumber: string
 //     }
 //   | {
 //       job_position: string

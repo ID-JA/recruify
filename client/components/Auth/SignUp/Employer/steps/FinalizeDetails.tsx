@@ -3,20 +3,20 @@ import { Controller, useFormContext } from 'react-hook-form'
 import * as yup from 'yup'
 
 const validationSchema = yup.object().shape({
-  position_user: yup.string().required('please select an position'),
-  phone_number: yup.string().required('phone number is required'),
+  position: yup.string().required('please select an position'),
+  phoneNumber: yup.string().required('phone number is required'),
 })
 
 type FinalizeDetailsType = {
-  position_user: string
+  position: string
   zipCode: string
-  phone_number: string
+  phoneNumber: string
 }
 
 const defaultValues = {
   zipCode: '',
-  position_user: '',
-  phone_number: '',
+  position: '',
+  phoneNumber: '',
 }
 
 const POSITION_USER = [
@@ -65,11 +65,11 @@ function FinalizeDetails() {
             mb="20px"
             data={POSITION_USER}
             {...field}
-            error={errors.position_user && errors.position_user.message}
+            error={errors.position && errors.position.message}
           />
         )}
         control={control}
-        name="position_user"
+        name="position"
       />
       <TextInput
         label="ZipCode"
@@ -81,8 +81,8 @@ function FinalizeDetails() {
       <TextInput
         label="Phone number"
         mb="20px"
-        {...register('phone_number')}
-        error={errors.phone_number && errors.phone_number.message}
+        {...register('phoneNumber')}
+        error={errors.phoneNumber && errors.phoneNumber.message}
       />
     </>
   )

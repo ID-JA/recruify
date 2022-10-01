@@ -12,7 +12,7 @@ datasource db {
 
 model User {
   id       String  @id @default(uuid())
-  email    String? @unique
+  email    String  @unique
   name     String
   imageUrl String?
 
@@ -33,6 +33,13 @@ model Employer {
   user   User?  @relation(fields: [userId], references: [id], onDelete: Cascade, onUpdate: Cascade)
   userId String @unique
 
+  zipCode         String
+  position        String
+  phoneNumber     String
+  companyName     String
+  companyLocation String
+  companyWebsite  String?
+
   createdAt DateTime @default(now())
   updatedAt DateTime @updatedAt
 
@@ -47,7 +54,7 @@ model Job {
   employmentType     String
   description        String
   skills             String
-  whyOurCompany      String
+  whyUs              String
   companyDescription String
 
   createdAt DateTime @default(now())
@@ -67,15 +74,15 @@ model Application {
 }
 
 model Experience {
-  id          String  @id @default(cuid())
-  title       String
-  company     String
-  working     Boolean
-  startYear   String
-  startMonth  String
-  endYear     String?
-  endMonth    String?
-  description String
+  id           String  @id @default(cuid())
+  title        String
+  company      String
+  stillWorking Boolean
+  startYear    String
+  startMonth   String
+  endYear      String?
+  endMonth     String?
+  description  String
 
   application   Application @relation(fields: [applicationId], references: [id], onDelete: Cascade, onUpdate: Cascade)
   applicationId String

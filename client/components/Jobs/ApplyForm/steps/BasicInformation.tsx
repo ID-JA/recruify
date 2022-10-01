@@ -4,13 +4,13 @@ import * as yup from 'yup'
 
 const validationSchema = yup.object().shape({
   full_name: yup.string().required('this field is required'),
-  phone_number: yup.string().required('this field is required'),
+  phoneNumber: yup.string().required('this field is required'),
   email: yup.string().email().required('this field is required'),
 })
 
 const defaultValues = {
   full_name: '',
-  phone_number: '',
+  phoneNumber: '',
   email: '',
 }
 function BasicInformation() {
@@ -50,8 +50,8 @@ function BasicInformation() {
         }}
         mb="lg"
         label="Phone Number"
-        {...register('phone_number')}
-        error={errors.phone_number && errors.phone_number.message}
+        {...register('phoneNumber')}
+        error={errors.phoneNumber && errors.phoneNumber.message}
       />
     </>
   )

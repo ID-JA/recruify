@@ -46,14 +46,14 @@ const validationSchema = yup.object().shape({
   name: yup.string().required(),
   email: yup.string().email().required(),
 
-  phone_number: yup.string().required(),
+  phoneNumber: yup.string().required(),
   position: yup.string().required(),
 })
 
 const defaultValues = {
   email: '',
   name: '',
-  phone_number: '',
+  phoneNumber: '',
   position: '',
 }
 
@@ -182,8 +182,8 @@ function PersonalInfo() {
             },
           }}
           label="Phone number"
-          error={errors.phone_number && errors.phone_number.message}
-          {...register('phone_number')}
+          error={errors.phoneNumber && errors.phoneNumber.message}
+          {...register('phoneNumber')}
         />
         <Group position="right" mt="lg">
           <Button variant="light" onClick={onCancel}>
