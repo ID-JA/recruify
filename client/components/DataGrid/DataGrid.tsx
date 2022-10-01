@@ -103,7 +103,7 @@ function DataGrid<TData extends RowData>({
 
   return (
     <div className={classes.wrapper}>
-      <ScrollArea>
+      <ScrollArea pb="md">
         <Table
           highlightOnHover={highlightOnHover}
           fontSize={fontSize}

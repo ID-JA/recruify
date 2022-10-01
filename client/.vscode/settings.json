@@ -6,11 +6,15 @@
     "plaintext",
     "mdx",
     "typescriptreact",
-    "typescript"
+    "typescript",
+    "prisma"
   ],
   "spellright.parserByClass": {
     "mdx": {
       "parser": "markdown"
+    },
+    "prisma": {
+      "parser": "plain"
     }
   }
 }

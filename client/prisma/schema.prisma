@@ -1,0 +1,94 @@
+// This is your Prisma schema file,
+// learn more about it in the docs: https://pris.ly/d/prisma-schema
+
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "sqlite"
+  url      = env("DATABASE_URL")
+}
+
+model User {
+  id       String  @id @default(uuid())
+  email    String? @unique
+  name     String
+  imageUrl String?
+
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+
+  password Password?
+  Employer Employer?
+}
+
+model Password {
+  hash   String
+  user   User   @relation(fields: [userId], references: [id], onDelete: Cascade, onUpdate: Cascade)
+  userId String @unique
+}
+
+model Employer {
+  user   User?  @relation(fields: [userId], references: [id], onDelete: Cascade, onUpdate: Cascade)
+  userId String @unique
+
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+
+  jobs Job[]
+}
+
+model Job {
+  id                 String @id @default(cuid())
+  title              String
+  location           String
+  address            String
+  employmentType     String
+  description        String
+  skills             String
+  whyOurCompany      String
+  companyDescription String
+
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+
+  empolyer   Employer @relation(fields: [employerId], references: [userId], onDelete: Cascade, onUpdate: Cascade)
+  employerId String
+}
+
+model Application {
+  id         String       @id @default(cuid())
+  name       String
+  email      String
+  phone      String
+  Experience Experience[]
+  Eduction   Eduction[]
+}
+
+model Experience {
+  id          String  @id @default(cuid())
+  title       String
+  company     String
+  working     Boolean
+  startYear   String
+  startMonth  String
+  endYear     String?
+  endMonth    String?
+  description String
+
+  application   Application @relation(fields: [applicationId], references: [id], onDelete: Cascade, onUpdate: Cascade)
+  applicationId String
+}
+
+model Eduction {
+  id          String  @id @default(cuid())
+  school      String
+  degree      String
+  inProgress  Boolean
+  degreeYear  String?
+  description String
+
+  application   Application @relation(fields: [applicationId], references: [id], onDelete: Cascade, onUpdate: Cascade)
+  applicationId String
+}
