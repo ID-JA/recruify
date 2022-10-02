@@ -1,9 +1,8 @@
 import { ActionIcon, Badge, Divider, Group, Title } from '@mantine/core'
 import { MouseEvent } from 'react'
 import { Archive, Edit, Trash } from 'tabler-icons-react'
-import AppLayout from '../../components/AppLayout/AppLayout'
-import DataGrid from '../../components/DataGrid/DataGrid'
-import { demoData, Job } from '../../mock/data'
+import { MainLayout, DataGrid } from '~/components'
+import { demoData, Job } from '~/mock/data'
 import { NextPageWithLayout } from '../_app'
 
 const renderStatus = (status: string) => {
@@ -135,7 +134,7 @@ const MyJobs: NextPageWithLayout = () => {
 }
 
 MyJobs.getLayout = function getLayout(page) {
-  return <AppLayout>{page}</AppLayout>
+  return <MainLayout>{page}</MainLayout>
 }
 
 export default MyJobs

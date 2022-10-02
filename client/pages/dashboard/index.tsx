@@ -1,5 +1,5 @@
 import { Text, Title } from '@mantine/core'
-import AppLayout from '../../components/AppLayout/AppLayout'
+import { MainLayout } from '~/components'
 import { NextPageWithLayout } from '../_app'
 
 const Dashboard: NextPageWithLayout = () => {
@@ -14,7 +14,7 @@ const Dashboard: NextPageWithLayout = () => {
 }
 
 Dashboard.getLayout = function getLayout(page) {
-  return <AppLayout>{page}</AppLayout>
+  return <MainLayout>{page}</MainLayout>
 }
 
 export default Dashboard

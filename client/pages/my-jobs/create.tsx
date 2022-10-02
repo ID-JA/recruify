@@ -1,6 +1,5 @@
 import { Divider, Title } from '@mantine/core'
-import AppLayout from '../../components/AppLayout/AppLayout'
-import CreateJobForm from '../../components/Jobs/CreateJobForm'
+import { MainLayout, CreateJob } from '~/components'
 import { NextPageWithLayout } from '../_app'
 
 const CreateNewJob: NextPageWithLayout = () => {
@@ -10,13 +9,13 @@ const CreateNewJob: NextPageWithLayout = () => {
         Post a job
       </Title>
       <Divider my="lg" />
-      <CreateJobForm />
+      <CreateJob />
     </>
   )
 }
 
 CreateNewJob.getLayout = function getLayout(page) {
-  return <AppLayout>{page}</AppLayout>
+  return <MainLayout>{page}</MainLayout>
 }
 
 export default CreateNewJob

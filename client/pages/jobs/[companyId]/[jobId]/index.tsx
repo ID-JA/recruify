@@ -14,7 +14,7 @@ import Link from 'next/link'
 import { useRouter } from 'next/router'
 import { Briefcase, CurrencyDollar } from 'tabler-icons-react'
 
-import AppLayout from '../../../../components/AppLayout/AppLayout'
+import { MainLayout } from '~/components'
 import { NextPageWithLayout } from '../../../_app'
 
 const useStyles = createStyles((theme) => ({
@@ -195,4 +195,4 @@ const JobPost: NextPageWithLayout = () => {
 
 export default JobPost
 
-JobPost.getLayout = (page) => <AppLayout>{page}</AppLayout>
+JobPost.getLayout = (page) => <MainLayout>{page}</MainLayout>

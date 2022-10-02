@@ -1,5 +1,4 @@
-import AppLayout from '../../components/AppLayout/AppLayout'
-import ProfileLayout from '../../components/ProfileLayout/ProfileLayout'
+import { MainLayout, ProfileLayout } from '~/components'
 import { NextPageWithLayout } from '../_app'
 
 const Company: NextPageWithLayout = () => {
@@ -8,9 +7,9 @@ const Company: NextPageWithLayout = () => {
 
 Company.getLayout = (page) => {
   return (
-    <AppLayout>
+    <MainLayout>
       <ProfileLayout>{page}</ProfileLayout>
-    </AppLayout>
+    </MainLayout>
   )
 }
 export default Company

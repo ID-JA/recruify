@@ -1,6 +1,6 @@
 import { useRouter } from 'next/router'
-import AppLayout from '../../../components/AppLayout/AppLayout'
-import { NextPageWithLayout } from '../../_app'
+import { NextPageWithLayout } from '~/pages/_app'
+import { MainLayout } from '~/components'
 
 const Edit: NextPageWithLayout = () => {
   const router = useRouter()
@@ -13,5 +13,5 @@ const Edit: NextPageWithLayout = () => {
 export default Edit
 
 Edit.getLayout = (page) => {
-  return <AppLayout>{page}</AppLayout>
+  return <MainLayout>{page}</MainLayout>
 }

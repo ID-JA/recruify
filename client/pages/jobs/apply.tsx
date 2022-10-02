@@ -1,3 +1,3 @@
-import AppLyForm from '../../components/Jobs/ApplyForm/ApplyFrom'
+import { AppLyForm } from '~/components'
 
 export default AppLyForm
