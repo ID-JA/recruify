@@ -5,11 +5,10 @@ const Company: NextPageWithLayout = () => {
   return <div>Hiring Company page</div>
 }
 
-Company.getLayout = (page) => {
-  return (
-    <MainLayout>
-      <ProfileLayout>{page}</ProfileLayout>
-    </MainLayout>
-  )
-}
+Company.getLayout = (page) => (
+  <MainLayout>
+    <ProfileLayout>{page}</ProfileLayout>
+  </MainLayout>
+)
+
 export default Company

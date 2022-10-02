@@ -7,14 +7,10 @@ import {
   Progress,
   Title,
 } from '@mantine/core'
-import { useMutation } from '@tanstack/react-query'
-import { AxiosError } from 'axios'
-import { useRouter } from 'next/router'
 
 import { useReducer } from 'react'
 import { FormProvider, useForm } from 'react-hook-form'
 
-import axios from 'utils/axios'
 import { CompanyDetails, EmployerAccount, FinalizeDetails } from './steps'
 
 type Action =
@@ -88,14 +84,8 @@ type ISignUpFormData =
 
 const steps = [EmployerAccount, CompanyDetails, FinalizeDetails]
 
-const createUserAction = async (body: Record<string, string>) => {
-  const res = await axios.post('/signup', body)
-  return res
-}
-
 export function EmployerSignUp() {
   const [state, dispatch] = useStepper()
-  const router = useRouter()
 
   const methods = useForm<ISignUpFormData>({
     defaultValues: steps[state.activeStep].defaultValues,
@@ -104,17 +94,9 @@ export function EmployerSignUp() {
 
   const { handleSubmit } = methods
 
-  const mutate = useMutation(createUserAction, {
-    onSuccess: (response) => {
-      console.log(response.data)
-      router.push('/dashboard')
-    },
-    onError: (error: AxiosError) => console.log(error?.response?.data),
-  })
-
   const onSubmit = (values: Record<string, string>) => {
     if (state.activeStep === 2) {
-      mutate.mutate(values)
+      console.log('submitting...')
     } else {
       dispatch({
         type: 'setData',
@@ -126,7 +108,18 @@ export function EmployerSignUp() {
 
   return (
     <>
-      <Progress value={state.progress} radius="xs" />
+      <Progress
+        value={state.progress}
+        radius="xs"
+        styles={{
+          root: {
+            borderRadius: '0 !important',
+            '& > div': {
+              borderRadius: '0 !important',
+            },
+          },
+        }}
+      />
       <Container mt="30px">
         <Center mb="md">
           <Title>FastRecruiter</Title>
@@ -148,14 +141,7 @@ export function EmployerSignUp() {
                     <Step.Component key={`create-multistep-${Step.key}`} />
                   )
               )}
-              <Button
-                fullWidth
-                size="md"
-                radius="sm"
-                type="submit"
-                mb="md"
-                disabled={mutate.isLoading}
-              >
+              <Button fullWidth size="md" radius="sm" type="submit" mb="md">
                 {state.activeStep > 0
                   ? state.activeStep === steps.length - 1
                     ? 'Create Account'

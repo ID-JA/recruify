@@ -14,8 +14,6 @@ const CreateNewJob: NextPageWithLayout = () => {
   )
 }
 
-CreateNewJob.getLayout = function getLayout(page) {
-  return <MainLayout>{page}</MainLayout>
-}
+CreateNewJob.getLayout = (page) => <MainLayout>{page}</MainLayout>
 
 export default CreateNewJob

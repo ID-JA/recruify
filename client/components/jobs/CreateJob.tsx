@@ -1,14 +1,5 @@
 import { yupResolver } from '@hookform/resolvers/yup'
-import {
-  Autocomplete,
-  AutocompleteProps,
-  Button,
-  Group,
-  Select,
-  Text,
-  Textarea,
-  TextInput,
-} from '@mantine/core'
+import { Button, Group, Select, Text, Textarea, TextInput } from '@mantine/core'
 import { useDebouncedValue } from '@mantine/hooks'
 import { ToolbarControl } from '@mantine/rte/lib/components/Toolbar/controls'
 
@@ -225,12 +216,4 @@ function CreateJob() {
   )
 }
 
-const CustomAutoComplete = React.forwardRef<
-  HTMLInputElement,
-  AutocompleteProps
->((props: AutocompleteProps, ref) => {
-  return <Autocomplete ref={ref} {...props} />
-})
-
-CustomAutoComplete.displayName = 'CustomAutoComplete'
 export { CreateJob }

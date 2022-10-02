@@ -5,20 +5,12 @@ import {
 } from '~/components'
 import { NextPageWithLayout } from '../_app'
 
-const CompanyInfo: NextPageWithLayout = () => {
-  return (
-    <>
-      <CompanyProfile />
-    </>
-  )
-}
+const CompanyInfo: NextPageWithLayout = () => <CompanyProfile />
 
-CompanyInfo.getLayout = (page) => {
-  return (
-    <MainLayout>
-      <ProfileLayout>{page}</ProfileLayout>
-    </MainLayout>
-  )
-}
+CompanyInfo.getLayout = (page) => (
+  <MainLayout>
+    <ProfileLayout>{page}</ProfileLayout>
+  </MainLayout>
+)
 
 export default CompanyInfo

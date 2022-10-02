@@ -12,6 +12,4 @@ const Edit: NextPageWithLayout = () => {
 
 export default Edit
 
-Edit.getLayout = (page) => {
-  return <MainLayout>{page}</MainLayout>
-}
+Edit.getLayout = (page) => <MainLayout>{page}</MainLayout>

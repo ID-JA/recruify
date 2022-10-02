@@ -7,21 +7,18 @@ import {
   ChangePassword,
 } from '~/components'
 
-const Details: NextPageWithLayout = () => {
-  return (
-    <>
-      <PersonalInfo />
-      <Divider my="lg" />
-      <ChangePassword />
-    </>
-  )
-}
+const Details: NextPageWithLayout = () => (
+  <>
+    <PersonalInfo />
+    <Divider my="lg" />
+    <ChangePassword />
+  </>
+)
 
-Details.getLayout = (page) => {
-  return (
-    <MainLayout>
-      <ProfileLayout>{page}</ProfileLayout>
-    </MainLayout>
-  )
-}
+Details.getLayout = (page) => (
+  <MainLayout>
+    <ProfileLayout>{page}</ProfileLayout>
+  </MainLayout>
+)
+
 export default Details
