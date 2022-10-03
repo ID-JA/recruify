@@ -1,21 +1,21 @@
 const userLinks = [
   {
-    to: '/user/details',
-    label: 'Users',
+    to: '/settings/user-details',
+    label: 'User',
     disabled: false,
   },
   {
-    to: '/user/company',
+    to: '/settings/company',
     label: 'Hiring Companies',
     disabled: true,
   },
   {
-    to: '/user/company-info',
+    to: '/settings/company-info',
     label: 'Company info',
     disabled: false,
   },
   {
-    to: '/user/options',
+    to: '/settings/options',
     label: 'Options',
     disabled: true,
   },

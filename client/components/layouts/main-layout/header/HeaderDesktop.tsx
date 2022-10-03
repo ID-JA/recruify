@@ -10,7 +10,7 @@ export function HeaderDesktop({ navbarOpened, toggleNavbar }: HeaderProps) {
   const { classes } = useStyles()
 
   return (
-    <div className={classes.header}>
+    <header className={classes.header}>
       <Burger
         className={classes.burger}
         opened={navbarOpened}
@@ -25,6 +25,6 @@ export function HeaderDesktop({ navbarOpened, toggleNavbar }: HeaderProps) {
       </div>
 
       <Avatar radius="xl" color="blue" mr="md" />
-    </div>
+    </header>
   )
 }

@@ -1,10 +1,12 @@
 import { useMediaQuery } from '@mantine/hooks'
 import { useRouter } from 'next/router'
 import { useState } from 'react'
+
 import {
   shouldExcludeHeader,
   shouldExcludeNavbar,
-} from '../../../utils/exclude-layout'
+} from '~/utils/exclude-layout'
+
 import { AppLayoutProps } from './MainLayout'
 import useStyles from './MainLayoutInner.styles'
 import Header from './header/Header'
@@ -38,9 +40,9 @@ function MainLayoutInner({ children }: AppLayoutProps) {
         <NavBar opened={navbarOpened} onClose={() => setNavBarState(false)} />
       )}
       <main className={classes.main}>
-        <div className={classes.content}>
-          <div className={classes.wrapper}>{children}</div>
-        </div>
+        {/* <div className={classes.content}> */}
+        <div className={classes.wrapper}>{children}</div>
+        {/* </div> */}
       </main>
     </div>
   )

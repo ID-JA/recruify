@@ -21,13 +21,8 @@ const mainLinksArr = [
     label: 'Jobs',
     icon: Briefcase,
   },
-  // {
-  //   to: '/messages',
-  //   label: 'Messages',
-  //   icon: Mail,
-  // },
   {
-    to: '/settings',
+    to: '/settings/user-details',
     label: 'Settings',
     icon: Settings,
   },
