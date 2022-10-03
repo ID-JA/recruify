@@ -1,17 +1,17 @@
 {
   "format": 1,
   "restore": {
-    "D:\\MyProjects\\fast-recruiter\\server\\FastRecruiter\\FastRecruiter.API\\FastRecruiter.API.csproj": {}
+    "D:\\MyProjects\\fast-recruiter\\server\\FastRecruiter.API\\FastRecruiter.API.csproj": {}
   },
   "projects": {
-    "D:\\MyProjects\\fast-recruiter\\server\\FastRecruiter\\FastRecruiter.API\\FastRecruiter.API.csproj": {
+    "D:\\MyProjects\\fast-recruiter\\server\\FastRecruiter.API\\FastRecruiter.API.csproj": {
       "version": "1.0.0",
       "restore": {
-        "projectUniqueName": "D:\\MyProjects\\fast-recruiter\\server\\FastRecruiter\\FastRecruiter.API\\FastRecruiter.API.csproj",
+        "projectUniqueName": "D:\\MyProjects\\fast-recruiter\\server\\FastRecruiter.API\\FastRecruiter.API.csproj",
         "projectName": "FastRecruiter.API",
-        "projectPath": "D:\\MyProjects\\fast-recruiter\\server\\FastRecruiter\\FastRecruiter.API\\FastRecruiter.API.csproj",
+        "projectPath": "D:\\MyProjects\\fast-recruiter\\server\\FastRecruiter.API\\FastRecruiter.API.csproj",
         "packagesPath": "C:\\Users\\idais\\.nuget\\packages\\",
-        "outputPath": "D:\\MyProjects\\fast-recruiter\\server\\FastRecruiter\\FastRecruiter.API\\obj\\",
+        "outputPath": "D:\\MyProjects\\fast-recruiter\\server\\FastRecruiter.API\\obj\\",
         "projectStyle": "PackageReference",
         "fallbackFolders": [
           "C:\\Program Files (x86)\\Microsoft Visual Studio\\Shared\\NuGetPackages"
@@ -44,6 +44,32 @@
         "net6.0": {
           "targetAlias": "net6.0",
           "dependencies": {
+            "Microsoft.AspNetCore.Authentication.JwtBearer": {
+              "target": "Package",
+              "version": "[6.0.9, )"
+            },
+            "Microsoft.AspNetCore.Identity.EntityFrameworkCore": {
+              "target": "Package",
+              "version": "[6.0.9, )"
+            },
+            "Microsoft.EntityFrameworkCore": {
+              "target": "Package",
+              "version": "[6.0.9, )"
+            },
+            "Microsoft.EntityFrameworkCore.SqlServer": {
+              "target": "Package",
+              "version": "[6.0.9, )"
+            },
+            "Microsoft.EntityFrameworkCore.Tools": {
+              "include": "Runtime, Build, Native, ContentFiles, Analyzers, BuildTransitive",
+              "suppressParent": "All",
+              "target": "Package",
+              "version": "[6.0.9, )"
+            },
+            "Newtonsoft.Json": {
+              "target": "Package",
+              "version": "[13.0.1, )"
+            },
             "Swashbuckle.AspNetCore": {
               "target": "Package",
               "version": "[6.2.3, )"

@@ -1,6 +1,12 @@
+using FastRecruiter.API.Models;
+using Microsoft.EntityFrameworkCore;
+
 var builder = WebApplication.CreateBuilder(args);
+var CS = builder.Configuration.GetConnectionString("DefaultConnection");
 
 // Add services to the container.
+
+builder.Services.AddDbContext<ApplicationDbContext>(option => option.UseSqlServer(CS, opt => opt.MigrationsAssembly(typeof(ApplicationDbContext).Assembly.FullName)));
 
 builder.Services.AddControllers();
 // Learn more about configuring Swagger/OpenAPI at https://aka.ms/aspnetcore/swashbuckle
