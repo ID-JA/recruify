@@ -13,7 +13,7 @@ import BasicInformation from './steps/BasicInformation'
 import Education from './steps/Education'
 import Experience from './steps/Experience'
 
-const useStyles = createStyles(() => ({
+export const useStyles = createStyles(() => ({
   titleWrapper: {
     marginBottom: 24,
   },
@@ -36,31 +36,18 @@ const useStyles = createStyles(() => ({
     fontSize: '16px',
     lineHeight: 1.5,
   },
+  row: {
+    display: 'flex',
+    flexWrap: 'wrap',
+    gap: 16,
+    marginBottom: 24,
+    '& > div': {
+      flexGrow: 1,
+    },
+  },
 }))
 
 const steps = [BasicInformation, Experience, Education]
-
-// type IApplyForm =
-//   | {
-//       full_name: string
-//       phoneNumber: string
-//     }
-//   | {
-//       job_position: string
-//       company_name: string
-//       current: string
-//       start_year: string
-//       start_month: string
-//       end_year: string
-//       end_month: string
-//       exp_description: string
-//     }
-//   | {
-//       school: string
-//       degree: string
-//       edu_current: boolean
-//       edu_description: string
-//     }
 
 type ApplyFormType =
   | typeof BasicInformation.defaultValues
@@ -71,7 +58,11 @@ function AppLyForm() {
   const [active, setActive] = useState(0)
   const { classes } = useStyles()
   const methods = useForm<ApplyFormType>({
-    defaultValues: steps[active].defaultValues,
+    defaultValues: {
+      ...BasicInformation.defaultValues,
+      ...Experience.defaultValues,
+      ...Education.defaultValues,
+    },
     resolver: yupResolver(steps[active].validationSchema),
   })
 
@@ -86,7 +77,7 @@ function AppLyForm() {
   }
 
   return (
-    <Container size="sm">
+    <Container size="sm" py="xl">
       <Paper withBorder p="xl">
         <FormProvider {...methods}>
           <form onSubmit={handleSubmit(onSubmit)}>

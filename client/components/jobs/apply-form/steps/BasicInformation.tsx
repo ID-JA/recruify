@@ -9,7 +9,7 @@ const validationSchema = yup.object().shape({
 })
 
 const defaultValues = {
-  full_name: '',
+  full_name: 'Jamal Id Aissa',
   phoneNumber: '',
   email: '',
 }

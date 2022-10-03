@@ -2,6 +2,7 @@ import { Checkbox, Select, Textarea, TextInput } from '@mantine/core'
 import { getMonthsNames, getYearsRange } from '@mantine/dates'
 import { Controller, useFormContext } from 'react-hook-form'
 import * as yup from 'yup'
+import { useStyles } from '../ApplyFrom'
 
 const years = getYearsRange({ from: 1930, to: 2022 })
   .reverse()
@@ -14,6 +15,8 @@ const months = getMonthsNames('en', 'MMMM').map((month) => ({
   label: month,
   value: month,
 }))
+
+
 
 const validationSchema = yup.object().shape({
   job_position: yup.string().required('this field is required'),
@@ -35,7 +38,7 @@ const validationSchema = yup.object().shape({
 })
 
 const defaultValues = {
-  job_position: '',
+  job_position: 'sa',
   company_name: '',
   current: undefined,
   start_year: '',
@@ -46,6 +49,7 @@ const defaultValues = {
 }
 
 function Experience() {
+  const { classes } = useStyles()
   const {
     register,
     control,
@@ -89,24 +93,24 @@ function Experience() {
         )}
         control={control}
       />
-      <div>
+      <div className={classes.row}>
         <Controller
           name="start_year"
+          control={control}
           render={({ field }) => (
             <Select
               label="Start Year"
+              data={years}
+              error={errors.start_year && errors.start_year.message}
               styles={{
                 label: {
                   marginBottom: '12px',
                 },
               }}
-              data={years}
               {...register('start_year')}
               {...field}
-              error={errors.start_year && errors.start_year.message}
             />
           )}
-          control={control}
         />
         <Controller
           name="start_month"
@@ -128,7 +132,7 @@ function Experience() {
         />
       </div>
       {!watch('current') && (
-        <div>
+        <div className={classes.row}>
           <Controller
             name="end_year"
             render={({ field }) => (
@@ -170,15 +174,15 @@ function Experience() {
       )}
 
       <Textarea
+        mb="lg"
+        label="Description"
+        error={errors.exp_description && errors.exp_description.message}
         styles={{
           label: {
             marginBottom: '12px',
           },
         }}
-        mb="lg"
-        label="Description"
         {...register('exp_description')}
-        error={errors.exp_description && errors.exp_description.message}
       />
     </>
   )
