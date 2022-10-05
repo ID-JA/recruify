@@ -1,8 +1,7 @@
-﻿namespace FastRecruiter.API.Models;
+﻿namespace FastRecruiter.API.Models.Entities;
 
 public class Education
 {
-    public string Id { get; set; }
     public string School { get; set; }
     public string Degree { get; set; }
     public bool InPorgress { get; set; }

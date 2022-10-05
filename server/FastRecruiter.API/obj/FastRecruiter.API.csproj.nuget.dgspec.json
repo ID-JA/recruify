@@ -44,6 +44,26 @@
         "net6.0": {
           "targetAlias": "net6.0",
           "dependencies": {
+            "FluentValidation.AspNetCore": {
+              "target": "Package",
+              "version": "[10.4.0, )"
+            },
+            "FluentValidation.DependencyInjectionExtensions": {
+              "target": "Package",
+              "version": "[11.2.2, )"
+            },
+            "Mapster": {
+              "target": "Package",
+              "version": "[7.3.0, )"
+            },
+            "MediatR": {
+              "target": "Package",
+              "version": "[11.0.0, )"
+            },
+            "MediatR.Extensions.Microsoft.DependencyInjection": {
+              "target": "Package",
+              "version": "[11.0.0, )"
+            },
             "Microsoft.AspNetCore.Authentication.JwtBearer": {
               "target": "Package",
               "version": "[6.0.9, )"
@@ -76,7 +96,7 @@
             },
             "NSwag.AspNetCore": {
               "target": "Package",
-              "version": "[13.17.0, )"
+              "version": "[13.16.1, )"
             },
             "Newtonsoft.Json": {
               "target": "Package",
@@ -86,9 +106,9 @@
               "target": "Package",
               "version": "[6.2.3, )"
             },
-            "ZymLabs.NSwag.FluentValidation": {
+            "ZymLabs.NSwag.FluentValidation.AspNetCore": {
               "target": "Package",
-              "version": "[0.6.1, )"
+              "version": "[0.5.1, )"
             }
           },
           "imports": [

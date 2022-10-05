@@ -1,6 +1,6 @@
 ﻿using Microsoft.AspNetCore.Identity;
 
-namespace FastRecruiter.API.Models;
+namespace FastRecruiter.API.Models.Entities;
 
 public class ApplicationUser : IdentityUser
 {

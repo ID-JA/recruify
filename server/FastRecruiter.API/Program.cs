@@ -1,7 +1,10 @@
-using FastRecruiter.API.Models;
+using FastRecruiter.API.Extensions;
+using FastRecruiter.API.Models.Entities;
 using FastRecruiter.OpenApi;
-using Microsoft.AspNetCore.Mvc;
+using FluentValidation.AspNetCore;
+using MediatR;
 using Microsoft.EntityFrameworkCore;
+using System.Reflection;
 
 var builder = WebApplication.CreateBuilder(args);
 var configuration = builder.Configuration;
@@ -9,23 +12,21 @@ var CS = builder.Configuration.GetConnectionString("DefaultConnection");
 
 // Add services to the container.
 
-// => DataBase
-builder.Services.AddDbContext<ApplicationDbContext>(option => option.UseSqlServer(CS, opt => opt.MigrationsAssembly(typeof(ApplicationDbContext).Assembly.FullName)));
 
-// => Versioning
+builder.Services.AddVersioning(configuration);
+builder.Services.AddAppIdentity();
+builder.Services.AddMediatR(Assembly.GetExecutingAssembly());
 builder.Services.AddOpenApiDocumentation(configuration);
+builder.Services.AddDbContext<ApplicationDbContext>(option => option.UseSqlServer(CS, opt => opt.MigrationsAssembly(typeof(ApplicationDbContext).Assembly.FullName)));
+builder.Services.AddServices();
+builder.Services.AddApplication();
 
-builder.Services.AddApiVersioning(config =>
-{
-    config.DefaultApiVersion = new ApiVersion(1, 0);
-    config.AssumeDefaultVersionWhenUnspecified = true;
-    config.ReportApiVersions = true;
-});
 
-builder.Services.AddControllers();
+builder.Services.AddControllers().AddFluentValidation();
+
 // Learn more about configuring Swagger/OpenAPI at https://aka.ms/aspnetcore/swashbuckle
-builder.Services.AddEndpointsApiExplorer();
-builder.Services.AddSwaggerGen();
+//builder.Services.AddEndpointsApiExplorer();
+//builder.Services.AddSwaggerGen();
 
 var app = builder.Build();
 
@@ -36,7 +37,7 @@ var app = builder.Build();
 //}
 
 app.UseHttpsRedirection();
-
+app.UseRouting();
 app.UseAuthentication();
 app.UseAuthorization();
 app.UseOpenApiDocumentation(configuration);

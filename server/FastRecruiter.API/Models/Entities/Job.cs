@@ -1,6 +1,6 @@
 ﻿using System.ComponentModel.DataAnnotations.Schema;
 
-namespace FastRecruiter.API.Models;
+namespace FastRecruiter.API.Models.Entities;
 
 public class Job
 {
@@ -21,6 +21,8 @@ public class Job
     public string WhyUs { get; set; }
 
     public string CompanyDescription { get; set; }
+
+    public string? Status { get; set; }
 
     public DateTime CreatedAt { get; set; }
 

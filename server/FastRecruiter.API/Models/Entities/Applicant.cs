@@ -1,4 +1,4 @@
-﻿namespace FastRecruiter.API.Models;
+﻿namespace FastRecruiter.API.Models.Entities;
 
 public class Applicant
 {

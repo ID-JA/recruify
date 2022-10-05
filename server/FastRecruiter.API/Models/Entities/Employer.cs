@@ -1,12 +1,12 @@
 ﻿using System.ComponentModel.DataAnnotations;
 using System.ComponentModel.DataAnnotations.Schema;
 
-namespace FastRecruiter.API.Models;
+namespace FastRecruiter.API.Models.Entities;
 
 public class Employer
 {
     [Key]
-    public string userId { get; set; }
+    public string Id { get; set; }
 
     public int ZipCode { get; set; }
     public int PhoneNumber { get; set; }
@@ -19,7 +19,7 @@ public class Employer
     public DateTime CreatedAt { get; set; }
     public DateTime UpdatedAt { get; set; }
 
-    [ForeignKey("userId")]
+    [ForeignKey("Id")]
     public ApplicationUser user { get; set; }
 
     public virtual ICollection<Job> Jobs { get; set; }
