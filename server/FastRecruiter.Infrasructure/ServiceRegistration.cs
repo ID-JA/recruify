@@ -42,6 +42,7 @@ namespace FastRecruiter.Infrasructure
            .UseExceptionMiddleware()
            .UseRouting()
            .UseAuthentication()
+           .UseCurrentUser()
            .UseAuthorization()
            .UseOpenApiDocumentation(config);
 

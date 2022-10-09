@@ -1,8 +1,9 @@
-﻿using FastRecruiter.Domain.Enums;
+﻿using FastRecruiter.Domain.Contracts;
+using FastRecruiter.Domain.Enums;
 
 namespace FastRecruiter.Domain.Entities;
 
-public class Job
+public class Job : IAggregateRoot
 {
     private Job()
     {
@@ -36,10 +37,11 @@ public class Job
 
     public virtual ICollection<Applicant> Applicants { get; private set; }
 
-    public static string CeateJob(string employerId, string title, string location, string address, string employmentType, string description, string whyUs, string companyDescription)
+    public static Job CeateJob(string employerId, string title, string location, string address, string employmentType, string description, string whyUs, string companyDescription)
     {
         var job = new Job
         {
+            Id = Guid.NewGuid().ToString(),
             EmployerId = employerId,
             Title = title,
             Locaiton = location,
@@ -53,7 +55,7 @@ public class Job
             UpdatedAt = DateTime.UtcNow
         };
 
-        return job.Id;
+        return job;
     }
 
     public void UpdateJob(string title, string location, string address, string employmentType, string description, string whyUs, string companyDescription)

@@ -1,6 +1,8 @@
-﻿namespace FastRecruiter.Domain.Entities;
+﻿using FastRecruiter.Domain.Contracts;
 
-public class Employer
+namespace FastRecruiter.Domain.Entities;
+
+public class Employer : IAggregateRoot
 {
     private Employer()
     {
