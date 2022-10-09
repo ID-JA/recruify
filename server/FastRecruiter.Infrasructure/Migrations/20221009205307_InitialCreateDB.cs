@@ -5,7 +5,7 @@ using Microsoft.EntityFrameworkCore.Migrations;
 
 namespace FastRecruiter.Infrasructure.Migrations
 {
-    public partial class InitialCreateDb : Migration
+    public partial class InitialCreateDB : Migration
     {
         protected override void Up(MigrationBuilder migrationBuilder)
         {
@@ -197,10 +197,11 @@ namespace FastRecruiter.Infrasructure.Migrations
                     Id = table.Column<string>(type: "nvarchar(450)", nullable: false),
                     EmployerId = table.Column<string>(type: "nvarchar(450)", nullable: false),
                     Title = table.Column<string>(type: "nvarchar(max)", nullable: false),
-                    Locaiton = table.Column<string>(type: "nvarchar(max)", nullable: false),
                     Address = table.Column<string>(type: "nvarchar(max)", nullable: false),
+                    Location = table.Column<string>(type: "nvarchar(max)", nullable: false),
                     EmploymentType = table.Column<string>(type: "nvarchar(max)", nullable: false),
                     Description = table.Column<string>(type: "nvarchar(max)", nullable: false),
+                    Skills = table.Column<string>(type: "nvarchar(max)", nullable: false),
                     WhyUs = table.Column<string>(type: "nvarchar(max)", nullable: false),
                     CompanyDescription = table.Column<string>(type: "nvarchar(max)", nullable: false),
                     Status = table.Column<int>(type: "int", nullable: false),

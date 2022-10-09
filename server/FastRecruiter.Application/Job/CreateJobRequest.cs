@@ -10,14 +10,15 @@ namespace FastRecruiter.Application.Job
 {
     public class CreateJobRequest : IRequest<string>
     {
-        public string Title { get; set; }
-        public string Location { get; set; }
-        public string Description { get; set; }
-        public string Address { get; set; }
-        public string EmploymentType { get; set; }
-        public string Skills { get; set; }
-        public string WhyUs { get; set; }
-        public string CompanyDescription { get; set; }
+        public string Title { get; set; } = default!;
+        public string Location { get; set; } = default!;
+        public string Description { get; set; } = default!;
+        public string Address { get; set; } = default!;
+        public string EmploymentType { get; set; } = default!;
+        public string Skills { get; set; } = default!;
+        public string WhyUs { get; set; } = default!;
+        public string CompanyDescription { get; set; } = default!;
+        public int SavaAsDraft { get; set; }
     }
 
     public class CreateJobRequestValidator : AbstractValidator<CreateJobRequest>
@@ -38,9 +39,10 @@ namespace FastRecruiter.Application.Job
     public class CreateJobRequestHandler : IRequestHandler<CreateJobRequest, string>
     {
         private readonly IRepository<JobEntity> _jobRepository;
-        private readonly IRepository<Employer> _employerRepository;
+        private readonly IReadRepository<Employer> _employerRepository;
         private readonly ICurrentUser _currentUser;
-        public CreateJobRequestHandler(IRepository<JobEntity> jobRepository, ICurrentUser currentUser, IRepository<Employer> employerRepository)
+
+        public CreateJobRequestHandler(IRepository<JobEntity> jobRepository, ICurrentUser currentUser, IReadRepository<Employer> employerRepository)
         {
             _jobRepository = jobRepository;
             _currentUser = currentUser;
@@ -50,18 +52,24 @@ namespace FastRecruiter.Application.Job
 
         public async Task<string> Handle(CreateJobRequest request, CancellationToken cancellationToken)
         {
-            // TODO: 
-            // 1. Find Employer Id using Identity User Id
-            // 2. Create new Job using repository.AddAsync()
-            // 3. Save changes using repository.UnitOfWork.SaveChangesAsync()
-            // 4. Return Job Id
+
             var identityId = _currentUser.GetUserId();
 
             var employerSpec = new EmployerSpec(identityId);
             var employer = await _employerRepository.FirstOrDefaultAsync(employerSpec);
 
 
-            var job = JobEntity.CeateJob(employer!.Id, request.Title, request.Location, request.Address, request.EmploymentType, request.Description, request.WhyUs, request.CompanyDescription);
+            var job = JobEntity.CeateJob(employer!.Id,
+                request.Title,
+                request.Location,
+                request.Address,
+                request.EmploymentType,
+                request.Description,
+                request.WhyUs,
+                request.CompanyDescription,
+                request.SavaAsDraft,
+                request.Skills
+                );
 
             await _jobRepository.AddAsync(job, cancellationToken);
 

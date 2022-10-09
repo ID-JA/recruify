@@ -9,19 +9,22 @@ public class Job : IAggregateRoot
     {
 
     }
+
     public string Id { get; private set; }
 
     public string EmployerId { get; private set; }
 
     public string Title { get; private set; }
 
-    public string Locaiton { get; private set; }
-
     public string Address { get; private set; }
+
+    public string Location { get; private set; }
 
     public string EmploymentType { get; private set; }
 
     public string Description { get; private set; }
+
+    public string Skills { get; private set; }
 
     public string WhyUs { get; private set; }
 
@@ -37,20 +40,21 @@ public class Job : IAggregateRoot
 
     public virtual ICollection<Applicant> Applicants { get; private set; }
 
-    public static Job CeateJob(string employerId, string title, string location, string address, string employmentType, string description, string whyUs, string companyDescription)
+    public static Job CeateJob(string employerId, string title, string location, string address, string employmentType, string description, string whyUs, string companyDescription, int SavaAsDraft, string skills)
     {
         var job = new Job
         {
             Id = Guid.NewGuid().ToString(),
             EmployerId = employerId,
             Title = title,
-            Locaiton = location,
+            Location = location,
             Address = address,
             EmploymentType = employmentType,
             Description = description,
             WhyUs = whyUs,
             CompanyDescription = companyDescription,
-            Status = Status.Draft, // status is always draft when creating a job offer
+            Skills = skills,
+            Status = SavaAsDraft == 1 ? Status.Draft : Status.Published,  // if user click on publish button then status will be published otherwise it will be draft
             CreatedAt = DateTime.UtcNow,
             UpdatedAt = DateTime.UtcNow
         };
@@ -61,7 +65,7 @@ public class Job : IAggregateRoot
     public void UpdateJob(string title, string location, string address, string employmentType, string description, string whyUs, string companyDescription)
     {
         Title = title;
-        Locaiton = location;
+        Location = location;
         Address = address;
         EmploymentType = employmentType;
         Description = description;
@@ -92,7 +96,7 @@ public class Job : IAggregateRoot
     public void RemoveApplicant(string applicantId)
     {
         var applicant = Applicants.FirstOrDefault(x => x.Id == applicantId);
-        Applicants.Remove(applicant);
+        Applicants.Remove(applicant!);
     }
 }
 

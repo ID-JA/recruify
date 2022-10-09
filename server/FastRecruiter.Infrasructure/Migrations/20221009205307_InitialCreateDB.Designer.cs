@@ -12,8 +12,8 @@ using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 namespace FastRecruiter.Infrasructure.Migrations
 {
     [DbContext(typeof(ApplicationDbContext))]
-    [Migration("20221009121522_InitialCreateDb")]
-    partial class InitialCreateDb
+    [Migration("20221009205307_InitialCreateDB")]
+    partial class InitialCreateDB
     {
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
@@ -199,7 +199,11 @@ namespace FastRecruiter.Infrasructure.Migrations
                         .IsRequired()
                         .HasColumnType("nvarchar(max)");
 
-                    b.Property<string>("Locaiton")
+                    b.Property<string>("Location")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<string>("Skills")
                         .IsRequired()
                         .HasColumnType("nvarchar(max)");
 

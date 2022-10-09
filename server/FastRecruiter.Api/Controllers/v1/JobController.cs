@@ -10,9 +10,10 @@ namespace FastRecruiter.Api.Controllers.v1
     public class JobController : VersionedApiController
     {
         [HttpGet("{id}")]
-        public IActionResult GetById(int id)
+        [OpenApiOperation("Get specific job offer using Id", "")]
+        public Task<JobOfferDto> GetById(string id)
         {
-            return Ok(id);
+            return Mediator.Send(new GetJobRequest(id));
         }
 
         [HttpPost]
