@@ -51,5 +51,3 @@ public class Employer
         UpdatedAt = DateTime.UtcNow;
     }
 }
-
-

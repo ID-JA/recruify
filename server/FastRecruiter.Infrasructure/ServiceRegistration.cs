@@ -1,6 +1,6 @@
-﻿using FastRecruiter.Application.Identity.Users;
-using FastRecruiter.Infrasructure.Auth;
-using FastRecruiter.Infrasructure.Identity;
+﻿using FastRecruiter.Infrasructure.Auth;
+using FastRecruiter.Infrasructure.Common;
+using FastRecruiter.Infrasructure.Middleware;
 using FastRecruiter.Infrasructure.OpenApi;
 using FastRecruiter.Infrasructure.Persistence;
 using Microsoft.AspNetCore.Builder;
@@ -9,19 +9,22 @@ using Microsoft.AspNetCore.Routing;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 
-
 namespace FastRecruiter.Infrasructure
 {
     public static class ServiceRegistration
     {
         public static IServiceCollection AddInfrasructure(this IServiceCollection services, IConfiguration configuration)
         {
-            services.AddTransient<IUserService, UserService>();
-            return services
-                .AddApiVersioning()
+            services
+               .AddApiVersioning()
                 .AddAuth(configuration)
+                .AddExceptionMiddleware()
                 .AddOpenApiDocumentation(configuration)
-                .AddPersistence(configuration);
+                .AddPersistence(configuration)
+                .AddRouting(options => options.LowercaseUrls = true)
+                .AddServices();
+
+            return services;
         }
 
         private static IServiceCollection AddApiVersioning(this IServiceCollection services) =>
@@ -36,10 +39,11 @@ namespace FastRecruiter.Infrasructure
        builder
            .UseRequestLocalization()
            .UseStaticFiles()
+           .UseExceptionMiddleware()
            .UseRouting()
            .UseAuthentication()
            .UseAuthorization()
-        .UseOpenApiDocumentation(config);
+           .UseOpenApiDocumentation(config);
 
         public static IEndpointRouteBuilder MapEndpoints(this IEndpointRouteBuilder builder)
         {

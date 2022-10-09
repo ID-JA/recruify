@@ -10,9 +10,10 @@ namespace FastRecruiter.Infrasructure.Auth
         internal static IServiceCollection AddAuth(this IServiceCollection services, IConfiguration config)
         {
             services
-                // Must add identity before adding auth!
                 .AddAppIdentity();
+
             services.Configure<SecuritySettings>(config.GetSection(nameof(SecuritySettings)));
+
             return services.AddJwtAuth(config);
         }
     }

@@ -1,4 +1,5 @@
-﻿using Microsoft.AspNetCore.Authentication.JwtBearer;
+﻿using FastRecruiter.Application.Common.Exceptions;
+using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.IdentityModel.Tokens;
@@ -13,9 +14,12 @@ namespace FastRecruiter.Infrasructure.Auth.Jwt
         internal static IServiceCollection AddJwtAuth(this IServiceCollection services, IConfiguration config)
         {
             services.Configure<JwtSettings>(config.GetSection($"SecuritySettings:{nameof(JwtSettings)}"));
+
             var jwtSettings = config.GetSection($"SecuritySettings:{nameof(JwtSettings)}").Get<JwtSettings>();
+
             if (string.IsNullOrEmpty(jwtSettings.Key))
                 throw new InvalidOperationException("No Key defined in JwtSettings config.");
+
             byte[] key = Encoding.ASCII.GetBytes(jwtSettings.Key);
 
             return services
@@ -45,12 +49,12 @@ namespace FastRecruiter.Infrasructure.Auth.Jwt
                             context.HandleResponse();
                             if (!context.Response.HasStarted)
                             {
-                                throw new Exception("Authentication Failed.");
+                                throw new UnauthorizedException("Authentication Failed.");
                             }
 
                             return Task.CompletedTask;
                         },
-                        OnForbidden = _ => throw new Exception("You are not authorized to access this resource."),
+                        OnForbidden = _ => throw new ForbiddenException("You are not authorized to access this resource."),
                         OnMessageReceived = context =>
                         {
                             var accessToken = context.Request.Query["access_token"];

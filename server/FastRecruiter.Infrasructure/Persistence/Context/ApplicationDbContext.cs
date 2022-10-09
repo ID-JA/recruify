@@ -13,7 +13,9 @@ namespace FastRecruiter.Infrasructure.Persistence.Context
 
         }
 
+        public DbSet<Skill> Skills { get; set; }
         public DbSet<Employer> Employers { get; set; }
+        public DbSet<Applicant> Applicants { get; set; }
         public DbSet<Job> Jobs { get; set; }
 
         protected override void OnModelCreating(ModelBuilder builder)

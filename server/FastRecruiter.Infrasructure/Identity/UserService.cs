@@ -1,4 +1,5 @@
-﻿using FastRecruiter.Application.Identity.Users;
+﻿using FastRecruiter.Application.Common.Exceptions;
+using FastRecruiter.Application.Identity.Users;
 using FastRecruiter.Domain.Entities;
 using FastRecruiter.Infrasructure.Persistence.Context;
 using Microsoft.AspNetCore.Identity;
@@ -31,8 +32,7 @@ namespace FastRecruiter.Infrasructure.Identity
 
             if (!result.Succeeded)
             {
-                throw new Exception("Validation Errors Occurred.");
-
+                throw new BadRequestException("Validation Errors Occurred.", result.GetErrors());
             }
 
             var employer = Employer.CreateEmployer(user.Id, request.CompanyName, request.CompanyLocation, request.CompanyWebsite, request.Position);
@@ -43,6 +43,11 @@ namespace FastRecruiter.Infrasructure.Identity
             var messages = new List<string> { string.Format("User {0} Registered.", user.UserName) };
 
             return string.Join(Environment.NewLine, messages);
+        }
+
+        public async Task<bool> ExistsWithEmailAsync(string email, string? exceptId = null)
+        {
+            return await _userManager.FindByEmailAsync(email.Normalize()) is ApplicationUser user && user.Id != exceptId;
         }
     }
 }

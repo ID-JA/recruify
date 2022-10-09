@@ -31,6 +31,8 @@ namespace FastRecruiter.Infrasructure.Migrations
                     FullName = table.Column<string>(type: "nvarchar(max)", nullable: false),
                     ImageUrl = table.Column<string>(type: "nvarchar(max)", nullable: true),
                     ZipCode = table.Column<int>(type: "int", nullable: true),
+                    RefreshToken = table.Column<string>(type: "nvarchar(max)", nullable: true),
+                    RefreshTokenExpiryTime = table.Column<DateTime>(type: "datetime2", nullable: false),
                     UserName = table.Column<string>(type: "nvarchar(256)", maxLength: 256, nullable: true),
                     NormalizedUserName = table.Column<string>(type: "nvarchar(256)", maxLength: 256, nullable: true),
                     Email = table.Column<string>(type: "nvarchar(256)", maxLength: 256, nullable: true),
@@ -67,6 +69,19 @@ namespace FastRecruiter.Infrasructure.Migrations
                 constraints: table =>
                 {
                     table.PrimaryKey("PK_Employers", x => x.Id);
+                });
+
+            migrationBuilder.CreateTable(
+                name: "Skills",
+                columns: table => new
+                {
+                    Id = table.Column<int>(type: "int", nullable: false)
+                        .Annotation("SqlServer:Identity", "1, 1"),
+                    Name = table.Column<string>(type: "nvarchar(max)", nullable: false)
+                },
+                constraints: table =>
+                {
+                    table.PrimaryKey("PK_Skills", x => x.Id);
                 });
 
             migrationBuilder.CreateTable(
@@ -204,7 +219,7 @@ namespace FastRecruiter.Infrasructure.Migrations
                 });
 
             migrationBuilder.CreateTable(
-                name: "Applicant",
+                name: "Applicants",
                 columns: table => new
                 {
                     Id = table.Column<string>(type: "nvarchar(450)", nullable: false),
@@ -216,9 +231,9 @@ namespace FastRecruiter.Infrasructure.Migrations
                 },
                 constraints: table =>
                 {
-                    table.PrimaryKey("PK_Applicant", x => x.Id);
+                    table.PrimaryKey("PK_Applicants", x => x.Id);
                     table.ForeignKey(
-                        name: "FK_Applicant_Jobs_JobId",
+                        name: "FK_Applicants_Jobs_JobId",
                         column: x => x.JobId,
                         principalTable: "Jobs",
                         principalColumn: "Id",
@@ -242,9 +257,9 @@ namespace FastRecruiter.Infrasructure.Migrations
                 {
                     table.PrimaryKey("PK_Education", x => x.Id);
                     table.ForeignKey(
-                        name: "FK_Education_Applicant_ApplicantId",
+                        name: "FK_Education_Applicants_ApplicantId",
                         column: x => x.ApplicantId,
-                        principalTable: "Applicant",
+                        principalTable: "Applicants",
                         principalColumn: "Id",
                         onDelete: ReferentialAction.Cascade);
                 });
@@ -269,16 +284,16 @@ namespace FastRecruiter.Infrasructure.Migrations
                 {
                     table.PrimaryKey("PK_Experience", x => x.Id);
                     table.ForeignKey(
-                        name: "FK_Experience_Applicant_ApplicantId",
+                        name: "FK_Experience_Applicants_ApplicantId",
                         column: x => x.ApplicantId,
-                        principalTable: "Applicant",
+                        principalTable: "Applicants",
                         principalColumn: "Id",
                         onDelete: ReferentialAction.Cascade);
                 });
 
             migrationBuilder.CreateIndex(
-                name: "IX_Applicant_JobId",
-                table: "Applicant",
+                name: "IX_Applicants_JobId",
+                table: "Applicants",
                 column: "JobId");
 
             migrationBuilder.CreateIndex(
@@ -360,13 +375,16 @@ namespace FastRecruiter.Infrasructure.Migrations
                 name: "Experience");
 
             migrationBuilder.DropTable(
+                name: "Skills");
+
+            migrationBuilder.DropTable(
                 name: "AspNetRoles");
 
             migrationBuilder.DropTable(
                 name: "AspNetUsers");
 
             migrationBuilder.DropTable(
-                name: "Applicant");
+                name: "Applicants");
 
             migrationBuilder.DropTable(
                 name: "Jobs");

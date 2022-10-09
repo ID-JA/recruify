@@ -12,7 +12,7 @@ using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 namespace FastRecruiter.Infrasructure.Migrations
 {
     [DbContext(typeof(ApplicationDbContext))]
-    [Migration("20221008154853_InitialCreateDb")]
+    [Migration("20221009121522_InitialCreateDb")]
     partial class InitialCreateDb
     {
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
@@ -51,7 +51,7 @@ namespace FastRecruiter.Infrasructure.Migrations
 
                     b.HasIndex("JobId");
 
-                    b.ToTable("Applicant");
+                    b.ToTable("Applicants");
                 });
 
             modelBuilder.Entity("FastRecruiter.Domain.Entities.Education", b =>
@@ -224,6 +224,23 @@ namespace FastRecruiter.Infrasructure.Migrations
                     b.ToTable("Jobs");
                 });
 
+            modelBuilder.Entity("FastRecruiter.Domain.Entities.Skill", b =>
+                {
+                    b.Property<int>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("int");
+
+                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"), 1L, 1);
+
+                    b.Property<string>("Name")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(max)");
+
+                    b.HasKey("Id");
+
+                    b.ToTable("Skills");
+                });
+
             modelBuilder.Entity("FastRecruiter.Infrasructure.Identity.ApplicationUser", b =>
                 {
                     b.Property<string>("Id")
@@ -272,6 +289,12 @@ namespace FastRecruiter.Infrasructure.Migrations
 
                     b.Property<bool>("PhoneNumberConfirmed")
                         .HasColumnType("bit");
+
+                    b.Property<string>("RefreshToken")
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<DateTime>("RefreshTokenExpiryTime")
+                        .HasColumnType("datetime2");
 
                     b.Property<string>("SecurityStamp")
                         .HasColumnType("nvarchar(max)");
