@@ -10,5 +10,6 @@ namespace FastRecruiter.Application.Specifications
         {
             Query.Where(j => j.Id == id);
         }
+
     }
 }

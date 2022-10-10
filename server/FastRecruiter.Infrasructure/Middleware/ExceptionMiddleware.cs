@@ -1,17 +1,20 @@
 ﻿using FastRecruiter.Application.Common.Exceptions;
+using FastRecruiter.Application.Common.Interfaces;
 using Microsoft.AspNetCore.Http;
 using Microsoft.Extensions.Logging;
 using System.Net;
-using System.Text.Json;
 
 namespace FastRecruiter.Infrasructure.Middleware
 {
     internal class ExceptionMiddleware : IMiddleware
     {
         private readonly ILogger<ExceptionMiddleware> _logger;
-        public ExceptionMiddleware(ILogger<ExceptionMiddleware> logger)
+        private readonly ISerializerService _jsonSerializer;
+
+        public ExceptionMiddleware(ILogger<ExceptionMiddleware> logger, ISerializerService jsonSerializer)
         {
             _logger = logger;
+            _jsonSerializer = jsonSerializer;
         }
 
         public async Task InvokeAsync(HttpContext context, RequestDelegate next)
@@ -70,7 +73,7 @@ namespace FastRecruiter.Infrasructure.Middleware
                     response.ContentType = "application/json";
                     response.StatusCode = (int)response.StatusCode;
                     _logger.LogError($"{errorResult.Exception} Request failed with Status Code {context.Response.StatusCode} and Error Id {errorId}.");
-                    await response.WriteAsync(JsonSerializer.Serialize(errorResult));
+                    await response.WriteAsync(_jsonSerializer.Serialize(errorResult));
                 }
             }
         }
