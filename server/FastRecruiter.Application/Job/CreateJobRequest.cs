@@ -58,7 +58,7 @@ namespace FastRecruiter.Application.Job
             var employer = await _employerRepository.FirstOrDefaultAsync(employerSpec);
 
 
-            var job = JobEntity.CeateJob(employer!.Id,
+            var job = JobEntity.CreateJob(employer!.Id,
                 request.Title,
                 request.Location,
                 request.Address,

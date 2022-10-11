@@ -40,7 +40,7 @@ public class Job : IAggregateRoot
 
     public virtual ICollection<Applicant> Applicants { get; private set; }
 
-    public static Job CeateJob(string employerId, string title, string location, string address, string employmentType, string description, string whyUs, string companyDescription, int SavaAsDraft, string skills)
+    public static Job CreateJob(string employerId, string title, string location, string address, string employmentType, string description, string whyUs, string companyDescription, int SavaAsDraft, string skills)
     {
         var job = new Job
         {
@@ -97,6 +97,11 @@ public class Job : IAggregateRoot
     {
         var applicant = Applicants.FirstOrDefault(x => x.Id == applicantId);
         Applicants.Remove(applicant!);
+    }
+
+    public int TotalApplicants()
+    {
+        return Applicants.Count();
     }
 }
 

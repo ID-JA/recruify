@@ -1,5 +1,8 @@
 ﻿using FastRecruiter.API.Controllers;
+using FastRecruiter.Application.Job;
 using Microsoft.AspNetCore.Authorization;
+using Microsoft.AspNetCore.Mvc;
+using System.Security.Claims;
 
 namespace FastRecruiter.Api.Controllers.v1
 {
@@ -7,11 +10,11 @@ namespace FastRecruiter.Api.Controllers.v1
     public class EmployerController : VersionedApiController
     {
 
-        //[HttpGet("jobs")]
-        //public Task<List<JobDto>> GetJobs()
-        //{
-        //    var identityId = User.FindFirstValue(ClaimTypes.NameIdentifier);
-        //    return Mediator.Send(new GetJobsRequest(identityId));
-        //}
+        [HttpGet("jobs")]
+        public Task<IEnumerable<JobDto>> GetJobs()
+        {
+            var identityId = User.FindFirstValue(ClaimTypes.NameIdentifier);
+            return Mediator.Send(new GetJobsRequest(identityId));
+        }
     }
 }
