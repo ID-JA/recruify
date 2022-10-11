@@ -54,8 +54,7 @@ namespace FastRecruiter.Application.Job
         {
 
             var identityId = _currentUser.GetUserId();
-
-            var employerSpec = new EmployerSpec(identityId);
+            var employerSpec = new EmployerByAuthIdSpec(identityId);
             var employer = await _employerRepository.FirstOrDefaultAsync(employerSpec);
 
 

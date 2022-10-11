@@ -1,6 +1,6 @@
 ﻿namespace FastRecruiter.Application.Job
 {
-    public class JobOfferDto
+    public class OfferDto
     {
         public string Id { get; set; }
         public string Title { get; set; }
