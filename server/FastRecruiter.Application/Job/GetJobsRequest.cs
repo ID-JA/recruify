@@ -1,6 +1,7 @@
 ﻿using FastRecruiter.Application.Common.Persistence;
 using FastRecruiter.Application.Specifications;
 using FastRecruiter.Domain.Entities;
+using Mapster;
 using MediatR;
 using JobEntity = FastRecruiter.Domain.Entities.Job;
 namespace FastRecruiter.Application.Job
@@ -34,16 +35,7 @@ namespace FastRecruiter.Application.Job
             var jobsSpec = new EmployerJobsSpec(employer!.Id);
             var jobs = await _jobRepository.ListAsync(jobsSpec, cancellationToken);
 
-            return jobs.Select(j => new JobDto
-            {
-                Id = j.Id,
-                Title = j.Title,
-                CompanyName = j.Employer.CompanyName,
-                Location = j.Location,
-                CreatedAt = j.CreatedAt,
-                Status = (int)j.Status,
-                CandidatesCount = j.TotalApplicants()
-            });
+            return jobs.Adapt<IEnumerable<JobDto>>(JobDto.GetMapsterConfig());
         }
     }
 }

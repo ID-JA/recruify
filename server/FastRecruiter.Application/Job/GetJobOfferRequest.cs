@@ -1,6 +1,8 @@
 ﻿using FastRecruiter.Application.Common.Exceptions;
 using FastRecruiter.Application.Common.Persistence;
 using FastRecruiter.Application.Specifications;
+using FastRecruiter.Domain.Enums;
+using Mapster;
 using MediatR;
 using JobEnity = FastRecruiter.Domain.Entities.Job;
 
@@ -29,9 +31,10 @@ namespace FastRecruiter.Application.Job
             var offerSpec = new OfferByIdSpec(request.JobId);
             var offer = await _repository.FirstOrDefaultAsync(offerSpec, cancellationToken);
 
-            _ = offer ?? throw new NotFoundException("this job no more exists");
+            if (offer is null || offer.Status == Status.Closed || offer.Status == Status.Draft)
+                throw new NotFoundException("this job no more exists");
 
-            return offer;
+            return offer.Adapt<OfferDto>(OfferDto.GetMapsterConfig());
         }
     }
 }

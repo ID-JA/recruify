@@ -54,7 +54,7 @@ public class Job : IAggregateRoot
             WhyUs = whyUs,
             CompanyDescription = companyDescription,
             Skills = skills,
-            Status = SavaAsDraft == 1 ? Status.Draft : Status.Published,  // if user click on publish button then status will be published otherwise it will be draft
+            Status = SavaAsDraft == 0 ? Status.Draft : Status.Published,  // if user click on publish button then status will be published otherwise it will be draft
             CreatedAt = DateTime.UtcNow,
             UpdatedAt = DateTime.UtcNow
         };
@@ -77,6 +77,12 @@ public class Job : IAggregateRoot
     public void PublishJob()
     {
         Status = Status.Published;
+        UpdatedAt = DateTime.UtcNow;
+    }
+
+    public void DraftJob()
+    {
+        Status = Status.Draft;
         UpdatedAt = DateTime.UtcNow;
     }
 

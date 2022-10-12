@@ -16,11 +16,20 @@ namespace FastRecruiter.Api.Controllers.v1
             return Mediator.Send(request);
         }
 
-        //[HttpPost("{")]
-        //[OpenApiOperation("Update a job offer.", "")]
-        //public Task<string> PublishJob(string id)
-        //{
-        //    return Mediator.Send(new PublishJobOfferRequest(id));
-        //}
+        [HttpPost("{id}")]
+        [OpenApiOperation("publish a job offer.", "")]
+        public Task<string> PublishJob(PublishJobOfferRequest id)
+        {
+            return Mediator.Send(id);
+        }
+
+        [HttpPost("{id}/update-status")]
+        [OpenApiOperation("change  job offer status.", "")]
+        public async Task<ActionResult<string>> UpdateJobStatus(UpdateJobStatus request, string id)
+        {
+            return id != request.JobId
+                ? BadRequest()
+                : await Mediator.Send(request);
+        }
     }
 }
