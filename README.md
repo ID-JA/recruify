@@ -6,6 +6,11 @@ FastRecruiter is recruitment management platform which assists talent acquisitio
 - [Next js](https://nextjs.org/)
 - [Mantine UI](https://mantine.dev/)
 
+## 🚧 Roadmap
+
+See the [open issues](https://github.com/ID-JA/fast-recruiter/issues) for a list of proposed features (and known issues).
+
+
 ## Features v1
 - [x] Authentication
 - [ ] profile management
