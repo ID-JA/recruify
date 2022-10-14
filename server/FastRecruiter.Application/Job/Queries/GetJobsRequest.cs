@@ -4,7 +4,7 @@ using FastRecruiter.Domain.Entities;
 using Mapster;
 using MediatR;
 using JobEntity = FastRecruiter.Domain.Entities.Job;
-namespace FastRecruiter.Application.Job
+namespace FastRecruiter.Application.Job.Queries
 {
     public class GetJobsRequest : IRequest<IEnumerable<JobDto>>
     {

@@ -7,7 +7,7 @@ using FastRecruiter.Domain.Enums;
 using MediatR;
 using JobEntity = FastRecruiter.Domain.Entities.Job;
 
-namespace FastRecruiter.Application.Job
+namespace FastRecruiter.Application.Job.Commands
 {
     public class PublishJobOfferRequest : IRequest<string>
     {

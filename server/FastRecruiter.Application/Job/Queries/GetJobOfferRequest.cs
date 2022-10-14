@@ -4,9 +4,9 @@ using FastRecruiter.Application.Specifications;
 using FastRecruiter.Domain.Enums;
 using Mapster;
 using MediatR;
-using JobEnity = FastRecruiter.Domain.Entities.Job;
+using JobEntity = FastRecruiter.Domain.Entities.Job;
 
-namespace FastRecruiter.Application.Job
+namespace FastRecruiter.Application.Job.Queries
 {
     public class GetJobOfferRequest : IRequest<OfferDto>
     {
@@ -20,14 +20,15 @@ namespace FastRecruiter.Application.Job
 
     public class GetJobOfferRequestHandler : IRequestHandler<GetJobOfferRequest, OfferDto>
     {
-        private readonly IReadRepository<JobEnity> _repository;
-        public GetJobOfferRequestHandler(IReadRepository<JobEnity> repository)
+        private readonly IReadRepository<JobEntity> _repository;
+        public GetJobOfferRequestHandler(IReadRepository<JobEntity> repository)
         {
             _repository = repository;
         }
 
         public async Task<OfferDto> Handle(GetJobOfferRequest request, CancellationToken cancellationToken)
         {
+
             var offerSpec = new OfferByIdSpec(request.JobId);
             var offer = await _repository.FirstOrDefaultAsync(offerSpec, cancellationToken);
 

@@ -42,8 +42,9 @@ namespace FastRecruiter.Infrasructure.Migrations
                         .IsRequired()
                         .HasColumnType("nvarchar(max)");
 
-                    b.Property<int>("PhoneNumber")
-                        .HasColumnType("int");
+                    b.Property<string>("PhoneNumber")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(max)");
 
                     b.HasKey("Id");
 
@@ -54,11 +55,8 @@ namespace FastRecruiter.Infrasructure.Migrations
 
             modelBuilder.Entity("FastRecruiter.Domain.Entities.Education", b =>
                 {
-                    b.Property<int>("Id")
-                        .ValueGeneratedOnAdd()
-                        .HasColumnType("int");
-
-                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"), 1L, 1);
+                    b.Property<string>("Id")
+                        .HasColumnType("nvarchar(450)");
 
                     b.Property<string>("ApplicantId")
                         .IsRequired()
@@ -85,7 +83,7 @@ namespace FastRecruiter.Infrasructure.Migrations
 
                     b.HasIndex("ApplicantId");
 
-                    b.ToTable("Education");
+                    b.ToTable("Educations");
                 });
 
             modelBuilder.Entity("FastRecruiter.Domain.Entities.Employer", b =>
@@ -125,11 +123,8 @@ namespace FastRecruiter.Infrasructure.Migrations
 
             modelBuilder.Entity("FastRecruiter.Domain.Entities.Experience", b =>
                 {
-                    b.Property<int>("Id")
-                        .ValueGeneratedOnAdd()
-                        .HasColumnType("int");
-
-                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"), 1L, 1);
+                    b.Property<string>("Id")
+                        .HasColumnType("nvarchar(450)");
 
                     b.Property<string>("ApplicantId")
                         .IsRequired()
@@ -152,21 +147,21 @@ namespace FastRecruiter.Infrasructure.Migrations
                         .IsRequired()
                         .HasColumnType("nvarchar(max)");
 
+                    b.Property<string>("StartMonth")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(max)");
+
                     b.Property<int>("StartYear")
                         .HasColumnType("int");
 
                     b.Property<bool>("StillWorking")
                         .HasColumnType("bit");
 
-                    b.Property<string>("StratMonth")
-                        .IsRequired()
-                        .HasColumnType("nvarchar(max)");
-
                     b.HasKey("Id");
 
                     b.HasIndex("ApplicantId");
 
-                    b.ToTable("Experience");
+                    b.ToTable("Experiences");
                 });
 
             modelBuilder.Entity("FastRecruiter.Domain.Entities.Job", b =>
@@ -470,24 +465,20 @@ namespace FastRecruiter.Infrasructure.Migrations
 
             modelBuilder.Entity("FastRecruiter.Domain.Entities.Education", b =>
                 {
-                    b.HasOne("FastRecruiter.Domain.Entities.Applicant", "Applicant")
+                    b.HasOne("FastRecruiter.Domain.Entities.Applicant", null)
                         .WithMany("Educations")
                         .HasForeignKey("ApplicantId")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
-
-                    b.Navigation("Applicant");
                 });
 
             modelBuilder.Entity("FastRecruiter.Domain.Entities.Experience", b =>
                 {
-                    b.HasOne("FastRecruiter.Domain.Entities.Applicant", "Applicant")
+                    b.HasOne("FastRecruiter.Domain.Entities.Applicant", null)
                         .WithMany("Experiences")
                         .HasForeignKey("ApplicantId")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
-
-                    b.Navigation("Applicant");
                 });
 
             modelBuilder.Entity("FastRecruiter.Domain.Entities.Job", b =>

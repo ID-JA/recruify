@@ -6,7 +6,7 @@ using FastRecruiter.Domain.Entities;
 using MediatR;
 using JobEntity = FastRecruiter.Domain.Entities.Job;
 
-namespace FastRecruiter.Application.Job
+namespace FastRecruiter.Application.Job.Commands
 {
     public class UpdateJobStatus : IRequest<string>
     {

@@ -24,7 +24,7 @@ public class Employer : IAggregateRoot
 
     public DateTime UpdatedAt { get; set; }
 
-    public virtual ICollection<Job>? Jobs { get; set; }
+    public ICollection<Job>? Jobs { get; set; }
 
     public static Employer CreateEmployer(string identityId, string companyName, string companyLocation, string? companyWebsite, string position)
     {

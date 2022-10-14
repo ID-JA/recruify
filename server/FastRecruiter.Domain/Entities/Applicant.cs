@@ -1,6 +1,8 @@
-﻿namespace FastRecruiter.Domain.Entities;
+﻿using FastRecruiter.Domain.Contracts;
 
-public class Applicant
+namespace FastRecruiter.Domain.Entities;
+
+public class Applicant : IAggregateRoot
 {
     public string Id { get; private set; }
 
@@ -10,27 +12,37 @@ public class Applicant
 
     public bool EmailConfirmation { get; private set; }
 
-    public int PhoneNumber { get; private set; }
+    public string PhoneNumber { get; private set; }
 
     public Job Job { get; private set; }
     public string JobId { get; private set; }
 
-    public virtual ICollection<Experience> Experiences { get; private set; }
-    public virtual ICollection<Education> Educations { get; private set; }
+    public virtual ICollection<Experience> Experiences { get; private set; } = new List<Experience>();
+    public virtual ICollection<Education> Educations { get; private set; } = new List<Education>();
 
-    public static string CreateApplicant(string name, string email, bool emailConfirmation, int phoneNumber, string jobId)
+    public static Applicant CreateApplicant(string name, string email, string phoneNumber, string jobId)
     {
         var applicant = new Applicant
         {
             Id = Guid.NewGuid().ToString(),
             Name = name,
             Email = email,
-            EmailConfirmation = emailConfirmation,
+            EmailConfirmation = false,
             PhoneNumber = phoneNumber,
-            JobId = jobId
+            JobId = jobId,
         };
 
-        return applicant.Id;
+        return applicant;
+    }
+
+    public void AddExperience(Experience experience)
+    {
+        Experiences.Add(experience);
+    }
+
+    public void AddEducation(Education education)
+    {
+        Educations.Add(education);
     }
 
 

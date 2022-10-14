@@ -13,6 +13,7 @@ namespace FastRecruiter.Application.Job
         public int CandidatesCount { get; set; }
         public int Status { get; set; }
 
+
         public static TypeAdapterConfig GetMapsterConfig()
         {
             var config = new TypeAdapterConfig();

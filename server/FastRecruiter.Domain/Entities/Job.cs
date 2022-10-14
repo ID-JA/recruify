@@ -38,7 +38,7 @@ public class Job : IAggregateRoot
 
     public Employer Employer { get; private set; }
 
-    public virtual ICollection<Applicant> Applicants { get; private set; }
+    public ICollection<Applicant> Applicants { get; private set; }
 
     public static Job CreateJob(string employerId, string title, string location, string address, string employmentType, string description, string whyUs, string companyDescription, int SavaAsDraft, string skills)
     {

@@ -6,7 +6,7 @@ using FluentValidation;
 using MediatR;
 using JobEntity = FastRecruiter.Domain.Entities.Job;
 
-namespace FastRecruiter.Application.Job
+namespace FastRecruiter.Application.Job.Commands
 {
     public class CreateJobRequest : IRequest<string>
     {

@@ -10,11 +10,12 @@ namespace FastRecruiter.Infrasructure.Persistence.Context
     {
         public ApplicationDbContext(DbContextOptions options) : base(options)
         {
-
         }
 
         public DbSet<Skill> Skills { get; set; }
         public DbSet<Employer> Employers { get; set; }
+        public DbSet<Education> Educations { get; set; }
+        public DbSet<Experience> Experiences { get; set; }
         public DbSet<Applicant> Applicants { get; set; }
         public DbSet<Job> Jobs { get; set; }
 

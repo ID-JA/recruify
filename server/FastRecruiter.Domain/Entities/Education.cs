@@ -6,7 +6,7 @@ public class Education
     {
 
     }
-    public int Id { get; private set; }
+    public string Id { get; private set; }
 
     public string School { get; private set; }
 
@@ -18,13 +18,14 @@ public class Education
 
     public string? Description { get; private set; }
 
-    public Applicant Applicant { get; private set; }
+    private Applicant Applicant { get; set; }
     public string ApplicantId { get; private set; }
 
     public static Education CreateEducation(string school, string degree, bool inProgress, int degreeYear, string? description, string applicantId)
     {
         var education = new Education
         {
+            Id = Guid.NewGuid().ToString(),
             School = school,
             Degree = degree,
             InProgress = inProgress,

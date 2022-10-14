@@ -1,5 +1,4 @@
-﻿
-namespace FastRecruiter.Domain.Entities;
+﻿namespace FastRecruiter.Domain.Entities;
 
 public class Experience
 {
@@ -8,7 +7,7 @@ public class Experience
 
     }
 
-    public int Id { get; private set; }
+    public string Id { get; private set; }
 
     public string Position { get; private set; }
 
@@ -18,7 +17,7 @@ public class Experience
 
     public int StartYear { get; private set; }
 
-    public string StratMonth { get; private set; }
+    public string StartMonth { get; private set; }
 
     public int? EndYear { get; private set; }
 
@@ -33,11 +32,12 @@ public class Experience
     {
         var experience = new Experience
         {
+            Id = Guid.NewGuid().ToString(),
             Position = position,
             Company = company,
             StillWorking = stillWorking,
             StartYear = startYear,
-            StratMonth = startMonth,
+            StartMonth = startMonth,
             EndYear = endYear,
             EndMonth = endMonth,
             Description = description,
