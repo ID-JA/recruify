@@ -52,5 +52,11 @@ namespace FastRecruiter.Api.Controllers.v1
                 ? BadRequest()
                 : await Mediator.Send(request);
         }
+
+        [HttpDelete("{id}")]
+        public Task<string> DeleteJobAsync(string id)
+        {
+            return Mediator.Send(new DeleteJobCommand(id));
+        }
     }
 }
