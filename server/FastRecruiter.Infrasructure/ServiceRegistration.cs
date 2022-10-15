@@ -1,13 +1,16 @@
 ﻿using FastRecruiter.Infrasructure.Auth;
 using FastRecruiter.Infrasructure.Common;
+using FastRecruiter.Infrasructure.Mailing;
 using FastRecruiter.Infrasructure.Middleware;
 using FastRecruiter.Infrasructure.OpenApi;
 using FastRecruiter.Infrasructure.Persistence;
+using MediatR;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Routing;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
+using System.Reflection;
 
 namespace FastRecruiter.Infrasructure
 {
@@ -19,6 +22,8 @@ namespace FastRecruiter.Infrasructure
                .AddApiVersioning()
                 .AddAuth(configuration)
                 .AddExceptionMiddleware()
+                .AddMailing(configuration)
+                .AddMediatR(Assembly.GetExecutingAssembly())
                 .AddOpenApiDocumentation(configuration)
                 .AddPersistence(configuration)
                 .AddRouting(options => options.LowercaseUrls = true)

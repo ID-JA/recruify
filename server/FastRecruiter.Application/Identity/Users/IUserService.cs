@@ -6,6 +6,9 @@ namespace FastRecruiter.Application.Identity.Users
     {
         Task<bool> ExistsWithEmailAsync(string email, string? exceptId = null);
 
-        Task<string> CreateAsync(CreateUserRequest request);
+        Task<string> CreateAsync(CreateUserRequest request, string origin);
+
+        Task<string> ConfirmEmailAsync(string userId, string code, CancellationToken cancellationToken);
+
     }
 }

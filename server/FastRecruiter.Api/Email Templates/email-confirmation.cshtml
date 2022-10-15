@@ -1,0 +1,30 @@
+﻿<!DOCTYPE html>
+<html>
+
+<head>
+    <title></title>
+    <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge" />
+    
+</head>
+
+<body style="background-color: #f4f4f4; margin: 0 !important; padding: 0 !important;">
+
+    <p style="margin: 0;">
+        Hi @Model?.Name ! We're excited to have you get started. First, you need
+        to confirm your email - <b>@Model?.Email</b> for this account. Just press the button below.
+    </p>
+    <br/>
+   @* <p style="margin: 0;">
+        <a href="[emailVerificationUri]" target="_blank"
+           style="color: #3eaf7c;">@Model?.Url</a>
+    </p>*@
+    <br/>
+    <a href="@Model?.Url" target="_blank"
+       style="font-size: 20px; font-family: Helvetica, Arial, sans-serif; color: #ffffff; text-decoration: none; color: #ffffff; text-decoration: none; padding: 15px 25px; border-radius: 2px; border: 1px solid #3eaf7c; display: inline-block;">
+        Confirm Account
+    </a>
+
+</body>
+</html>

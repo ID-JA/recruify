@@ -30,12 +30,23 @@ namespace FastRecruiter.Api.Controllers.Identity
         [HttpPost("self-register")]
         public Task<string> RegisterAsync(CreateUserRequest request)
         {
-            return _userService.CreateAsync(request);
+            return _userService.CreateAsync(request, GetOriginFromRequest());
+        }
+
+        [HttpGet("confirm-email")]
+        [AllowAnonymous]
+        [OpenApiOperation("Confirm email address for a user.", "")]
+        public Task<string> ConfirmEmailAsync([FromQuery] string userId, [FromQuery] string code, CancellationToken cancellationToken)
+        {
+            return _userService.ConfirmEmailAsync(userId, code, cancellationToken);
         }
 
         private string GetIpAddress() =>
        Request.Headers.ContainsKey("X-Forwarded-For")
            ? Request.Headers["X-Forwarded-For"]
            : HttpContext.Connection.RemoteIpAddress?.MapToIPv4().ToString() ?? "N/A";
+
+        private string GetOriginFromRequest() => $"{Request.Scheme}://{Request.Host.Value}{Request.PathBase.Value}";
+
     }
 }
