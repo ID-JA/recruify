@@ -8,7 +8,7 @@ using JobEntity = FastRecruiter.Domain.Entities.Job;
 
 namespace FastRecruiter.Application.Job.Commands
 {
-    public class CreateJobRequest : IRequest<string>
+    public class CreateJobCommand : IRequest<string>
     {
         public string Title { get; set; } = default!;
         public string Location { get; set; } = default!;
@@ -20,10 +20,9 @@ namespace FastRecruiter.Application.Job.Commands
         public string CompanyDescription { get; set; } = default!;
         public int SavaAsDraft { get; set; }
     }
-
-    public class CreateJobRequestValidator : AbstractValidator<CreateJobRequest>
+    public class CreateJobCommandValidator : AbstractValidator<CreateJobCommand>
     {
-        public CreateJobRequestValidator()
+        public CreateJobCommandValidator()
         {
             RuleFor(x => x.Title).NotEmpty();
             RuleFor(x => x.Location).NotEmpty();
@@ -36,7 +35,7 @@ namespace FastRecruiter.Application.Job.Commands
         }
     }
 
-    public class CreateJobRequestHandler : IRequestHandler<CreateJobRequest, string>
+    public class CreateJobRequestHandler : IRequestHandler<CreateJobCommand, string>
     {
         private readonly IRepository<JobEntity> _jobRepository;
         private readonly IReadRepository<Employer> _employerRepository;
@@ -50,7 +49,7 @@ namespace FastRecruiter.Application.Job.Commands
         }
 
 
-        public async Task<string> Handle(CreateJobRequest request, CancellationToken cancellationToken)
+        public async Task<string> Handle(CreateJobCommand request, CancellationToken cancellationToken)
         {
 
             var identityId = _currentUser.GetUserId();
@@ -75,4 +74,5 @@ namespace FastRecruiter.Application.Job.Commands
             return job.Id;
         }
     }
+
 }

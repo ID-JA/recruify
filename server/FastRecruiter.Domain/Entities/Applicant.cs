@@ -17,8 +17,8 @@ public class Applicant : IAggregateRoot
     public Job Job { get; private set; }
     public string JobId { get; private set; }
 
-    public virtual ICollection<Experience> Experiences { get; private set; } = new List<Experience>();
-    public virtual ICollection<Education> Educations { get; private set; } = new List<Education>();
+    public ICollection<Experience> Experiences { get; private set; } = new List<Experience>();
+    public ICollection<Education> Educations { get; private set; } = new List<Education>();
 
     public static Applicant CreateApplicant(string name, string email, string phoneNumber, string jobId)
     {

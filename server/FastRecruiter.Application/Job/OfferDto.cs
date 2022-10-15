@@ -1,4 +1,5 @@
-﻿using Mapster;
+﻿using FastRecruiter.Domain.Enums;
+using Mapster;
 using JobEntity = FastRecruiter.Domain.Entities.Job;
 
 namespace FastRecruiter.Application.Job
@@ -15,22 +16,15 @@ namespace FastRecruiter.Application.Job
         public string Skills { get; set; }
         public string WhyUs { get; set; }
         public string CompanyDescription { get; set; }
+        public Status Status { get; set; }
 
         public static TypeAdapterConfig GetMapsterConfig()
         {
             var config = new TypeAdapterConfig();
             config.NewConfig<JobEntity, OfferDto>()
-                .Map(dest => dest.Id, src => src.Id)
-                .Map(dest => dest.Title, src => src.Title)
-                .Map(dest => dest.Location, src => src.Location)
-                .Map(dest => dest.CompanyName, src => src.Employer.CompanyName)
-                .Map(des => des.Description, src => src.Description)
-                .Map(des => des.Address, src => src.Address)
-                .Map(des => des.EmploymentType, src => src.EmploymentType)
-                .Map(des => des.Skills, src => src.Skills)
-                .Map(des => des.WhyUs, src => src.WhyUs)
-                .Map(des => des.CompanyDescription, src => src.CompanyDescription);
+                .Map(dest => dest.CompanyName, src => src.Employer.CompanyName);
             return config;
         }
+
     }
 }

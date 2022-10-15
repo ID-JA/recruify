@@ -5,23 +5,17 @@ using FastRecruiter.Application.Specifications;
 using FastRecruiter.Domain.Entities;
 using MediatR;
 using JobEntity = FastRecruiter.Domain.Entities.Job;
-
 namespace FastRecruiter.Application.Job.Commands
 {
-    public class UpdateJobStatus : IRequest<string>
+    public class UpdateJobStatusCommand : IRequest<string>
     {
         public string JobId { get; set; } = default!;
         public string Status { get; set; } = default!;
 
-        public UpdateJobStatus(string jobId, string status)
-        {
-            JobId = jobId;
-            Status = status;
-        }
     }
 
 
-    public class UpdateJobStatusHandler : IRequestHandler<UpdateJobStatus, string>
+    public class UpdateJobStatusHandler : IRequestHandler<UpdateJobStatusCommand, string>
     {
         private readonly IRepository<JobEntity> _jobRepository;
         private readonly IReadRepository<Employer> _employerRepository;
@@ -34,7 +28,7 @@ namespace FastRecruiter.Application.Job.Commands
             _currentUser = currentUser;
         }
 
-        public async Task<string> Handle(UpdateJobStatus request, CancellationToken cancellationToken)
+        public async Task<string> Handle(UpdateJobStatusCommand request, CancellationToken cancellationToken)
         {
             var employerSpec = new EmployerByAuthIdSpec(_currentUser.GetUserId());
             var employer = await _employerRepository.FirstOrDefaultAsync(employerSpec);

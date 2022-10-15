@@ -14,11 +14,11 @@ namespace FastRecruiter.Api.Controllers.v1
         [HttpGet("{id}")]
         public Task<OfferDto> GetOffer(string id)
         {
-            return Mediator.Send(new GetJobOfferRequest(id));
+            return Mediator.Send(new GetOfferQuery(id));
         }
 
         [HttpPost("{id}")]
-        public async Task<ActionResult<string>> ApplyToOffer(ApplyToOfferRequest request, string id)
+        public async Task<ActionResult<string>> ApplyToOffer(ApplyToJobCommand request, string id)
         {
             return id != request.JobId
                 ? BadRequest()

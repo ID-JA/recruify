@@ -17,4 +17,9 @@
     <ProjectReference Include="..\FastRecruiter.Domain\FastRecruiter.Domain.csproj" />
   </ItemGroup>
 
+  <ItemGroup>
+    <Folder Include="Candidate\Commands\" />
+    <Folder Include="Candidate\Queries\" />
+  </ItemGroup>
+
 </Project>

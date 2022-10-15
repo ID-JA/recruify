@@ -184,7 +184,7 @@ namespace FastRecruiter.Infrasructure.Migrations
                         .IsRequired()
                         .HasColumnType("nvarchar(max)");
 
-                    b.Property<string>("EmployerId")
+                    b.Property<string>("IdentityId")
                         .IsRequired()
                         .HasColumnType("nvarchar(450)");
 
@@ -216,7 +216,7 @@ namespace FastRecruiter.Infrasructure.Migrations
 
                     b.HasKey("Id");
 
-                    b.HasIndex("EmployerId");
+                    b.HasIndex("IdentityId");
 
                     b.ToTable("Jobs");
                 });
@@ -485,7 +485,7 @@ namespace FastRecruiter.Infrasructure.Migrations
                 {
                     b.HasOne("FastRecruiter.Domain.Entities.Employer", "Employer")
                         .WithMany("Jobs")
-                        .HasForeignKey("EmployerId")
+                        .HasForeignKey("IdentityId")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
 

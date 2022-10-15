@@ -62,7 +62,7 @@ public class Job : IAggregateRoot
         return job;
     }
 
-    public void UpdateJob(string title, string location, string address, string employmentType, string description, string whyUs, string companyDescription)
+    public void UpdateJob(string title, string location, string address, string employmentType, string description, string whyUs, string companyDescription, string skills)
     {
         Title = title;
         Location = location;
@@ -71,6 +71,7 @@ public class Job : IAggregateRoot
         Description = description;
         WhyUs = whyUs;
         CompanyDescription = companyDescription;
+        Skills = skills;
         UpdatedAt = DateTime.UtcNow;
     }
 
