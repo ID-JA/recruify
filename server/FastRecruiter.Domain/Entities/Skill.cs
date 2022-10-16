@@ -1,6 +1,8 @@
-﻿namespace FastRecruiter.Domain.Entities;
+﻿using FastRecruiter.Domain.Contracts;
 
-public class Skill
+namespace FastRecruiter.Domain.Entities;
+
+public class Skill : IAggregateRoot
 {
     public int Id { get; set; }
 
