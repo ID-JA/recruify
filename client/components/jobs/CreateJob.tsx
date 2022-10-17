@@ -1,25 +1,18 @@
 import { yupResolver } from '@hookform/resolvers/yup'
 import { Button, Group, Select, Text, Textarea, TextInput } from '@mantine/core'
 import { useDebouncedValue } from '@mantine/hooks'
-import { ToolbarControl } from '@mantine/rte/lib/components/Toolbar/controls'
-import { useState } from 'react'
 
+import { useState } from 'react'
 import { Controller, useForm } from 'react-hook-form'
+import { InputActionMeta } from 'react-select'
 import ReactSelectCreatable from 'react-select/creatable'
 import * as yup from 'yup'
+
 import { useSkills } from '~/hooks/use-skills'
+import { EMPLOYMENT_TYPES } from '~/mock/data'
 
 import RichTextEditor from '../RichTextEditor'
 import useStyles from './CreateJob.styles'
-
-const employmentTypes = [
-  { value: 'full_time', label: 'Full Time' },
-  { value: 'part_time', label: 'Part Time' },
-  { value: 'contract', label: 'Contract' },
-  { value: 'temporary', label: 'Temporary' },
-  { value: 'internship', label: 'Internship' },
-  { value: 'other', label: 'Other' },
-]
 
 const validationSchema = yup.object().shape({
   job_title: yup.string().required('Job title is required'),
@@ -48,16 +41,9 @@ const defaultValues = {
   company_description: '',
 }
 
-const editorControls: ToolbarControl[][] = [
-  ['bold', 'italic', 'underline', 'link', 'image'],
-  ['unorderedList', 'h1', 'h2', 'h3'],
-  ['sup', 'sub'],
-  ['alignLeft', 'alignCenter', 'alignRight'],
-]
-
-function CreateJob() {
+function CreateJobForm() {
   const [searchedSkill, setSearchedSkill] = useState('')
-  const { classes, cx } = useStyles()
+  const { classes } = useStyles()
 
   const {
     handleSubmit,
@@ -74,8 +60,7 @@ function CreateJob() {
     console.log(values)
   }
 
-  // eslint-disable-next-line @typescript-eslint/no-explicit-any
-  const handleInputSkillsChange = (value: string, event: any) => {
+  const handleInputSkillsChange = (value: string, event: InputActionMeta) => {
     if (event.action !== 'input-blur' && event.action !== 'menu-close') {
       setSearchedSkill(value)
     }
@@ -112,7 +97,7 @@ function CreateJob() {
               className={classes.field}
               label="Employment Type"
               placeholder="Select one"
-              data={employmentTypes}
+              data={EMPLOYMENT_TYPES}
               error={errors.employment_type && errors.employment_type.message}
               {...register('employment_type')}
               {...field}
@@ -121,32 +106,13 @@ function CreateJob() {
           control={control}
           name="employment_type"
         />
-        <div className={classes.fieldWrapper}>
-          <label className={classes.label}>Job Description</label>
-          <Controller
-            render={({ field }) => (
-              <RichTextEditor
-                mb={5}
-                controls={editorControls}
-                placeholder="Enter job description"
-                {...register('job_description')}
-                sticky
-                className={cx({ [classes.invalid]: errors.job_description })}
-                {...field}
-              />
-            )}
-            control={control}
-            name="job_description"
-          />
-          {errors.job_description && (
-            <span
-              className={classes.invalidMessage}
-              key="job-description-error"
-            >
-              {errors.job_description.message}
-            </span>
-          )}
-        </div>
+        <RichTextEditor
+          label="Job Description"
+          register={register}
+          name="job_description"
+          control={control}
+          error={errors.job_description && errors.job_description.message}
+        />
 
         <div className={classes.fieldWrapper}>
           <label className={classes.label}>Skills</label>
@@ -158,6 +124,7 @@ function CreateJob() {
           <Controller
             render={({ field }) => (
               <ReactSelectCreatable
+                instanceId="skills-autocomplete"
                 isClearable
                 isMulti
                 isLoading={searchStatus === 'loading'}
@@ -172,22 +139,6 @@ function CreateJob() {
             control={control}
             name="skills"
           />
-          {/* <Controller
-            render={({ field }) => (
-              <ReactSelect
-                instanceId="creatable-select-skills"
-                aria-label="select-skills"
-                isMulti
-                isClearable
-                options={data}
-                onInputChange={(value) => handleInputSkillsChange(value)}
-                {...register('skills')}
-                {...field}
-              />
-            )}
-            control={control}
-            name="skills"
-          /> */}
         </div>
 
         <Textarea
@@ -224,4 +175,4 @@ function CreateJob() {
   )
 }
 
-export { CreateJob }
+export { CreateJobForm }

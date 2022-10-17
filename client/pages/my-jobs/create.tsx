@@ -1,5 +1,5 @@
 import { Divider, Title } from '@mantine/core'
-import { MainLayout, CreateJob } from '~/components'
+import { CreateJobForm, MainLayout } from '~/components'
 import { NextPageWithLayout } from '../_app'
 
 const CreateNewJob: NextPageWithLayout = () => {
@@ -9,7 +9,7 @@ const CreateNewJob: NextPageWithLayout = () => {
         Post a job
       </Title>
       <Divider my="lg" />
-      <CreateJob />
+      <CreateJobForm />
     </>
   )
 }
