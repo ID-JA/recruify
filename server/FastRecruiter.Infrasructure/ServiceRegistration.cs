@@ -1,5 +1,6 @@
 ﻿using FastRecruiter.Infrasructure.Auth;
 using FastRecruiter.Infrasructure.Common;
+using FastRecruiter.Infrasructure.Cors;
 using FastRecruiter.Infrasructure.Mailing;
 using FastRecruiter.Infrasructure.Middleware;
 using FastRecruiter.Infrasructure.OpenApi;
@@ -21,6 +22,7 @@ namespace FastRecruiter.Infrasructure
             services
                .AddApiVersioning()
                 .AddAuth(configuration)
+                .AddCorsPolicy(configuration)
                 .AddExceptionMiddleware()
                 .AddMailing(configuration)
                 .AddMediatR(Assembly.GetExecutingAssembly())
@@ -46,6 +48,7 @@ namespace FastRecruiter.Infrasructure
            .UseStaticFiles()
            .UseExceptionMiddleware()
            .UseRouting()
+           .UseCorsPolicy()
            .UseAuthentication()
            .UseCurrentUser()
            .UseAuthorization()
