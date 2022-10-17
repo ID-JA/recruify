@@ -2,13 +2,13 @@ import { yupResolver } from '@hookform/resolvers/yup'
 import { Button, Group, Select, Text, Textarea, TextInput } from '@mantine/core'
 import { useDebouncedValue } from '@mantine/hooks'
 import { ToolbarControl } from '@mantine/rte/lib/components/Toolbar/controls'
+import { useState } from 'react'
 
-import React, { useState } from 'react'
 import { Controller, useForm } from 'react-hook-form'
-import AsyncCreatableSelect from 'react-select/async-creatable'
+import ReactSelectCreatable from 'react-select/creatable'
 import * as yup from 'yup'
+import { useSkills } from '~/hooks/use-skills'
 
-import { professionalSkillOptions } from '../../mock/data'
 import RichTextEditor from '../RichTextEditor'
 import useStyles from './CreateJob.styles'
 
@@ -55,24 +55,10 @@ const editorControls: ToolbarControl[][] = [
   ['alignLeft', 'alignCenter', 'alignRight'],
 ]
 
-const filterColors = (inputValue: string) => {
-  return professionalSkillOptions.filter((i) =>
-    i.label.toLowerCase().includes(inputValue.toLowerCase())
-  )
-}
-
-const promiseOptions = (inputValue: string) =>
-  // eslint-disable-next-line @typescript-eslint/no-explicit-any
-  new Promise<any>((resolve) => {
-    setTimeout(() => {
-      resolve(filterColors(inputValue))
-    }, 1000)
-  })
-
 function CreateJob() {
+  const [searchedSkill, setSearchedSkill] = useState('')
   const { classes, cx } = useStyles()
-  const [openSelect, setOpenSelect] = useState(false)
-  const [debounced] = useDebouncedValue(openSelect, 200)
+
   const {
     handleSubmit,
     register,
@@ -82,13 +68,19 @@ function CreateJob() {
     defaultValues,
     resolver: yupResolver(validationSchema),
   })
+  const [debounced] = useDebouncedValue(searchedSkill, 500)
 
   const onSubmit = (values: typeof defaultValues) => {
     console.log(values)
   }
 
-  const handleSelectInputChange = (value: string) =>
-    value.length > 1 ? setOpenSelect(true) : setOpenSelect(false)
+  // eslint-disable-next-line @typescript-eslint/no-explicit-any
+  const handleInputSkillsChange = (value: string, event: any) => {
+    if (event.action !== 'input-blur' && event.action !== 'menu-close') {
+      setSearchedSkill(value)
+    }
+  }
+  const { data, status: searchStatus } = useSkills(debounced)
 
   return (
     <div className={classes.wrapper}>
@@ -129,7 +121,6 @@ function CreateJob() {
           control={control}
           name="employment_type"
         />
-
         <div className={classes.fieldWrapper}>
           <label className={classes.label}>Job Description</label>
           <Controller
@@ -163,16 +154,17 @@ function CreateJob() {
             Target the exact job seekers you need by adding skill keywords
             below.
           </div>
+
           <Controller
             render={({ field }) => (
-              <AsyncCreatableSelect
-                instanceId="creatable-select-skills"
-                aria-label="select-skills"
+              <ReactSelectCreatable
+                isClearable
                 isMulti
-                cacheOptions
-                menuIsOpen={debounced}
-                onInputChange={handleSelectInputChange}
-                loadOptions={promiseOptions}
+                isLoading={searchStatus === 'loading'}
+                inputValue={searchedSkill}
+                options={data}
+                menuIsOpen={debounced.length >= 2}
+                onInputChange={handleInputSkillsChange}
                 {...register('skills')}
                 {...field}
               />
@@ -180,6 +172,22 @@ function CreateJob() {
             control={control}
             name="skills"
           />
+          {/* <Controller
+            render={({ field }) => (
+              <ReactSelect
+                instanceId="creatable-select-skills"
+                aria-label="select-skills"
+                isMulti
+                isClearable
+                options={data}
+                onInputChange={(value) => handleInputSkillsChange(value)}
+                {...register('skills')}
+                {...field}
+              />
+            )}
+            control={control}
+            name="skills"
+          /> */}
         </div>
 
         <Textarea

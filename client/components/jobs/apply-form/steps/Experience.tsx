@@ -16,8 +16,6 @@ const months = getMonthsNames('en', 'MMMM').map((month) => ({
   value: month,
 }))
 
-
-
 const validationSchema = yup.object().shape({
   job_position: yup.string().required('this field is required'),
   company_name: yup.string().required('this field is required'),
