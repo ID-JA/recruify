@@ -1,20 +1,19 @@
 ﻿using FastRecruiter.API.Controllers;
+using FastRecruiter.Application.Common.Models;
 using FastRecruiter.Application.Job;
 using FastRecruiter.Application.Job.Queries;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
-using System.Security.Claims;
 
 namespace FastRecruiter.Api.Controllers.v1
 {
     [Authorize]
     public class EmployerController : VersionedApiController
     {
-        [HttpGet("jobs")]
-        public Task<IEnumerable<JobDto>> GetJobs()
+        [HttpPost("jobs")]
+        public Task<PaginationResponse<JobDto>> GetJobs(GetJobListQuery request)
         {
-            var identityId = User.FindFirstValue(ClaimTypes.NameIdentifier);
-            return Mediator.Send(new GetJobListQuery(identityId));
+            return Mediator.Send(request);
         }
     }
 }

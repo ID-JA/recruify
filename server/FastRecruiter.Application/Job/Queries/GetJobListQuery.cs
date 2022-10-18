@@ -1,41 +1,37 @@
-﻿using FastRecruiter.Application.Common.Persistence;
+﻿using FastRecruiter.Application.Common.Interfaces;
+using FastRecruiter.Application.Common.Models;
+using FastRecruiter.Application.Common.Persistence;
 using FastRecruiter.Application.Specifications;
-using FastRecruiter.Domain.Entities;
-using Mapster;
 using MediatR;
 using JobEntity = FastRecruiter.Domain.Entities.Job;
 
 namespace FastRecruiter.Application.Job.Queries
 {
-    public class GetJobListQuery : IRequest<IEnumerable<JobDto>>
+    public class GetJobListQuery : PaginationFilter, IRequest<PaginationResponse<JobDto>>
     {
-        public string UserId { get; set; }
-        public GetJobListQuery(string userId)
-        {
-            UserId = userId;
-        }
     }
 
-    public class GetJobsQueryHandler : IRequestHandler<GetJobListQuery, IEnumerable<JobDto>>
+    public class GetJobsQueryHandler : IRequestHandler<GetJobListQuery, PaginationResponse<JobDto>>
     {
         private readonly IReadRepository<JobEntity> _jobRepository;
-        private readonly IReadRepository<Employer> _employerRepository;
+        private ICurrentUser _currentUser;
 
-        public GetJobsQueryHandler(IReadRepository<JobEntity> jobRepository, IReadRepository<Employer> employerRepository)
+        public GetJobsQueryHandler(IReadRepository<JobEntity> jobRepository, ICurrentUser currentUser)
         {
             _jobRepository = jobRepository;
-            _employerRepository = employerRepository;
+            _currentUser = currentUser;
         }
 
-        public async Task<IEnumerable<JobDto>> Handle(GetJobListQuery request, CancellationToken cancellationToken)
+        public async Task<PaginationResponse<JobDto>> Handle(GetJobListQuery request, CancellationToken cancellationToken)
         {
-            var employerSpec = new EmployerByAuthIdSpec(request.UserId);
-            var employer = await _employerRepository.FirstOrDefaultAsync(employerSpec, cancellationToken);
 
-            var jobsSpec = new EmployerJobsSpec(employer!.Id);
-            var jobs = await _jobRepository.ListAsync(jobsSpec, cancellationToken);
+            var spec = new EmployerJobsSpec(request, _currentUser.GetUserId());
 
-            return jobs.Adapt<IEnumerable<JobDto>>(JobDto.GetMapsterConfig());
+            return await _jobRepository.PaginatedListAsync(
+                spec,
+                request.PageNumber,
+                request.PageSize,
+                cancellationToken: cancellationToken);
         }
     }
 }

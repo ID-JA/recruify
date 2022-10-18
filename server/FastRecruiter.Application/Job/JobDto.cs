@@ -1,8 +1,9 @@
-﻿using Mapster;
+﻿using FastRecruiter.Application.Common.Interfaces;
+using Mapster;
 using JobEntity = FastRecruiter.Domain.Entities.Job;
 namespace FastRecruiter.Application.Job
 {
-    public class JobDto
+    public class JobDto : IDto
     {
 
         public string Id { get; set; }
