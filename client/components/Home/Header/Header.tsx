@@ -1,6 +1,6 @@
 import { Button, Container } from '@mantine/core'
 import Link from 'next/link'
-import { Logo } from '~/components/logo/Logo'
+import { Logo } from '~/components'
 import useStyles from './Header.styles'
 
 function Header() {
