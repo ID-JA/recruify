@@ -15,5 +15,7 @@ namespace FastRecruiter.Api.Controllers.v1
         {
             return Mediator.Send(request);
         }
+
+
     }
 }

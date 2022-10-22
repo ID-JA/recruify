@@ -1,19 +1,18 @@
-﻿using Ardalis.Specification;
-using FastRecruiter.Application.Common.Models;
+﻿using FastRecruiter.Application.Common.Models;
 
 namespace FastRecruiter.Application.Specifications
 {
-    public class EntitiesByPaginationFilterSpec<T, TResult> : Specification<T, TResult>
+    public class EntitiesByPaginationFilterSpec<T, TResult> : EntitiesByBaseFilterSpec<T, TResult>
     {
         public EntitiesByPaginationFilterSpec(PaginationFilter filter)
-             =>
+            : base(filter) =>
             Query.PaginateBy(filter);
     }
 
-    public class EntitiesByPaginationFilterSpec<T> : Specification<T>
+    public class EntitiesByPaginationFilterSpec<T> : EntitiesByBaseFilterSpec<T>
     {
         public EntitiesByPaginationFilterSpec(PaginationFilter filter)
-             =>
+            : base(filter) =>
             Query.PaginateBy(filter);
     }
 }

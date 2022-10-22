@@ -14,5 +14,9 @@ namespace FastRecruiter.Application.Specifications
                 .Include(j => j.Employer)
                 .Include(j => j.Applicants);
         }
+
     }
+
+
+
 }
