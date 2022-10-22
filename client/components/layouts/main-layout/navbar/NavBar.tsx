@@ -1,4 +1,4 @@
-import { ScrollArea } from '@mantine/core'
+import { Badge, ScrollArea } from '@mantine/core'
 import mainLinks from './main-links'
 import NavBarMainLink from './NavBarMainLink/NavbarMainLink'
 
@@ -60,10 +60,16 @@ export default function NavBar({ onClose, opened }: NavBarProps) {
     <NavBarMainLink
       key={item.to}
       to={item.to}
-      icon={<item.icon size={24} strokeWidth={1.5} />}
+      icon={<item.icon size={28} strokeWidth={2} />}
       onClick={onClose}
+      disabled={!item.released}
     >
-      {item.label}
+      <span>{item.label}</span>
+      {!item.released && (
+        <Badge color="yellow" size="sm" style={{ marginLeft: 10 }}>
+          coming soon
+        </Badge>
+      )}
     </NavBarMainLink>
   ))
   return (

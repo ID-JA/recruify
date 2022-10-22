@@ -83,9 +83,9 @@ function CreateJobForm() {
           {...register('job_location')}
         />
         <TextInput
+          label="Job Address"
           className={classes.field}
           inputWrapperOrder={['label', 'description', 'input', 'error']}
-          label="Job Address"
           description="Some job boards allow users to search with a map. Enter your street address for better visibility."
           error={errors.job_address_one && errors.job_address_one.message}
           {...register('job_address_one')}

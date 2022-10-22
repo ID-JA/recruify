@@ -9,6 +9,7 @@ interface NavBarMainLinkProps {
   icon: React.ReactNode
   children: React.ReactNode
   onClick?(): void
+  disabled?: boolean
 }
 
 export default function NavBarMainLink({
@@ -17,10 +18,10 @@ export default function NavBarMainLink({
   icon,
   to,
   onClick,
+  disabled,
 }: NavBarMainLinkProps) {
   const { classes, cx } = useStyles()
   const router = useRouter()
-
   return (
     <Link href={to}>
       <a
@@ -30,10 +31,11 @@ export default function NavBarMainLink({
             router.pathname.split('/').includes('create')
               ? router.pathname === to
               : router.pathname.startsWith(to),
+          [classes.disabled]: disabled,
         })}
         onClick={onClick}
       >
-        {icon && icon}
+        {Boolean(icon) && icon}
         <div className={classes.body}>{children}</div>
       </a>
     </Link>

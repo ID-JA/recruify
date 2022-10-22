@@ -8,7 +8,7 @@ export default createStyles((theme: MantineTheme) => ({
     alignItems: 'center',
     textDecoration: 'none',
     color: '#344054', //'hsl(212,20%,16%)',
-    fontWeight: 700,
+    // fontWeight: 700,
     fontSize: '15px',
     lineHeight: '24px',
     padding: 12,
@@ -21,14 +21,27 @@ export default createStyles((theme: MantineTheme) => ({
   },
 
   active: {
-    color: theme.colorScheme === 'dark' ? theme.white : theme.black,
+    // color: theme.colorScheme === 'dark' ? theme.white : theme.black,
     backgroundColor:
       theme.colorScheme === 'dark'
         ? theme.colors.dark[6]
         : theme.colors.gray[0],
+    color: theme.colors.blue,
+    fontWeight: 700,
+    // backgroundColor: theme.colors.blue[2],
   },
 
   body: {
     marginLeft: theme.spacing.sm,
+    display: 'flex',
+    alignItems: 'center',
+    justifyContent: 'space-between',
+  },
+  disabled: {
+    color:
+      theme.colorScheme === 'dark'
+        ? theme.colors.dark[3]
+        : theme.colors.gray[5],
+    pointerEvents: 'none',
   },
 }))

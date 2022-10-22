@@ -36,6 +36,12 @@ export default createStyles((theme) => ({
     paddingTop: 6,
     display: 'flex',
     alignItems: 'center',
+    justifyContent: 'center',
+    '& > span': {
+      fontWeight: 700,
+      marginBottom: 5,
+      marginRight: 5,
+    },
   },
 
   mainSection: {
