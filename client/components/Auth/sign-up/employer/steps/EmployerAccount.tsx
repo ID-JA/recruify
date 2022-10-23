@@ -3,21 +3,15 @@ import { useFormContext } from 'react-hook-form'
 import * as yup from 'yup'
 
 const validationSchema = yup.object().shape({
-  email: yup.string().email().required(),
-  name: yup.string().required(),
-  password: yup.string().required(),
+  email: yup.string().email().required('this field is required'),
+  name: yup.string().required('this field is required'),
+  password: yup.string().required('this field is required'),
 })
 
 interface IEmployerAccount {
   email: string
   name: string
   password: string
-}
-
-const defaultValues: IEmployerAccount = {
-  email: '',
-  name: '',
-  password: '',
 }
 
 function EmployerAccount() {
@@ -59,6 +53,5 @@ function EmployerAccount() {
 export default {
   Component: EmployerAccount,
   validationSchema,
-  defaultValues,
   key: 'employer-account',
 }

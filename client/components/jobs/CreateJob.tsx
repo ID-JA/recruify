@@ -175,4 +175,5 @@ function CreateJobForm() {
   )
 }
 
-export { CreateJobForm }
+// eslint-disable-next-line import/no-anonymous-default-export
+export default { Component: CreateJobForm, defaultValues, validationSchema }

@@ -1,15 +1,11 @@
 import { yupResolver } from '@hookform/resolvers/yup'
-import {
-  Button,
-  Center,
-  Container,
-  Paper,
-  Progress,
-  Title,
-} from '@mantine/core'
-
+import { Button, Center, Container, Paper, Progress } from '@mantine/core'
+import { useMutation } from '@tanstack/react-query'
+import { useRouter } from 'next/router'
 import { useReducer } from 'react'
 import { FormProvider, useForm } from 'react-hook-form'
+import Logo from '~/components/logo/Logo'
+import { signupEmployer } from '~/services/auth-service'
 
 import { CompanyDetails, EmployerAccount, FinalizeDetails } from './steps'
 
@@ -29,7 +25,7 @@ function reducer(state: StepperState, action: Action) {
     case 'next':
       return {
         ...state,
-        progress: state.progress < 100 ? state.progress + 20 : state.progress,
+        progress: state.progress < 100 ? state.progress + 34 : state.progress,
         activeStep:
           state.activeStep < 2 ? state.activeStep + 1 : state.activeStep,
       }
@@ -57,7 +53,7 @@ function reducer(state: StepperState, action: Action) {
 
 const defaultStepperState: StepperState = {
   activeStep: 0,
-  progress: 20,
+  progress: 34,
   data: {},
 }
 
@@ -65,38 +61,44 @@ const useStepper = () => {
   return useReducer(reducer, defaultStepperState)
 }
 
-type ISignUpFormData =
-  | {
-      name: string
-      email: string
-      password: string
-    }
-  | {
-      companyName: string
-      companyLocation: string
-      website: string
-    }
-  | {
-      position: string
-      zipCode: string
-      phoneNumber: string
-    }
-
 const steps = [EmployerAccount, CompanyDetails, FinalizeDetails]
+
+const defaultValues = {
+  zipCode: 0,
+  position: '',
+  phoneNumber: '',
+  companyName: '',
+  companyLocation: '',
+  companyWebsite: '',
+  email: '',
+  name: '',
+  password: '',
+}
 
 export function EmployerSignUp() {
   const [state, dispatch] = useStepper()
-
-  const methods = useForm<ISignUpFormData>({
-    defaultValues: steps[state.activeStep].defaultValues,
+  const router = useRouter()
+  const methods = useForm<typeof defaultValues>({
+    defaultValues,
     resolver: yupResolver(steps[state.activeStep].validationSchema),
   })
 
   const { handleSubmit } = methods
+  const mutation = useMutation((values: typeof defaultValues) => {
+    return signupEmployer(values)
+  })
 
-  const onSubmit = (values: Record<string, string>) => {
+  const onSubmit = (values: typeof defaultValues) => {
     if (state.activeStep === 2) {
       console.log('submitting...')
+      mutation.mutate(values, {
+        onSuccess: () => {
+          router.push('/signin')
+        },
+        onError: (error) => {
+          console.log(error)
+        },
+      })
     } else {
       dispatch({
         type: 'setData',
@@ -122,7 +124,7 @@ export function EmployerSignUp() {
       />
       <Container mt="30px">
         <Center mb="md">
-          <Title>FastRecruiter</Title>
+          <Logo />
         </Center>
         <Paper
           sx={{
@@ -141,14 +143,21 @@ export function EmployerSignUp() {
                     <Step.Component key={`create-multistep-${Step.key}`} />
                   )
               )}
-              <Button fullWidth size="md" radius="sm" type="submit" mb="md">
+              <Button
+                fullWidth
+                size="md"
+                radius="sm"
+                type="submit"
+                mb="md"
+                loading={mutation.isLoading}
+              >
                 {state.activeStep > 0
                   ? state.activeStep === steps.length - 1
                     ? 'Create Account'
                     : 'Continue'
                   : 'Get Started'}
               </Button>
-              {state.activeStep > 0 && (
+              {/* {state.activeStep > 0 && (
                 <Button
                   fullWidth
                   radius="sm"
@@ -161,7 +170,7 @@ export function EmployerSignUp() {
                 >
                   Previous
                 </Button>
-              )}
+              )} */}
             </form>
           </FormProvider>
         </Paper>
