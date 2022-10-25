@@ -13,6 +13,6 @@ TODO : Clean up the project and refactor code
 - [x] Company Profile
 - [ ] Dashboard
 - [ ] Candidate
-- [ ] New Job
-- [ ] Jobs
+- [x] New Job
+- [x] Jobs
 - [ ] 404 / 500 / 403

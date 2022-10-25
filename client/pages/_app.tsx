@@ -1,4 +1,6 @@
+import { NotificationsProvider } from '@mantine/notifications'
 import { QueryClient, QueryClientProvider } from '@tanstack/react-query'
+import { ReactQueryDevtools } from '@tanstack/react-query-devtools'
 import { NextPage } from 'next'
 import { AppProps } from 'next/app'
 import Head from 'next/head'
@@ -33,7 +35,10 @@ export default function App(props: AppPropsWithLayout) {
           content="fast recruiter platform helps you to share job offers and search for candidates"
         />
       </Head>
-      <Component {...pageProps} />
+      <NotificationsProvider position="top-right">
+        <Component {...pageProps} />
+      </NotificationsProvider>
+      <ReactQueryDevtools initialIsOpen={false} />
     </QueryClientProvider>
   )
 }

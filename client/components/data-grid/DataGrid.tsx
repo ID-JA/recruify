@@ -16,7 +16,7 @@ import useStyles from './DataGrid.styles'
 import Pagination from './Pagination'
 import { getRowSelectionColumn } from './RowSelection'
 
-export const DEFAULT_INITIAL_PAGE = 0
+export const DEFAULT_INITIAL_PAGE = 1
 export const DEFAULT_INITIAL_SIZE = 10
 
 function DataGrid<TData extends RowData>({
@@ -41,6 +41,9 @@ function DataGrid<TData extends RowData>({
       : columns,
     initialState,
 
+    enableRowSelection: !!withRowSelection,
+    manualPagination: !!total,
+
     getCoreRowModel: getCoreRowModel(),
     getPaginationRowModel: getPaginationRowModel(),
   })
@@ -60,7 +63,7 @@ function DataGrid<TData extends RowData>({
         }))
       }
     },
-    [onPageChange]
+    [table, onPageChange]
   )
 
   const handleRowSelectionChange: OnChangeFn<RowSelectionState> = useCallback(
@@ -74,7 +77,7 @@ function DataGrid<TData extends RowData>({
         }
       })
     },
-    [onRowSelectionChange]
+    [table, onRowSelectionChange]
   )
 
   const pageCount =
@@ -94,10 +97,19 @@ function DataGrid<TData extends RowData>({
       table.setPageSize(
         initialState?.pagination?.pageSize || DEFAULT_INITIAL_SIZE
       )
+      table.setPageIndex(
+        initialState?.pagination?.pageIndex || DEFAULT_INITIAL_PAGE - 1
+      )
     } else {
       table.setPageSize(data.length)
     }
-  }, [withPagination])
+  }, [
+    data.length,
+    initialState?.pagination?.pageIndex,
+    initialState?.pagination?.pageSize,
+    table,
+    withPagination,
+  ])
 
   const { classes, cx } = useStyles({ withBoarder, noEllipsis })
 

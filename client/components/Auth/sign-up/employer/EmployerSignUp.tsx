@@ -1,10 +1,12 @@
 import { yupResolver } from '@hookform/resolvers/yup'
 import { Button, Center, Container, Paper, Progress } from '@mantine/core'
+import { showNotification } from '@mantine/notifications'
 import { useMutation } from '@tanstack/react-query'
 import { useRouter } from 'next/router'
 import { useReducer } from 'react'
 import { FormProvider, useForm } from 'react-hook-form'
 import Logo from '~/components/logo/Logo'
+import { NextPageWithLayout } from '~/pages/_app'
 import { signupEmployer } from '~/services/auth-service'
 
 import { CompanyDetails, EmployerAccount, FinalizeDetails } from './steps'
@@ -75,7 +77,7 @@ const defaultValues = {
   password: '',
 }
 
-export function EmployerSignUp() {
+export const EmployerSignUp: NextPageWithLayout = () => {
   const [state, dispatch] = useStepper()
   const router = useRouter()
   const methods = useForm<typeof defaultValues>({
@@ -93,10 +95,20 @@ export function EmployerSignUp() {
       console.log('submitting...')
       mutation.mutate(values, {
         onSuccess: () => {
+          showNotification({
+            title: 'Success',
+            message: 'Account created successfully',
+            color: 'green',
+          })
           router.push('/signin')
         },
         onError: (error) => {
           console.log(error)
+          showNotification({
+            title: 'Error',
+            message: 'Something went wrong',
+            color: 'red',
+          })
         },
       })
     } else {
@@ -157,20 +169,6 @@ export function EmployerSignUp() {
                     : 'Continue'
                   : 'Get Started'}
               </Button>
-              {/* {state.activeStep > 0 && (
-                <Button
-                  fullWidth
-                  radius="sm"
-                  variant="outline"
-                  onClick={() =>
-                    dispatch({
-                      type: 'prev',
-                    })
-                  }
-                >
-                  Previous
-                </Button>
-              )} */}
             </form>
           </FormProvider>
         </Paper>

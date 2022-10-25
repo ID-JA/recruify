@@ -1,4 +1,5 @@
 import { Button, Container } from '@mantine/core'
+
 import Link from 'next/link'
 
 import Logo from '../../logo/Logo'
@@ -26,6 +27,11 @@ function Header() {
             gap: '1rem',
           }}
         >
+          <Link href="/dashboard" passHref>
+            <Button component="a" radius="md">
+              Dashboard
+            </Button>
+          </Link>
           <Link href="/employer-signup" passHref>
             <Button component="a" radius="md">
               Become a recruiter

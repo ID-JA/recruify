@@ -17,7 +17,7 @@ export default createStyles(
         position: 'relative',
         display: 'flex',
         flexDirection: 'column',
-        overflow: 'hidden',
+        // overflow: 'hidden',
         borderRadius: '4px',
         height: '100%',
         ...(withBoarder && {

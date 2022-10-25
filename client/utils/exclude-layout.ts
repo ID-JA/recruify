@@ -1,6 +1,11 @@
-export const EXCLUDE_LAYOUT_PATHS = ['/', '/jobs']
-export const EXCLUDE_NAVBAR_PATHS = ['/jobs']
-export const EXCLUDE_HEADER_PATHS = ['/jobs']
+export const EXCLUDE_LAYOUT_PATHS = [
+  '/',
+  '/jobs',
+  '/signin',
+  '/employer-signup',
+]
+export const EXCLUDE_NAVBAR_PATHS = ['/jobs', '/signin', '/employer-signup']
+export const EXCLUDE_HEADER_PATHS = ['/jobs', '/signin', '/employer-signup']
 
 export function shouldExcludeHeader(path: string) {
   return EXCLUDE_HEADER_PATHS.some((p) => path.startsWith(p))

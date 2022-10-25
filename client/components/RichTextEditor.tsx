@@ -11,7 +11,7 @@ const MantineRTE = dynamic(() => import('@mantine/rte'), {
   ssr: false,
 
   // Render anything as fallback on server, e.g. loader or html content without editor
-  loading: () => null,
+  loading: () => <div>Loading Rich Text Editor...</div>,
 })
 
 const editorControls: ToolbarControl[][] = [
@@ -80,7 +80,7 @@ function RichTextEditor<TFormValues extends Record<string, unknown>>({
           />
         )}
         control={control}
-        name="job_description"
+        name={name}
       />
       {error && (
         <span className={classes.errorMessage} key="job-description-error">

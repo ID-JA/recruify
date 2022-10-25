@@ -13,15 +13,16 @@ import {
   TextInput,
   Title,
 } from '@mantine/core'
+import { showNotification } from '@mantine/notifications'
 import { useMutation } from '@tanstack/react-query'
-import { AxiosError } from 'axios'
 import Link from 'next/link'
 import { useRouter } from 'next/router'
 import { useState } from 'react'
 import { useForm } from 'react-hook-form'
 import { BrandGoogle } from 'tabler-icons-react'
-import axios from 'utils/axios'
 import * as yup from 'yup'
+import { NextPageWithLayout } from '~/pages/_app'
+import { authenticateUser } from '~/services/auth-service'
 
 const useStyles = createStyles((theme) => ({
   paper: {
@@ -35,6 +36,7 @@ const useStyles = createStyles((theme) => ({
     textDecoration: 'none',
     fontSize: theme.fontSizes.sm,
     fontWeight: 500,
+    fontFamily: theme.fontFamily,
   },
 }))
 
@@ -48,14 +50,9 @@ const defaultValues = {
   password: '',
 }
 
-const authenticateUser = async (body: Record<string, string>) => {
-  const res = await axios.post('/login', body)
-  return res
-}
-
-export function SignIn() {
+export const SignIn: NextPageWithLayout = () => {
   const router = useRouter()
-  const [activeTab, setActiveTab] = useState('job_seeker')
+  const [activeTab, setActiveTab] = useState('employer')
   const { classes } = useStyles()
   const methods = useForm({
     defaultValues,
@@ -71,14 +68,24 @@ export function SignIn() {
 
   const mutate = useMutation(authenticateUser, {
     onSuccess: (response) => {
-      localStorage.setItem('user', JSON.stringify(response.data))
+      localStorage.setItem('token', JSON.stringify(response.data))
       router.push('/dashboard')
     },
-    onError: (error: AxiosError) => console.log(error?.response?.data),
+    // eslint-disable-next-line @typescript-eslint/no-explicit-any
+    onError: (error: any) => {
+      const messages = error?.response?.data?.messages || []
+      messages.forEach((message: string) => {
+        showNotification({
+          title: message,
+          message: 'invalid email or password',
+          color: 'red',
+        })
+      })
+    },
   })
 
   const onSubmit = (values: typeof defaultValues) => {
-    console.log(values)
+    console.log('submitting...')
     mutate.mutate(values)
   }
 
@@ -150,7 +157,9 @@ export function SignIn() {
             passHref
           >
             <Text color="blue" component="a" weight={500}>
-              {activeTab === 'job_seeker' ? 'Create an account' : 'Post a job'}
+              {activeTab === 'job_seeker'
+                ? 'Create an account'
+                : 'Create an account'}
             </Text>
           </Link>
         </Text>

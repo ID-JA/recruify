@@ -1,4 +1,5 @@
 import { Avatar, Badge, Burger } from '@mantine/core'
+import Logo from '~/components/logo/Logo'
 import useStyles from './HeaderDesktop.styles'
 
 interface HeaderProps {
@@ -21,8 +22,12 @@ export function HeaderDesktop({ navbarOpened, toggleNavbar }: HeaderProps) {
       <div className={classes.mainSection}>
         <div className={classes.logoWrapper}>
           <div className={classes.logo}>
-            <span> FastRecruiter </span>
-            <Badge color="blue">beta</Badge>
+            <div>
+              <Logo height={30} width={135} />
+            </div>
+            <Badge color="blue" ml="sm">
+              beta
+            </Badge>
           </div>
         </div>
       </div>

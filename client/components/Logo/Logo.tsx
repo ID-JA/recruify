@@ -1,11 +1,16 @@
-function Logo() {
+type LogoProps = {
+  width?: number
+  height?: number
+}
+
+function Logo({ height = 40, width = 180 }: LogoProps) {
   return (
     <svg
       version="1.2"
       xmlns="http://www.w3.org/2000/svg"
       viewBox="0 0 1186 264"
-      width={180}
-      height={40}
+      width={width}
+      height={height}
     >
       <style
         dangerouslySetInnerHTML={{

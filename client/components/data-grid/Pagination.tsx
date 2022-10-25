@@ -22,7 +22,7 @@ function Pagination<TData>({
   const pageIndex = table.getState().pagination.pageIndex
   const pageSize = table.getState().pagination.pageSize
 
-  const maxRows = total ? total : table.getPaginationRowModel().rows.length
+  const maxRows = total ? total : table.getPrePaginationRowModel().rows.length
   const rowsPerPage = table.getRowModel().rows.length
   const firstRowNum = maxRows === 0 ? 0 : pageIndex * pageSize + 1
   const lastRowNum = maxRows === 0 ? 0 : firstRowNum + rowsPerPage - 1
@@ -40,8 +40,9 @@ function Pagination<TData>({
       <MantinePagination
         size={fontSize}
         page={table.getState().pagination.pageIndex + 1}
-        total={Math.ceil(table.getPageCount())}
+        total={table.getPageCount()}
         onChange={handlePageChange}
+        className={classes[3]}
         siblings={1}
       />
     </Group>

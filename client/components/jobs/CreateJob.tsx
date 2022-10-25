@@ -1,6 +1,9 @@
 import { yupResolver } from '@hookform/resolvers/yup'
 import { Button, Group, Select, Text, Textarea, TextInput } from '@mantine/core'
 import { useDebouncedValue } from '@mantine/hooks'
+import { showNotification } from '@mantine/notifications'
+import { useMutation } from '@tanstack/react-query'
+import { useRouter } from 'next/router'
 
 import { useState } from 'react'
 import { Controller, useForm } from 'react-hook-form'
@@ -10,41 +13,42 @@ import * as yup from 'yup'
 
 import { useSkills } from '~/hooks/use-skills'
 import { EMPLOYMENT_TYPES } from '~/mock/data'
+import { createNewJob } from '~/services/employer-services'
 
 import RichTextEditor from '../RichTextEditor'
 import useStyles from './CreateJob.styles'
 
 const validationSchema = yup.object().shape({
-  job_title: yup.string().required('Job title is required'),
-  job_location: yup.string().required('Job location is required'),
-  job_address_one: yup.string().required('Job address is required'),
-  employment_type: yup.string().required('Employment type is required'),
-  job_description: yup.string().required('Job description is required'),
+  title: yup.string().required('Job title is required'),
+  location: yup.string().required('Job location is required'),
+  address: yup.string().required('Job address is required'),
+  employmentType: yup.string().required('Employment type is required'),
+  description: yup.string().required('Job description is required'),
   skills: yup.array().of(
     yup.object().shape({
       label: yup.string(),
       value: yup.string(),
     })
   ),
-  why_work_here: yup.string().required('This field is required'),
-  company_description: yup.string().required('company description is required'),
+  whyUs: yup.string().required('This field is required'),
+  companyDescription: yup.string().required('company description is required'),
 })
 
 const defaultValues = {
-  job_title: '',
-  job_location: '',
-  job_address_one: '',
-  employment_type: '',
-  job_description: '',
+  title: '',
+  location: '',
+  address: '',
+  employmentType: '',
+  description: '',
   skills: [],
-  why_work_here: '',
-  company_description: '',
+  whyUs: '',
+  companyDescription: '',
 }
 
-function CreateJobForm() {
+export function CreateJobForm() {
   const [searchedSkill, setSearchedSkill] = useState('')
   const { classes } = useStyles()
-
+  const router = useRouter()
   const {
     handleSubmit,
     register,
@@ -55,9 +59,40 @@ function CreateJobForm() {
     resolver: yupResolver(validationSchema),
   })
   const [debounced] = useDebouncedValue(searchedSkill, 500)
+  const { data, status: searchStatus } = useSkills(debounced)
 
-  const onSubmit = (values: typeof defaultValues) => {
-    console.log(values)
+  const mutation = useMutation(createNewJob, {
+    onSuccess: () => {
+      router.push('/my-jobs')
+      showNotification({
+        title: 'Job created successfully',
+        message: 'Your job has been created successfully',
+        color: 'green',
+      })
+    },
+    onError: () => {
+      showNotification({
+        title: 'Error',
+        message: 'Error occurred while creating job',
+        color: 'red',
+      })
+    },
+  })
+
+  const handleSubmitPublish = (values: typeof defaultValues) => {
+    mutation.mutate({
+      ...values,
+      savaAsDraft: 1,
+      skills: JSON.stringify(values.skills),
+    })
+  }
+
+  const handleSubmitDraft = (values: typeof defaultValues) => {
+    mutation.mutate({
+      ...values,
+      savaAsDraft: 0,
+      skills: JSON.stringify(values.skills),
+    })
   }
 
   const handleInputSkillsChange = (value: string, event: InputActionMeta) => {
@@ -65,30 +100,29 @@ function CreateJobForm() {
       setSearchedSkill(value)
     }
   }
-  const { data, status: searchStatus } = useSkills(debounced)
 
   return (
     <div className={classes.wrapper}>
-      <form onSubmit={handleSubmit(onSubmit)}>
+      <form>
         <TextInput
           className={classes.field}
           label="Job Title"
-          error={errors.job_title && errors.job_title.message}
-          {...register('job_title')}
+          error={errors.title && errors.title.message}
+          {...register('title')}
         />
         <TextInput
           className={classes.field}
           label="Job Location"
-          error={errors.job_location && errors.job_location.message}
-          {...register('job_location')}
+          error={errors.location && errors.location.message}
+          {...register('location')}
         />
         <TextInput
           label="Job Address"
           className={classes.field}
           inputWrapperOrder={['label', 'description', 'input', 'error']}
           description="Some job boards allow users to search with a map. Enter your street address for better visibility."
-          error={errors.job_address_one && errors.job_address_one.message}
-          {...register('job_address_one')}
+          error={errors.address && errors.address.message}
+          {...register('address')}
         />
 
         <Controller
@@ -98,20 +132,20 @@ function CreateJobForm() {
               label="Employment Type"
               placeholder="Select one"
               data={EMPLOYMENT_TYPES}
-              error={errors.employment_type && errors.employment_type.message}
-              {...register('employment_type')}
+              error={errors.employmentType && errors.employmentType.message}
+              {...register('employmentType')}
               {...field}
             />
           )}
           control={control}
-          name="employment_type"
+          name="employmentType"
         />
         <RichTextEditor
           label="Job Description"
           register={register}
-          name="job_description"
+          name="description"
           control={control}
-          error={errors.job_description && errors.job_description.message}
+          error={errors.description && errors.description.message}
         />
 
         <div className={classes.fieldWrapper}>
@@ -147,8 +181,8 @@ function CreateJobForm() {
           className={classes.field}
           minRows={5}
           description="Give a one-line sales pitch for working at this company (140 characters max.). Note: editing this field will affect all jobs at this hiring company."
-          error={errors.why_work_here && errors.why_work_here.message}
-          {...register('why_work_here')}
+          error={errors.whyUs && errors.whyUs.message}
+          {...register('whyUs')}
         />
         <Textarea
           label="Hiring Company Description"
@@ -156,10 +190,8 @@ function CreateJobForm() {
           className={classes.field}
           minRows={5}
           description="Note: editing this description will affect all jobs at this hiring company."
-          error={
-            errors.company_description && errors.company_description.message
-          }
-          {...register('company_description')}
+          error={errors.companyDescription && errors.companyDescription.message}
+          {...register('companyDescription')}
         />
         <Text mb="md" color="#667085" size="xs">
           By clicking Save & Post Now, I agree that ZipRecruiter may publish
@@ -167,13 +199,24 @@ function CreateJobForm() {
           distribution partners.
         </Text>
         <Group position="left">
-          <Button type="submit">Save & Post Now</Button>
-          <Button variant="subtle">Save Draft</Button>
+          <Button
+            type="submit"
+            onClick={handleSubmit(handleSubmitPublish)}
+            loading={mutation.isLoading}
+            name="publish"
+          >
+            Save & Post Now
+          </Button>
+          <Button
+            type="submit"
+            variant="subtle"
+            onClick={handleSubmit(handleSubmitDraft)}
+            name="draft"
+          >
+            Save Draft
+          </Button>
         </Group>
       </form>
     </div>
   )
 }
-
-// eslint-disable-next-line import/no-anonymous-default-export
-export default { Component: CreateJobForm, defaultValues, validationSchema }

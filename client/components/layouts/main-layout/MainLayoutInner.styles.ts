@@ -26,7 +26,7 @@ export default createStyles(
 
     main: {
       scrollMarginTop: HEADER_HEIGHT,
-      minHeight: 'calc(100vh - 280px)',
+      minHeight: '100vh',
       backgroundColor:
         theme.colorScheme === 'dark'
           ? theme.colors.dark[8]

@@ -27,4 +27,5 @@ export interface DataGridProps<TData extends RowData>
   noEllipsis?: boolean
   striped?: boolean
   highlightOnHover?: boolean
+  pageSizes?: string[]
 }
