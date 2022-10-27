@@ -11,9 +11,9 @@ import { InputActionMeta } from 'react-select'
 import ReactSelectCreatable from 'react-select/creatable'
 import * as yup from 'yup'
 
-import { useSkills } from '~/hooks/use-skills'
-import { EMPLOYMENT_TYPES } from '~/mock/data'
-import { createNewJob } from '~/services/employer-services'
+import { useSkills } from '@/hooks/use-skills'
+import { EMPLOYMENT_TYPES } from '@/mock/data'
+import { createNewJob } from '@/services/employer-services'
 
 import RichTextEditor from '../RichTextEditor'
 import useStyles from './CreateJob.styles'

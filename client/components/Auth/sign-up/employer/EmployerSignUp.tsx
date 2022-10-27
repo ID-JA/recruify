@@ -1,3 +1,6 @@
+import Logo from '@/components/logo/Logo'
+import { signupEmployer } from '@/services/auth-service'
+import { NextPageWithLayout } from '@/types'
 import { yupResolver } from '@hookform/resolvers/yup'
 import { Button, Center, Container, Paper, Progress } from '@mantine/core'
 import { showNotification } from '@mantine/notifications'
@@ -5,9 +8,6 @@ import { useMutation } from '@tanstack/react-query'
 import { useRouter } from 'next/router'
 import { useReducer } from 'react'
 import { FormProvider, useForm } from 'react-hook-form'
-import Logo from '~/components/logo/Logo'
-import { NextPageWithLayout } from '~/pages/_app'
-import { signupEmployer } from '~/services/auth-service'
 
 import { CompanyDetails, EmployerAccount, FinalizeDetails } from './steps'
 

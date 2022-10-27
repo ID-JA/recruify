@@ -1,15 +1,15 @@
-import React from 'react'
-import { HeaderDesktop } from './HeaderDesktop'
+import { HeaderDesktop, HeaderProps } from './HeaderDesktop'
 
-interface HeaderProps {
-  navbarOpened: boolean
-  toggleNavbar(): void
-}
-
-export default function Header({ navbarOpened, toggleNavbar }: HeaderProps) {
+export default function Header({
+  navbarOpened,
+  toggleNavbar,
+  user,
+}: HeaderProps) {
   return (
-    <>
-      <HeaderDesktop navbarOpened={navbarOpened} toggleNavbar={toggleNavbar} />
-    </>
+    <HeaderDesktop
+      navbarOpened={navbarOpened}
+      toggleNavbar={toggleNavbar}
+      user={user}
+    />
   )
 }

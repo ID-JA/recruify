@@ -13,16 +13,20 @@ import {
   TextInput,
   Title,
 } from '@mantine/core'
-import { showNotification } from '@mantine/notifications'
-import { useMutation } from '@tanstack/react-query'
+import { useMutation, useQueryClient } from '@tanstack/react-query'
+
 import Link from 'next/link'
 import { useRouter } from 'next/router'
-import { useState } from 'react'
+import { useEffect, useState } from 'react'
 import { useForm } from 'react-hook-form'
 import { BrandGoogle } from 'tabler-icons-react'
 import * as yup from 'yup'
-import { NextPageWithLayout } from '~/pages/_app'
-import { authenticateUser } from '~/services/auth-service'
+
+import { useCurrentUser } from '@/hooks/use-current-user'
+import { authenticateUser } from '@/services/auth-service'
+import { NextPageWithLayout } from '@/types'
+import { showNotification } from '@mantine/notifications'
+import { useCallback } from 'react'
 
 const useStyles = createStyles((theme) => ({
   paper: {
@@ -51,45 +55,53 @@ const defaultValues = {
 }
 
 export const SignIn: NextPageWithLayout = () => {
-  const router = useRouter()
   const [activeTab, setActiveTab] = useState('employer')
   const { classes } = useStyles()
-  const methods = useForm({
-    defaultValues,
-    resolver: yupResolver(validationSchema),
-  })
+  const router = useRouter()
+  const { data } = useCurrentUser()
+  const queryClient = useQueryClient()
 
   const {
     handleSubmit,
     register,
     reset,
     formState: { errors },
-  } = methods
-
-  const mutate = useMutation(authenticateUser, {
-    onSuccess: (response) => {
-      localStorage.setItem('token', JSON.stringify(response.data))
-      router.push('/dashboard')
-    },
-    // eslint-disable-next-line @typescript-eslint/no-explicit-any
-    onError: (error: any) => {
-      const messages = error?.response?.data?.messages || []
-      messages.forEach((message: string) => {
-        showNotification({
-          title: message,
-          message: 'invalid email or password',
-          color: 'red',
-        })
-      })
-    },
+  } = useForm({
+    defaultValues,
+    resolver: yupResolver(validationSchema),
   })
 
-  const onSubmit = (values: typeof defaultValues) => {
-    console.log('submitting...')
-    mutate.mutate(values)
-  }
+  const mutate = useMutation(authenticateUser)
 
-  const handleChange = (v: string) => {
+  useEffect(() => {
+    if (data?.success) {
+      router.replace('/dashboard')
+    }
+  }, [data?.success, router])
+
+  const onSubmit = useCallback(
+    (values: typeof defaultValues) => {
+      mutate.mutate(values, {
+        onSuccess: (response) => {
+          localStorage.setItem('token', response.data.token)
+          queryClient.setQueryData(
+            ['currentUser'],
+            response.data.token ? { success: true } : { success: false }
+          )
+        },
+        onError: () => {
+          showNotification({
+            title: 'Authentication failed',
+            message: 'invalid email or password',
+            color: 'red',
+          })
+        },
+      })
+    },
+    [mutate, queryClient]
+  )
+
+  const handleChangeTab = (v: string) => {
     setActiveTab(v)
     reset()
   }
@@ -103,7 +115,7 @@ export const SignIn: NextPageWithLayout = () => {
         <StyledSegmentedControl
           mb="24px"
           value={activeTab}
-          onChange={(value) => handleChange(value)}
+          onChange={(value) => handleChangeTab(value)}
           data={[
             {
               label: 'I am an Employer',

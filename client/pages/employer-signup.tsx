@@ -1,3 +1,3 @@
-import { EmployerSignUp } from '~/components'
+import { EmployerSignUp } from '@/components'
 
 export default EmployerSignUp

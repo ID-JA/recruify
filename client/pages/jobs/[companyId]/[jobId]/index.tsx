@@ -14,8 +14,8 @@ import Link from 'next/link'
 import { useRouter } from 'next/router'
 import { Briefcase, CurrencyDollar } from 'tabler-icons-react'
 
-import { MainLayout } from '~/components'
-import { NextPageWithLayout } from '../../../_app'
+import { MainLayout } from '@/components'
+import { NextPageWithLayout } from '@/types'
 
 const useStyles = createStyles((theme) => ({
   wrapper: {},

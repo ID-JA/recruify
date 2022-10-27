@@ -1,7 +1,7 @@
+import { MainLayout, ProfileLayout } from '@/components'
+import { NextPageWithLayout } from '@/types'
 import { Alert } from '@mantine/core'
 import { AlertCircle } from 'tabler-icons-react'
-import { MainLayout, ProfileLayout } from '~/components'
-import { NextPageWithLayout } from '../_app'
 
 const Options: NextPageWithLayout = () => {
   return (

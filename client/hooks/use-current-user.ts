@@ -1,16 +1,11 @@
-import { useEffect, useState } from 'react'
+import axios, { version } from '@/utils/axios'
+import { useQuery } from '@tanstack/react-query'
+
+export const getProfile = async () => {
+  const response = await axios.get(`${version}/profile/validate`)
+  return response.data
+}
 
 export const useCurrentUser = () => {
-  const [data, setData] = useState(null)
-
-  useEffect(() => {
-    const u = localStorage.getItem('user')
-    if (u) {
-      setData(JSON.parse(u))
-    }
-  }, [])
-
-  return {
-    data,
-  }
+  return useQuery(['currentUser'], getProfile)
 }

@@ -1,6 +1,6 @@
+import { convertToProfessionalSkillOptions } from '@/mock/data'
+import axios, { version } from '@/utils/axios'
 import { useQuery } from '@tanstack/react-query'
-import { convertToProfessionalSkillOptions } from '~/mock/data'
-import axios, { version } from '~/utils/axios'
 
 // eslint-disable-next-line @typescript-eslint/no-explicit-any
 const fetchSkills: any = (skillName: string) => {

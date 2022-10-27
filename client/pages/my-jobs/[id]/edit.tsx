@@ -1,6 +1,6 @@
+import { MainLayout } from '@/components'
+import { NextPageWithLayout } from '@/types'
 import { useRouter } from 'next/router'
-import { NextPageWithLayout } from '~/pages/_app'
-import { MainLayout } from '~/components'
 
 const Edit: NextPageWithLayout = () => {
   const router = useRouter()

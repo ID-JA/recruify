@@ -113,15 +113,11 @@ export function Home() {
               fastest and most effective way to hire and attract top talent
             </Text>
             <div className={classes.controls}>
-              <Button
-                component="a"
-                href="/employer-signup"
-                variant="filled"
-                color="blue"
-                radius="md"
-              >
-                Get Started
-              </Button>
+              <Link href="/signin" passHref>
+                <Button component="a" variant="filled" color="blue" radius="md">
+                  Get Started
+                </Button>
+              </Link>
               <Link
                 href="https://www.github.com/ID-JA/fast-recruiter"
                 target="_blank"

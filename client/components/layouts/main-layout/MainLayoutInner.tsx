@@ -1,19 +1,21 @@
 import { useMediaQuery } from '@mantine/hooks'
 import { useRouter } from 'next/router'
-import { useState } from 'react'
+import { useEffect, useState } from 'react'
 
 import {
   shouldExcludeHeader,
   shouldExcludeNavbar,
-} from '~/utils/exclude-layout'
+} from '@/utils/exclude-layout'
 
+import { useCurrentUser } from '@/hooks/use-current-user'
+import Header from './header/Header'
 import { AppLayoutProps } from './MainLayout'
 import useStyles from './MainLayoutInner.styles'
-import Header from './header/Header'
 import NavBar, { NAVBAR_BREAKPOINT } from './navbar/NavBar'
 
 function MainLayoutInner({ children }: AppLayoutProps) {
   const [navbarOpened, setNavBarState] = useState(false)
+  const { data, error } = useCurrentUser()
   const router = useRouter()
 
   const navbarCollapsed = useMediaQuery(`(max-width: ${NAVBAR_BREAKPOINT}px)`)
@@ -23,28 +25,46 @@ function MainLayoutInner({ children }: AppLayoutProps) {
 
   const { classes, cx } = useStyles({ shouldRenderNavbar })
 
+  useEffect(() => {
+    console.log({ data, error, path: "'from dashboard'" })
+    if (!data && !error) return
+    if (!data.success) {
+      router.replace('/signin')
+    }
+  }, [router, data, error])
+
   return (
-    <div
-      className={cx({
-        [classes.withNavbar]: shouldRenderNavbar,
-        [classes.withoutHeader]: shouldExcludeHeader,
-      })}
-    >
-      {shouldRenderHeader && (
-        <Header
-          navbarOpened={navbarOpened}
-          toggleNavbar={() => setNavBarState((o) => !o)}
-        />
+    <>
+      {data?.success === true ? (
+        <div
+          className={cx({
+            [classes.withNavbar]: shouldRenderNavbar,
+            [classes.withoutHeader]: shouldExcludeHeader,
+          })}
+        >
+          {shouldRenderHeader ? (
+            <Header
+              key="application-header"
+              navbarOpened={navbarOpened}
+              toggleNavbar={() => setNavBarState((o) => !o)}
+              user={data}
+            />
+          ) : null}
+          {shouldRenderNavbar ? (
+            <NavBar
+              key="application-navbar"
+              opened={navbarOpened}
+              onClose={() => setNavBarState(false)}
+            />
+          ) : null}
+          <main className={classes.main}>
+            <div className={classes.wrapper}>{children}</div>
+          </main>
+        </div>
+      ) : (
+        <h1>Redirecting...</h1>
       )}
-      {shouldRenderNavbar && (
-        <NavBar opened={navbarOpened} onClose={() => setNavBarState(false)} />
-      )}
-      <main className={classes.main}>
-        {/* <div className={classes.content}> */}
-        <div className={classes.wrapper}>{children}</div>
-        {/* </div> */}
-      </main>
-    </div>
+    </>
   )
 }
 

@@ -1,3 +1,3 @@
-import { AppLyForm } from '~/components'
+import { AppLyForm } from '@/components'
 
 export default AppLyForm

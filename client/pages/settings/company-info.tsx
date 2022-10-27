@@ -1,9 +1,9 @@
 import {
+  CompanyInfo as CompanyProfile,
   MainLayout,
   ProfileLayout,
-  CompanyInfo as CompanyProfile,
-} from '~/components'
-import { NextPageWithLayout } from '../_app'
+} from '@/components'
+import { NextPageWithLayout } from '@/types'
 
 const CompanyInfo: NextPageWithLayout = () => <CompanyProfile />
 

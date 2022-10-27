@@ -1,11 +1,11 @@
-import { Divider } from '@mantine/core'
-import { NextPageWithLayout } from '../_app'
 import {
-  ProfileLayout,
+  ChangePassword,
   MainLayout,
   PersonalInfo,
-  ChangePassword,
-} from '~/components'
+  ProfileLayout,
+} from '@/components'
+import { NextPageWithLayout } from '@/types'
+import { Divider } from '@mantine/core'
 
 const Details: NextPageWithLayout = () => (
   <>

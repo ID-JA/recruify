@@ -1,12 +1,12 @@
+import { DataGrid, MainLayout } from '@/components'
+import { deleteOffer, getJobOffers } from '@/services/employer-services'
+import { NextPageWithLayout } from '@/types'
+import { timeAgo } from '@/utils/timeAgo'
 import { ActionIcon, Badge, Divider, Group, Title } from '@mantine/core'
 import { showNotification } from '@mantine/notifications'
 import { useMutation, useQuery, useQueryClient } from '@tanstack/react-query'
 import { MouseEvent, useState } from 'react'
 import { Archive, Edit, Trash } from 'tabler-icons-react'
-import { DataGrid, MainLayout } from '~/components'
-import { deleteOffer, getJobOffers } from '~/services/employer-services'
-import { timeAgo } from '~/utils/timeAgo'
-import { NextPageWithLayout } from '../_app'
 
 const renderStatus = (status: number) => {
   switch (status) {
@@ -71,7 +71,6 @@ const RenderActions = (record: any) => {
 }
 const MyJobs: NextPageWithLayout = () => {
   const [page, setPage] = useState(1)
-
   const { data, isLoading } = useQuery(['my-jobs'], () => getJobOffers(page), {
     refetchOnWindowFocus: false,
   })

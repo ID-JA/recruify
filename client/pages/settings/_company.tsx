@@ -1,5 +1,5 @@
-import { MainLayout, ProfileLayout } from '~/components'
-import { NextPageWithLayout } from '../_app'
+import { MainLayout, ProfileLayout } from '@/components'
+import { NextPageWithLayout } from '@/types'
 
 const Company: NextPageWithLayout = () => {
   return <div>Hiring Company page</div>

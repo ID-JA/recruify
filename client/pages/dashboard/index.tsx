@@ -1,6 +1,7 @@
 import { Center, Grid, Text, Title } from '@mantine/core'
-import { MainLayout } from '~/components'
-import { NextPageWithLayout } from '../_app'
+
+import { MainLayout } from '@/components'
+import { NextPageWithLayout } from '@/types'
 
 const MainSections = [
   {
