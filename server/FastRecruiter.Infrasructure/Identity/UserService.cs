@@ -4,6 +4,7 @@ using FastRecruiter.Application.Identity.Users;
 using FastRecruiter.Domain.Entities;
 using FastRecruiter.Infrasructure.Auth;
 using FastRecruiter.Infrasructure.Persistence.Context;
+using Mapster;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.WebUtilities;
 using Microsoft.EntityFrameworkCore;
@@ -123,6 +124,18 @@ namespace FastRecruiter.Infrasructure.Identity
             string verificationUri = QueryHelpers.AddQueryString(endpointUri.ToString(), "userId", user.Id);
             verificationUri = QueryHelpers.AddQueryString(verificationUri, "code", code);
             return verificationUri;
+        }
+
+        public async Task<UserDetailsDto> GetAsync(string userId, CancellationToken cancellationToken)
+        {
+            var user = await _userManager.Users
+                .AsNoTracking()
+                .Where(u => u.Id == userId)
+                .FirstOrDefaultAsync(cancellationToken);
+
+            _ = user ?? throw new NotFoundException("User Not Found.");
+
+            return user.Adapt<UserDetailsDto>();
         }
     }
 }

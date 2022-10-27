@@ -27,11 +27,14 @@ namespace FastRecruiter.Application.Job.Queries
 
             var spec = new EmployerJobsSpec(request, _currentUser.GetUserId());
 
-            return await _jobRepository.PaginatedListAsync(
-                spec,
-                request.PageNumber,
-                request.PageSize,
-                cancellationToken: cancellationToken);
+            return await _jobRepository.PaginatedListAsync<JobEntity, JobDto>(
+                  spec,
+                  request.PageNumber,
+                  request.PageSize,
+                  JobDto.GetMapsterConfig(),
+                  cancellationToken: cancellationToken);
+
+
         }
     }
 }

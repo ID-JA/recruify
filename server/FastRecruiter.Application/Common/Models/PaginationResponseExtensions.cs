@@ -1,12 +1,14 @@
 ﻿using Ardalis.Specification;
 using FastRecruiter.Application.Common.Interfaces;
+using Mapster;
 
 namespace FastRecruiter.Application.Common.Models
 {
     public static class PaginationResponseExtensions
     {
         public static async Task<PaginationResponse<TDestination>> PaginatedListAsync<T, TDestination>(
-            this IReadRepositoryBase<T> repository, ISpecification<T, TDestination> spec, int pageNumber, int pageSize, CancellationToken cancellationToken = default)
+            this IReadRepositoryBase<T> repository, ISpecification<T, TDestination> spec, int pageNumber, int pageSize,
+            CancellationToken cancellationToken = default)
             where T : class
             where TDestination : class, IDto
         {
@@ -14,6 +16,22 @@ namespace FastRecruiter.Application.Common.Models
             int count = await repository.CountAsync(spec, cancellationToken);
 
             return new PaginationResponse<TDestination>(list, count, pageNumber, pageSize);
+        }
+
+        public static async Task<PaginationResponse<TDestination>> PaginatedListAsync<T, TDestination>(
+            this IReadRepositoryBase<T> repository,
+            ISpecification<T> spec,
+            int pageNumber,
+            int pageSize,
+            TypeAdapterConfig adapterConfig,
+            CancellationToken cancellationToken = default)
+            where T : class
+            where TDestination : class, IDto
+        {
+            var list = await repository.ListAsync(spec, cancellationToken);
+            int count = await repository.CountAsync(spec, cancellationToken);
+            var data = list.Adapt<List<TDestination>>(adapterConfig);
+            return new PaginationResponse<TDestination>(data, count, pageNumber, pageSize);
         }
     }
 }

@@ -1,10 +1,14 @@
 ﻿using FastRecruiter.Application.Common.Interfaces;
+using FastRecruiter.Infrasructure.Identity;
+using Microsoft.AspNetCore.Identity;
 using System.Security.Claims;
 
 namespace FastRecruiter.Infrasructure.Auth
 {
     public class CurrentUser : ICurrentUser, ICurrentUserInitializer
     {
+        private readonly UserManager<ApplicationUser> _userManager;
+
 
         private ClaimsPrincipal? _user;
 
@@ -50,5 +54,7 @@ namespace FastRecruiter.Infrasructure.Auth
                 _userId = userId;
             }
         }
+
+
     }
 }

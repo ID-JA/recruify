@@ -135,5 +135,9 @@ namespace FastRecruiter.Infrasructure.Identity
             return new SigningCredentials(new SymmetricSecurityKey(secret), SecurityAlgorithms.HmacSha256);
         }
 
+        public bool ValidateToken(string token)
+        {
+            return true;
+        }
     }
 }

@@ -10,5 +10,8 @@ namespace FastRecruiter.Application.Identity.Users
 
         Task<string> ConfirmEmailAsync(string userId, string code, CancellationToken cancellationToken);
 
+        Task<UserDetailsDto> GetAsync(string userId, CancellationToken cancellationToken);
+
+
     }
 }
