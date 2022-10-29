@@ -1,12 +1,12 @@
 import Logo from '@/components/logo/Logo'
 import { Avatar, Burger, Container, createStyles, Menu } from '@mantine/core'
+import Link from 'next/link'
+import { useRouter } from 'next/router'
 import { Logout, Settings } from 'tabler-icons-react'
 import { HEADER_HEIGHT, NAVBAR_BREAKPOINT } from './RootLayout.styles'
 
-const useStyles = createStyles((theme) => ({
+const useStyles = createStyles((theme, { p }: { p: string }) => ({
   header: {
-    paddingRight: theme.spacing.md,
-    paddingLeft: theme.spacing.md,
     top: 0,
     left: 0,
     right: 0,
@@ -25,6 +25,12 @@ const useStyles = createStyles((theme) => ({
     alignItems: 'center',
     justifyContent: 'space-between',
     height: '100%',
+    ...(p !== '/' && {
+      [`@media (min-width: ${NAVBAR_BREAKPOINT}px)`]: {
+        margin: 0,
+        maxWidth: 'unset',
+      },
+    }),
   },
 
   logo: {
@@ -61,7 +67,8 @@ type HeaderProps = {
 }
 
 function MainHeader({ navbarOpened, toggleNavbar }: HeaderProps) {
-  const { classes } = useStyles()
+  const router = useRouter()
+  const { classes } = useStyles({ p: router.pathname })
 
   return (
     <header className={classes.header}>
@@ -73,22 +80,38 @@ function MainHeader({ navbarOpened, toggleNavbar }: HeaderProps) {
           aria-label="Toggle navbar"
         />
         <div className={classes.logoWrapper}>
-          <Logo height={30} width={135} />
+          <Link href="/">
+            <div>
+              <Logo height={30} width={135} />
+            </div>
+          </Link>
         </div>
-        <Menu shadow="md" width={200}>
-          <Menu.Target>
-            <Avatar radius="xl" color="blue" mr="md" />
-          </Menu.Target>
-
-          <Menu.Dropdown>
-            <Menu.Item icon={<Settings size={14} />}>Settings</Menu.Item>
-            <Menu.Divider />
-            <Menu.Item icon={<Logout size={14} />}>Sign out</Menu.Item>
-          </Menu.Dropdown>
-        </Menu>
+        <UserAvatar />
       </Container>
     </header>
   )
 }
 
 export default MainHeader
+
+function UserAvatar() {
+  return (
+    <Menu shadow="md" width={200}>
+      <Menu.Target>
+        <Avatar
+          sx={{
+            cursor: 'pointer',
+          }}
+          radius="xl"
+          color="blue"
+          mr="md"
+        />
+      </Menu.Target>
+      <Menu.Dropdown>
+        <Menu.Item icon={<Settings size={14} />}>Settings</Menu.Item>
+        <Menu.Divider />
+        <Menu.Item icon={<Logout size={14} />}>Sign out</Menu.Item>
+      </Menu.Dropdown>
+    </Menu>
+  )
+}

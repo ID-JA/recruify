@@ -28,10 +28,6 @@ export default createStyles(
         paddingTop: HEADER_HEIGHT - theme.spacing.xl - 2,
       }),
 
-      [`@media (max-width: ${NAVBAR_BREAKPOINT}px)`]: {
-        paddingLeft: 0,
-        paddingRight: 0,
-      },
       paddingLeft: theme.spacing.lg,
       paddingRight: theme.spacing.lg,
       backgroundColor:

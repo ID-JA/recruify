@@ -1,9 +1,5 @@
-import {
-  ChangePassword,
-  MainLayout,
-  PersonalInfo,
-  ProfileLayout,
-} from '@/components'
+import { ChangePassword, PersonalInfo } from '@/components'
+import SettingsLayout from '@/layouts/SettingsLayout/SettingsLayout'
 import { NextPageWithLayout } from '@/types'
 import { Divider } from '@mantine/core'
 
@@ -15,10 +11,6 @@ const Details: NextPageWithLayout = () => (
   </>
 )
 
-Details.getLayout = (page) => (
-  <MainLayout>
-    <ProfileLayout>{page}</ProfileLayout>
-  </MainLayout>
-)
+Details.getLayout = (page) => <SettingsLayout>{page}</SettingsLayout>
 
 export default Details

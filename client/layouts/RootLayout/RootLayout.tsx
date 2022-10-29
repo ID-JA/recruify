@@ -32,7 +32,7 @@ export function RootLayout({ children }: { children: React.ReactNode }) {
       ) : null}
       {shouldRenderNavbar ? (
         <MainNavbar
-          key="root-nav"
+          key="root-navbar"
           opened={navbarOpened}
           onClose={() => setNavBarState(false)}
         />

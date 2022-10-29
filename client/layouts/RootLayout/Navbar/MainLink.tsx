@@ -21,15 +21,14 @@ export default function NavBarMainLink({
 }: NavBarMainLinkProps) {
   const { classes, cx } = useStyles()
   const router = useRouter()
+
   return (
     <Link href={to}>
       <a
         className={cx(classes.mainLink, className, {
-          [classes.activeLink]:
-            router.pathname.startsWith(to) &&
-            router.pathname.split('/').includes('create')
-              ? router.pathname === to
-              : router.pathname.startsWith(to),
+          [classes.activeLink]: router.pathname.split('/').includes('my-jobs')
+            ? router.pathname == to
+            : router.pathname.includes(to.split('/')[1]),
           [classes.disabledLink]: disabled,
         })}
         onClick={onClick}

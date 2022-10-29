@@ -1,7 +1,11 @@
 import { createStyles } from '@mantine/core'
 
 export default createStyles((theme) => ({
-  subLink: {
+  subNav: {
+    display: 'flex',
+  },
+
+  link: {
     ...theme.fn.focusStyles(),
     WebkitTapHighlightColor: 'transparent',
     display: 'flex',
@@ -22,23 +26,18 @@ export default createStyles((theme) => ({
 
   active: {
     color: theme.colors.blue,
-    // backgroundColor: '#EBEDF3 ',
     '&::after': {
       content: "''",
       position: 'absolute',
-      bottom: 0,
       left: 0,
-      height: '2px',
+      bottom: '-2px',
+      height: '2.5px',
+      zIndex: 1001,
       width: '100%',
       backgroundColor: theme.colors.blue,
     },
   },
-  disabled: {
-    pointerEvents: 'none',
-    opacity: 0.4,
-  },
-
-  body: {
-    // marginLeft: theme.spacing.sm,
+  content: {
+    paddingTop: theme.spacing.lg * 2,
   },
 }))
