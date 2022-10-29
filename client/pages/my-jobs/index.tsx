@@ -1,4 +1,4 @@
-import { DataGrid, MainLayout } from '@/components'
+import { DataGrid } from '@/components'
 import { deleteOffer, getJobOffers } from '@/services/employer-services'
 import { NextPageWithLayout } from '@/types'
 import { timeAgo } from '@/utils/timeAgo'
@@ -98,13 +98,6 @@ const MyJobs: NextPageWithLayout = () => {
               size: 220,
             },
 
-            // {
-            //   accessorFn: (row) => row.companyName,
-            //   accessorKey: 'Company',
-            //   cell: (info) => info.getValue(),
-            //   size: 200,
-            // },
-
             {
               accessorFn: (row) => row.location,
               accessorKey: 'Location',
@@ -154,32 +147,4 @@ const MyJobs: NextPageWithLayout = () => {
   )
 }
 
-MyJobs.getLayout = function getLayout(page) {
-  return <MainLayout>{page}</MainLayout>
-}
-
 export default MyJobs
-
-// export const timeAgo = (date: string) => {
-//   const time = new Date(date).getTime()
-//   const now = new Date().getTime()
-//   const diff = now - time
-//   const diffInDays = Math.floor(diff / (1000 * 60 * 60 * 24))
-//   const diffInHours = Math.floor(diff / (1000 * 60 * 60))
-//   const diffInMinutes = Math.floor(diff / (1000 * 60))
-//   const diffInSeconds = Math.floor(diff / 1000)
-
-//   if (diffInDays > 0) {
-//     return `${diffInDays} days ago`
-//   }
-//   if (diffInHours > 0) {
-//     return `${diffInHours} hours ago`
-//   }
-//   if (diffInMinutes > 0) {
-//     return `${diffInMinutes} minutes ago`
-//   }
-//   if (diffInSeconds > 0) {
-//     return `${diffInSeconds} seconds ago`
-//   }
-//   return 'Just now'
-// }

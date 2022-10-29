@@ -4,6 +4,7 @@ import { ReactQueryDevtools } from '@tanstack/react-query-devtools'
 import { AppProps } from 'next/app'
 import Head from 'next/head'
 
+import { RootLayout } from '@/layouts/RootLayout/RootLayout'
 import '@/styles/global.css'
 import { NextPageWithLayout } from '@/types'
 
@@ -26,7 +27,7 @@ export default function App(props: AppPropsWithLayout) {
   return (
     <>
       <Head>
-        <title>Fast Hire</title>
+        <title>FastRecruiter</title>
         <meta
           name="viewport"
           content="minimum-scale=1, initial-scale=1, width=device-width"
@@ -38,7 +39,7 @@ export default function App(props: AppPropsWithLayout) {
       </Head>
       <NotificationsProvider position="top-right">
         <QueryClientProvider client={queryClient}>
-          {getLayout(<Component {...pageProps} />)}
+          <RootLayout>{getLayout(<Component {...pageProps} />)}</RootLayout>
           <ReactQueryDevtools initialIsOpen={false} />
         </QueryClientProvider>
       </NotificationsProvider>

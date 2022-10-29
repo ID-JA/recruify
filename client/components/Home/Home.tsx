@@ -11,7 +11,6 @@ import Image from 'next/image'
 import Link from 'next/link'
 import { BrandGithub } from 'tabler-icons-react'
 import data from './data'
-import Header from './Header/Header'
 
 const useStyles = createStyles((theme) => ({
   inner: {
@@ -101,7 +100,6 @@ export function Home() {
   ))
   return (
     <>
-      <Header />
       <Container size="xl" pt="80px" px="md">
         <div className={classes.inner}>
           <div className={classes.content}>

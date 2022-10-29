@@ -1,6 +1,5 @@
 import { Center, Grid, Text, Title } from '@mantine/core'
 
-import { MainLayout } from '@/components'
 import { NextPageWithLayout } from '@/types'
 
 const MainSections = [
@@ -45,10 +44,6 @@ const Dashboard: NextPageWithLayout = () => {
       </Grid>
     </>
   )
-}
-
-Dashboard.getLayout = function getLayout(page) {
-  return <MainLayout>{page}</MainLayout>
 }
 
 export default Dashboard
