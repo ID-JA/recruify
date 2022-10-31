@@ -1,4 +1,5 @@
 import { DataGrid } from '@/components'
+import { RootLayout } from '@/layouts/RootLayout/RootLayout'
 import { demoData } from '@/mock/data'
 import { deleteOffer } from '@/services/employer-services'
 import { NextPageWithLayout } from '@/types'
@@ -87,11 +88,10 @@ const MyJobs: NextPageWithLayout = () => (
           accessorFn: (row) => row.title,
           accessorKey: 'Title',
           cell: (info) => (
-            <Link href={info.row.original.id}>{info.getValue()}</Link>
+            <Link href={info.row.original.id}>{info.getValue() as string}</Link>
           ),
           size: 220,
         },
-
         {
           accessorFn: (row) => row.location,
           accessorKey: 'Location',
@@ -132,4 +132,5 @@ const MyJobs: NextPageWithLayout = () => (
   </div>
 )
 
+MyJobs.getLayout = (page) => <RootLayout>{page}</RootLayout>
 export default MyJobs

@@ -1,3 +1,5 @@
+import { RootLayout } from '@/layouts/RootLayout/RootLayout'
+import { NextPageWithLayout } from '@/types'
 import {
   Button,
   Container,
@@ -82,7 +84,7 @@ const useStyles = createStyles((theme) => ({
   },
 }))
 
-export function Home() {
+export const Home: NextPageWithLayout = () => {
   const { classes } = useStyles()
 
   const features = data.map((feature) => (
@@ -158,3 +160,5 @@ export function Home() {
     </>
   )
 }
+
+Home.getLayout = (page) => <RootLayout>{page}</RootLayout>

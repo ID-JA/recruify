@@ -1,9 +1,12 @@
+import { useCurrentUser } from '@/hooks/use-current-user'
 import {
   shouldExcludeHeader,
   shouldExcludeNavbar,
 } from '@/utils/exclude-layout'
+
 import { useRouter } from 'next/router'
 import React, { useState } from 'react'
+
 import MainHeader from './Header'
 import MainNavbar from './Navbar/Navbar'
 import useStyles from './RootLayout.styles'
@@ -15,6 +18,7 @@ export function RootLayout({ children }: { children: React.ReactNode }) {
   const shouldRenderHeader = !shouldExcludeHeader(router.pathname)
   const shouldRenderNavbar = !shouldExcludeNavbar(router.pathname)
   const { classes, cx } = useStyles({ shouldRenderNavbar })
+  const { data } = useCurrentUser()
 
   return (
     <div
@@ -28,6 +32,7 @@ export function RootLayout({ children }: { children: React.ReactNode }) {
           key="root-header"
           navbarOpened={navbarOpened}
           toggleNavbar={() => setNavBarState(!navbarOpened)}
+          user={data}
         />
       ) : null}
       {shouldRenderNavbar ? (

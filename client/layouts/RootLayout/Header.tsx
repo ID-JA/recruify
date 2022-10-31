@@ -1,5 +1,12 @@
 import Logo from '@/components/logo/Logo'
-import { Avatar, Burger, Container, createStyles, Menu } from '@mantine/core'
+import {
+  Avatar,
+  Burger,
+  Button,
+  Container,
+  createStyles,
+  Menu,
+} from '@mantine/core'
 import Link from 'next/link'
 import { useRouter } from 'next/router'
 import { Logout, Settings } from 'tabler-icons-react'
@@ -64,9 +71,11 @@ const useStyles = createStyles((theme, { p }: { p: string }) => ({
 type HeaderProps = {
   navbarOpened: boolean
   toggleNavbar(): void
+  // eslint-disable-next-line @typescript-eslint/no-explicit-any
+  user?: any
 }
 
-function MainHeader({ navbarOpened, toggleNavbar }: HeaderProps) {
+function MainHeader({ navbarOpened, toggleNavbar, user }: HeaderProps) {
   const router = useRouter()
   const { classes } = useStyles({ p: router.pathname })
 
@@ -86,7 +95,12 @@ function MainHeader({ navbarOpened, toggleNavbar }: HeaderProps) {
             </div>
           </Link>
         </div>
-        <UserAvatar />
+
+        {user ? (
+          <UserAvatar key="user-avatar" />
+        ) : (
+          <Button key="get-started-btn">Become recruiter</Button>
+        )}
       </Container>
     </header>
   )
