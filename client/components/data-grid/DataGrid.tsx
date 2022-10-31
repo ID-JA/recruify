@@ -122,8 +122,9 @@ function DataGrid<TData extends RowData>({
           className={classes.table}
           striped={striped}
           horizontalSpacing="xl"
+          verticalSpacing="md"
         >
-          <thead>
+          <thead className={classes.thead}>
             {table.getHeaderGroups().map((headerGroup) => (
               <tr key={headerGroup.id} role="row">
                 {headerGroup.headers.map((header) => (
@@ -133,6 +134,7 @@ function DataGrid<TData extends RowData>({
                     style={{
                       width: header.getSize(),
                     }}
+                    className={classes.th}
                     colSpan={header.colSpan}
                   >
                     {header.isPlaceholder ? null : (

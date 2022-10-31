@@ -1,11 +1,13 @@
 import { DataGrid } from '@/components'
-import { deleteOffer, getJobOffers } from '@/services/employer-services'
+import { demoData } from '@/mock/data'
+import { deleteOffer } from '@/services/employer-services'
 import { NextPageWithLayout } from '@/types'
 import { timeAgo } from '@/utils/timeAgo'
 import { ActionIcon, Badge, Divider, Group, Title } from '@mantine/core'
 import { showNotification } from '@mantine/notifications'
-import { useMutation, useQuery, useQueryClient } from '@tanstack/react-query'
-import { MouseEvent, useState } from 'react'
+import { useMutation, useQueryClient } from '@tanstack/react-query'
+import Link from 'next/link'
+import { MouseEvent } from 'react'
 import { Archive, Edit, Trash } from 'tabler-icons-react'
 
 const renderStatus = (status: number) => {
@@ -69,82 +71,65 @@ const RenderActions = (record: any) => {
     </Group>
   )
 }
-const MyJobs: NextPageWithLayout = () => {
-  const [page, setPage] = useState(1)
-  const { data, isLoading } = useQuery(['my-jobs'], () => getJobOffers(page), {
-    refetchOnWindowFocus: false,
-  })
+const MyJobs: NextPageWithLayout = () => (
+  <div>
+    <Group align="center">
+      <Title order={1} weight={600}>
+        Jobs
+      </Title>
+    </Group>
+    <Divider my="md" />
 
-  return (
-    <div>
-      <Group align="center">
-        <Title order={1} weight={600}>
-          Jobs
-        </Title>
-      </Group>
-      <Divider my="md" />
-      {isLoading ? (
-        <div>Loading...</div>
-      ) : !data?.data ? (
-        <div>NO Job offer yet</div>
-      ) : (
-        <DataGrid
-          data={data.data}
-          columns={[
-            {
-              accessorFn: (row) => row.title,
-              accessorKey: 'Title',
-              cell: (info) => info.getValue(),
-              size: 220,
-            },
+    <DataGrid
+      data={demoData}
+      columns={[
+        {
+          accessorFn: (row) => row.title,
+          accessorKey: 'Title',
+          cell: (info) => (
+            <Link href={info.row.original.id}>{info.getValue()}</Link>
+          ),
+          size: 220,
+        },
 
-            {
-              accessorFn: (row) => row.location,
-              accessorKey: 'Location',
-              cell: (info) => info.getValue(),
-            },
-            {
-              accessorFn: (row) => row.createdAt,
-              accessorKey: 'Created',
-              cell: (info) => timeAgo(info.getValue() as Date),
-              size: 100,
-            },
-            {
-              accessorFn: (row) => row.status,
-              accessorKey: 'Status',
-              cell: (info) => renderStatus(info.getValue() as number),
-              size: 80,
-            },
-            {
-              accessorFn: (row) => row.candidatesCount,
-              accessorKey: 'Candidates',
-              cell: (info) => info.getValue(),
-              size: 60,
-            },
-            {
-              id: 'action',
-              cell: (props) => RenderActions(props.row.original),
-              size: 100,
-            },
-          ]}
-          onPageChange={(page) => setPage(page.pageIndex + 1)}
-          pageSizes={['10', '20', '50']}
-          total={data.totalCount}
-          fontSize="sm"
-          withPagination
-          withRowSelection
-          withBoarder
-          noEllipsis
-          initialState={{
-            pagination: {
-              pageSize: data.pageSize,
-              pageIndex: data.currentPage - 1,
-            },
-          }}
-        />
-      )}
-    </div>
-  )
-}
+        {
+          accessorFn: (row) => row.location,
+          accessorKey: 'Location',
+          cell: (info) => info.getValue(),
+        },
+        {
+          accessorFn: (row) => row.createdAt,
+          accessorKey: 'Created At',
+          cell: (info) => timeAgo(info.getValue() as Date),
+          size: 100,
+        },
+        {
+          accessorFn: (row) => row.status,
+          accessorKey: 'Status',
+          cell: (info) => renderStatus(info.getValue() as number),
+          size: 80,
+        },
+        {
+          accessorFn: (row) => row.candidates,
+          accessorKey: 'Candidates',
+          cell: (info) => info.getValue(),
+          size: 60,
+        },
+        {
+          id: 'action',
+          cell: (props) => RenderActions(props.row.original),
+          size: 100,
+        },
+      ]}
+      pageSizes={['10', '20', '50']}
+      total={demoData.length}
+      fontSize="sm"
+      withPagination
+      // withRowSelection
+      withBoarder
+      noEllipsis
+    />
+  </div>
+)
 
 export default MyJobs

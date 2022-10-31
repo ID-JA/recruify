@@ -28,8 +28,8 @@ export default createStyles(
         paddingTop: HEADER_HEIGHT - theme.spacing.xl - 2,
       }),
 
-      paddingLeft: theme.spacing.lg,
-      paddingRight: theme.spacing.lg,
+      paddingLeft: theme.spacing.lg * 2,
+      paddingRight: theme.spacing.lg * 2,
       backgroundColor:
         theme.colorScheme === 'dark'
           ? theme.colors.dark[8]

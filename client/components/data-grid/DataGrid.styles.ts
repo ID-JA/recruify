@@ -27,13 +27,23 @@ export default createStyles(
       table: {
         borderCollapse: 'separate',
         borderSpacing: 0,
+        color: '#667085',
+        fontWeight: 600,
       },
       tbody: {
         minHeight: '160px',
       },
-      tr: {},
-      th: { position: 'relative' },
-      td: {},
+      thead: {
+        background: '#FCFCFD',
+        paddingTop: 12,
+        paddingBottom: 12,
+      },
+      th: {
+        position: 'relative',
+        paddingTop: '12px !important',
+        paddingBottom: '12px !important',
+      },
+
       headerCell: {
         display: 'flex',
         width: 'inherit',
@@ -60,6 +70,7 @@ export default createStyles(
         }),
       },
       pagination: {
+        padding: '16px 24px',
         ...(withBoarder && {
           borderTop: '1px solid rgb(222, 226, 230)',
         }),

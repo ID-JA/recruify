@@ -32,7 +32,7 @@ function Pagination<TData>({
   }
 
   return (
-    <Group position="apart" p="xs" className={classes[0]}>
+    <Group position="apart" className={classes[0]}>
       <Text size={fontSize}>
         Showing <b>{firstRowNum}</b> - <b>{lastRowNum}</b> of <b>{maxRows}</b>{' '}
         result{maxRows === 1 ? '' : 's'}
