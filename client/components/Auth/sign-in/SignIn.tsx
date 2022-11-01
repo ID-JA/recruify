@@ -17,12 +17,12 @@ import {
 import { useMutation } from '@tanstack/react-query'
 
 import Link from 'next/link'
-import { useState } from 'react'
+import { useEffect, useState } from 'react'
 import { useForm } from 'react-hook-form'
 import { BrandGoogle } from 'tabler-icons-react'
 import * as yup from 'yup'
 
-import { useCurrentUser } from '@/hooks/use-current-user'
+import useGetProfile from '@/hooks/use-get-profile'
 import { authenticateUser } from '@/services/auth-service'
 import { NextPageWithLayout } from '@/types'
 import { showNotification } from '@mantine/notifications'
@@ -72,7 +72,8 @@ export const SignIn: NextPageWithLayout = () => {
 
   const mutate = useMutation(authenticateUser)
   const router = useRouter()
-  const { data: user, isError, isLoading, isFetching } = useCurrentUser()
+  const { data } = useGetProfile()
+  // const { data: user, isError, isLoading, isFetching } = useCurrentUser()
 
   const onSubmit = useCallback(
     (values: typeof defaultValues) => {
@@ -98,11 +99,17 @@ export const SignIn: NextPageWithLayout = () => {
     reset()
   }
 
-  if (user !== undefined) {
+  useEffect(() => {
+    if (data) {
+      router.replace('/dashboard')
+    }
+  }, [router, data])
+
+  // console.log({ isFetching, isLoading, user, isError })
+
+  if (data) {
     return <div></div>
   }
-
-  console.log({ isFetching, isLoading, user, isError })
   return (
     <Container mt="30px">
       <Paper className={classes.paper}>
