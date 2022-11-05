@@ -12,7 +12,7 @@ namespace FastRecruiter.Api.Controllers.v1
     public class EmployerController : VersionedApiController
     {
         [HttpPost("jobs")]
-        public Task<PaginationResponse<JobDto>> GetJobs(GetJobListQuery request)
+        public Task<PaginationResponse<JobDto>> GetJobs([FromQuery]GetJobListQuery request)
         {
             return Mediator.Send(request);
         }

@@ -135,7 +135,22 @@ namespace FastRecruiter.Infrasructure.Identity
 
             _ = user ?? throw new NotFoundException("User Not Found.");
 
-            return user.Adapt<UserDetailsDto>();
+            var employer = await _context.Employers.AsNoTracking()
+                                                   .Where(e => e.IdentityId == user.Id)
+                                                   .FirstOrDefaultAsync(cancellationToken);
+            var config = new TypeAdapterConfig();
+            config
+                .NewConfig<(Employer emp, ApplicationUser u), UserDetailsDto>()
+                .Map(dest => dest.Id, src => src.u.Id)
+                .Map(dest => dest.Email, src => src.u.Email)
+                .Map(dest => dest.Name, src => src.u.FullName)
+                .Map(dest => dest.CompanyName, src => src.emp.CompanyName)
+                .Map(dest => dest.Position, src => src.emp.Position)
+                .Map(dest => dest.PhoneNumber, src => src.u.PhoneNumber)
+                .Map(dest => dest.EmailConfirmed, src => src.u.EmailConfirmed)
+                .Map(dest => dest.ImageUrl, src => src.u.ImageUrl);
+
+            return (employer, user).Adapt<UserDetailsDto>(config);
         }
     }
 }

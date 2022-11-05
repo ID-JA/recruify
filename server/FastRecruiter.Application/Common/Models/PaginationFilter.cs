@@ -6,15 +6,14 @@
 
         public int PageSize { get; set; } = int.MaxValue;
 
-        //public string[]? OrderBy { get; set; }
-
+        public string[]? OrderBy { get; set; }
         //public Filter? AdvancedFilter { get; set; }
 
     }
 
-    //public static class PaginationFilterExtensions
-    //{
-    //    public static bool HasOrderBy(this PaginationFilter filter) =>
-    //        filter.OrderBy?.Any() is true;
-    //}
+    public static class PaginationFilterExtensions
+    {
+        public static bool HasOrderBy(this PaginationFilter filter) =>
+            filter.OrderBy?.Any() is true;
+    }
 }

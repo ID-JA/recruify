@@ -9,6 +9,7 @@ namespace FastRecruiter.Application.Job.Queries
 {
     public class GetJobListQuery : PaginationFilter, IRequest<PaginationResponse<JobDto>>
     {
+        public string sort { get; set; } = default!;
     }
 
     public class GetJobsQueryHandler : IRequestHandler<GetJobListQuery, PaginationResponse<JobDto>>
