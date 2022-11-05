@@ -1,3 +1,4 @@
+import { MantineProvider } from '@mantine/core'
 import { NotificationsProvider } from '@mantine/notifications'
 import { QueryClient, QueryClientProvider } from '@tanstack/react-query'
 import { ReactQueryDevtools } from '@tanstack/react-query-devtools'
@@ -25,23 +26,25 @@ export default function App(props: AppPropsWithLayout) {
 
   return (
     <>
-      <Head>
-        <title>Fast Hire</title>
-        <meta
-          name="viewport"
-          content="minimum-scale=1, initial-scale=1, width=device-width"
-        />
-        <meta
-          name="description"
-          content="fast recruiter platform helps you to share job offers and search for candidates"
-        />
-      </Head>
-      <NotificationsProvider position="top-right">
-        <QueryClientProvider client={queryClient}>
-          {getLayout(<Component {...pageProps} />)}
-          <ReactQueryDevtools initialIsOpen={false} />
-        </QueryClientProvider>
-      </NotificationsProvider>
+      <QueryClientProvider client={queryClient}>
+        <Head>
+          <title>FastRecruiter</title>
+          <meta
+            name="viewport"
+            content="minimum-scale=1, initial-scale=1, width=device-width"
+          />
+          <meta
+            name="description"
+            content="fast recruiter platform helps you to share job offers and search for candidates"
+          />
+        </Head>
+        <MantineProvider withGlobalStyles withNormalizeCSS>
+          <NotificationsProvider position="top-right">
+            {getLayout(<Component {...pageProps} />)}
+            <ReactQueryDevtools initialIsOpen={false} />
+          </NotificationsProvider>
+        </MantineProvider>
+      </QueryClientProvider>
     </>
   )
 }

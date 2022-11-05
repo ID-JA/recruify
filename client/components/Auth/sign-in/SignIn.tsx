@@ -1,5 +1,6 @@
 import { yupResolver } from '@hookform/resolvers/yup'
 import {
+  Alert,
   Box,
   Button,
   Container,
@@ -16,16 +17,16 @@ import {
 import { useMutation, useQueryClient } from '@tanstack/react-query'
 
 import Link from 'next/link'
-import { useRouter } from 'next/router'
 import { useEffect, useState } from 'react'
 import { useForm } from 'react-hook-form'
 import { BrandGoogle } from 'tabler-icons-react'
 import * as yup from 'yup'
 
-import { useCurrentUser } from '@/hooks/use-current-user'
 import { authenticateUser } from '@/services/auth-service'
+import useAuthStore from '@/store'
 import { NextPageWithLayout } from '@/types'
 import { showNotification } from '@mantine/notifications'
+import { useRouter } from 'next/router'
 import { useCallback } from 'react'
 
 const useStyles = createStyles((theme) => ({
@@ -57,9 +58,6 @@ const defaultValues = {
 export const SignIn: NextPageWithLayout = () => {
   const [activeTab, setActiveTab] = useState('employer')
   const { classes } = useStyles()
-  const router = useRouter()
-  const { data } = useCurrentUser()
-  const queryClient = useQueryClient()
 
   const {
     handleSubmit,
@@ -72,22 +70,17 @@ export const SignIn: NextPageWithLayout = () => {
   })
 
   const mutate = useMutation(authenticateUser)
-
-  useEffect(() => {
-    if (data?.success) {
-      router.replace('/dashboard')
-    }
-  }, [data?.success, router])
+  const router = useRouter()
+  const queryClient = useQueryClient()
+  const { isLoggedIn, setIsLoggedIn } = useAuthStore((state) => state)
 
   const onSubmit = useCallback(
     (values: typeof defaultValues) => {
       mutate.mutate(values, {
         onSuccess: (response) => {
           localStorage.setItem('token', response.data.token)
-          queryClient.setQueryData(
-            ['currentUser'],
-            response.data.token ? { success: true } : { success: false }
-          )
+          setIsLoggedIn(true)
+          router.replace('/dashboard')
         },
         onError: () => {
           showNotification({
@@ -98,7 +91,7 @@ export const SignIn: NextPageWithLayout = () => {
         },
       })
     },
-    [mutate, queryClient]
+    [mutate, router]
   )
 
   const handleChangeTab = (v: string) => {
@@ -106,12 +99,36 @@ export const SignIn: NextPageWithLayout = () => {
     reset()
   }
 
+  useEffect(() => {
+    if (isLoggedIn) {
+      router.replace('/dashboard')
+    } else {
+      queryClient.removeQueries()
+    }
+  }, [router, isLoggedIn])
+
+  if (isLoggedIn && mutate.isIdle) {
+    return <div></div>
+  }
   return (
     <Container mt="30px">
       <Paper className={classes.paper}>
         <Title align="center" weight="normal" mb="24px">
           Sign in
         </Title>
+        <Alert
+          color="blue"
+          variant="light"
+          title="use this account to test the app"
+          mb="20px"
+        >
+          <Text>
+            Email: <b> tecequ.agelus@gotgel.org </b>
+          </Text>
+          <Text>
+            Password: <b> Test123@</b>
+          </Text>
+        </Alert>
         <StyledSegmentedControl
           mb="24px"
           value={activeTab}
@@ -157,7 +174,12 @@ export const SignIn: NextPageWithLayout = () => {
               <a className={classes.link}>Forgot Password ?</a>
             </Link>
           </Group>
-          <Button fullWidth radius="lg" type="submit">
+          <Button
+            fullWidth
+            radius="lg"
+            type="submit"
+            loading={mutate.isLoading}
+          >
             Sign in
           </Button>
         </form>

@@ -1,9 +1,8 @@
 import Link from 'next/link'
 import { useRouter } from 'next/router'
-import React from 'react'
-import useStyles from './NavbarMainLink.styles'
+import useStyles from './Navbar.styles'
 
-interface NavBarMainLinkProps {
+type NavBarMainLinkProps = {
   className?: string
   to: string
   icon: React.ReactNode
@@ -22,21 +21,20 @@ export default function NavBarMainLink({
 }: NavBarMainLinkProps) {
   const { classes, cx } = useStyles()
   const router = useRouter()
+
   return (
     <Link href={to}>
       <a
         className={cx(classes.mainLink, className, {
-          [classes.active]:
-            router.pathname.startsWith(to) &&
-            router.pathname.split('/').includes('create')
-              ? router.pathname === to
-              : router.pathname.startsWith(to),
-          [classes.disabled]: disabled,
+          [classes.activeLink]: router.pathname.split('/').includes('my-jobs')
+            ? router.pathname == to
+            : router.pathname.includes(to.split('/')[1]),
+          [classes.disabledLink]: disabled,
         })}
         onClick={onClick}
       >
         {Boolean(icon) && icon}
-        <div className={classes.body}>{children}</div>
+        <div className={classes.bodyLink}>{children}</div>
       </a>
     </Link>
   )

@@ -1,4 +1,5 @@
-import { CreateJobForm, MainLayout } from '@/components'
+import { CreateJobForm } from '@/components'
+import { RootLayout } from '@/layouts/RootLayout/RootLayout'
 import { NextPageWithLayout } from '@/types'
 import { Divider, Title } from '@mantine/core'
 
@@ -14,6 +15,6 @@ const CreateNewJob: NextPageWithLayout = () => {
   )
 }
 
-CreateNewJob.getLayout = (page) => <MainLayout>{page}</MainLayout>
+CreateNewJob.getLayout = (page) => <RootLayout>{page}</RootLayout>
 
 export default CreateNewJob

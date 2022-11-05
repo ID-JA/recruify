@@ -11,8 +11,11 @@ export default createStyles((theme) => ({
     }`,
     padding: theme.spacing.sm,
   },
-  logo: {
-    height: 40,
-    width: 180,
+  inner: {
+    display: 'flex',
+    justifyContent: 'space-between',
+    alignItems: 'center',
+    paddingLeft: '16px',
+    paddingRight: '16px',
   },
 }))

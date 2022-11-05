@@ -2,7 +2,7 @@ import { yupResolver } from '@hookform/resolvers/yup'
 import { Button, Group, Select, Text, Textarea, TextInput } from '@mantine/core'
 import { useDebouncedValue } from '@mantine/hooks'
 import { showNotification } from '@mantine/notifications'
-import { useMutation } from '@tanstack/react-query'
+import { useMutation, useQueryClient } from '@tanstack/react-query'
 import { useRouter } from 'next/router'
 
 import { useState } from 'react'
@@ -48,6 +48,7 @@ const defaultValues = {
 export function CreateJobForm() {
   const [searchedSkill, setSearchedSkill] = useState('')
   const { classes } = useStyles()
+  const queryClient = useQueryClient()
   const router = useRouter()
   const {
     handleSubmit,
@@ -63,6 +64,7 @@ export function CreateJobForm() {
 
   const mutation = useMutation(createNewJob, {
     onSuccess: () => {
+      queryClient.invalidateQueries(['jobs'])
       router.push('/my-jobs')
       showNotification({
         title: 'Job created successfully',
@@ -211,6 +213,7 @@ export function CreateJobForm() {
             type="submit"
             variant="subtle"
             onClick={handleSubmit(handleSubmitDraft)}
+            loading={mutation.isLoading}
             name="draft"
           >
             Save Draft

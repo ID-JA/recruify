@@ -5,9 +5,7 @@ export const baseURL = 'https://localhost:7112/api'
 
 const axiosInstance = axios.create({
   baseURL: baseURL,
-  headers: {
-    'Content-type': 'application/json',
-  },
+  headers: { 'Content-Type': 'application/json', charset: 'utf-8' },
 })
 
 // Set the AUTH token for any request
@@ -16,6 +14,7 @@ axiosInstance.interceptors.request.use((config) => {
   if (config.headers && token) {
     config.headers.Authorization = token ? `Bearer ${token}` : ''
   }
+
   return config
 })
 

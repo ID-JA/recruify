@@ -1,4 +1,4 @@
-import { ScrollArea, Table } from '@mantine/core'
+import { ScrollArea, Skeleton, Stack, Table, Text } from '@mantine/core'
 import {
   flexRender,
   functionalUpdate,
@@ -11,6 +11,7 @@ import {
   useReactTable,
 } from '@tanstack/react-table'
 import { useCallback, useEffect } from 'react'
+import { BoxOff } from 'tabler-icons-react'
 import { DataGridProps } from './DataGrid.props'
 import useStyles from './DataGrid.styles'
 import Pagination from './Pagination'
@@ -21,7 +22,7 @@ export const DEFAULT_INITIAL_SIZE = 10
 
 function DataGrid<TData extends RowData>({
   columns,
-  data,
+  data = [],
   initialState,
   fontSize,
   total,
@@ -33,6 +34,7 @@ function DataGrid<TData extends RowData>({
   striped,
   highlightOnHover,
   noEllipsis,
+  isFetching,
 }: DataGridProps<TData>) {
   const table = useReactTable<TData>({
     data,
@@ -47,6 +49,9 @@ function DataGrid<TData extends RowData>({
     getCoreRowModel: getCoreRowModel(),
     getPaginationRowModel: getPaginationRowModel(),
   })
+
+  //----------------------------------------------
+  const showNoRowsOverlay = !isFetching && total === 0
 
   const handlePaginationChange: OnChangeFn<PaginationState> = useCallback(
     (arg0) => {
@@ -84,6 +89,7 @@ function DataGrid<TData extends RowData>({
     withPagination && total
       ? Math.ceil(total / table.getState().pagination.pageSize)
       : undefined
+  console.log({ pageCount })
 
   table.setOptions((prev) => ({
     ...prev,
@@ -97,19 +103,10 @@ function DataGrid<TData extends RowData>({
       table.setPageSize(
         initialState?.pagination?.pageSize || DEFAULT_INITIAL_SIZE
       )
-      table.setPageIndex(
-        initialState?.pagination?.pageIndex || DEFAULT_INITIAL_PAGE - 1
-      )
     } else {
       table.setPageSize(data.length)
     }
-  }, [
-    data.length,
-    initialState?.pagination?.pageIndex,
-    initialState?.pagination?.pageSize,
-    table,
-    withPagination,
-  ])
+  }, [table, withPagination, data.length, initialState?.pagination?.pageSize])
 
   const { classes, cx } = useStyles({ withBoarder, noEllipsis })
 
@@ -122,8 +119,9 @@ function DataGrid<TData extends RowData>({
           className={classes.table}
           striped={striped}
           horizontalSpacing="xl"
+          verticalSpacing="md"
         >
-          <thead>
+          <thead className={classes.thead}>
             {table.getHeaderGroups().map((headerGroup) => (
               <tr key={headerGroup.id} role="row">
                 {headerGroup.headers.map((header) => (
@@ -133,6 +131,7 @@ function DataGrid<TData extends RowData>({
                     style={{
                       width: header.getSize(),
                     }}
+                    className={classes.th}
                     colSpan={header.colSpan}
                   >
                     {header.isPlaceholder ? null : (
@@ -151,7 +150,9 @@ function DataGrid<TData extends RowData>({
             ))}
           </thead>
           <tbody role="rowgroup" className={classes.tbody}>
-            {table.getRowModel().rows.length > 0 &&
+            {isFetching ? (
+              <Skeleton height={250} />
+            ) : table.getRowModel().rows.length > 0 ? (
               table.getRowModel().rows.map((row) => {
                 const selected =
                   Object.keys(table.getState().rowSelection).indexOf(row.id) !==
@@ -186,7 +187,17 @@ function DataGrid<TData extends RowData>({
                     })}
                   </tr>
                 )
-              })}
+              })
+            ) : (
+              <tr role="row">
+                <td colSpan={table.getVisibleLeafColumns().length}>
+                  <Stack align="center" spacing="xs">
+                    <BoxOff size={64} />
+                    <Text weight="bold">No Data</Text>
+                  </Stack>
+                </td>
+              </tr>
+            )}
           </tbody>
         </Table>
       </ScrollArea>
