@@ -14,7 +14,7 @@ import {
   TextInput,
   Title,
 } from '@mantine/core'
-import { useMutation } from '@tanstack/react-query'
+import { useMutation, useQueryClient } from '@tanstack/react-query'
 
 import Link from 'next/link'
 import { useEffect, useState } from 'react'
@@ -22,8 +22,8 @@ import { useForm } from 'react-hook-form'
 import { BrandGoogle } from 'tabler-icons-react'
 import * as yup from 'yup'
 
-import useGetProfile from '@/hooks/use-get-profile'
 import { authenticateUser } from '@/services/auth-service'
+import useAuthStore from '@/store'
 import { NextPageWithLayout } from '@/types'
 import { showNotification } from '@mantine/notifications'
 import { useRouter } from 'next/router'
@@ -57,7 +57,6 @@ const defaultValues = {
 
 export const SignIn: NextPageWithLayout = () => {
   const [activeTab, setActiveTab] = useState('employer')
-  const [token, setToken] = useState<string | null>(null)
   const { classes } = useStyles()
 
   const {
@@ -72,14 +71,15 @@ export const SignIn: NextPageWithLayout = () => {
 
   const mutate = useMutation(authenticateUser)
   const router = useRouter()
-  const { data } = useGetProfile()
-  // const { data: user, isError, isLoading, isFetching } = useCurrentUser()
+  const queryClient = useQueryClient()
+  const { isLoggedIn, setIsLoggedIn } = useAuthStore((state) => state)
 
   const onSubmit = useCallback(
     (values: typeof defaultValues) => {
       mutate.mutate(values, {
         onSuccess: (response) => {
           localStorage.setItem('token', response.data.token)
+          setIsLoggedIn(true)
           router.replace('/dashboard')
         },
         onError: () => {
@@ -100,14 +100,14 @@ export const SignIn: NextPageWithLayout = () => {
   }
 
   useEffect(() => {
-    if (data) {
+    if (isLoggedIn) {
       router.replace('/dashboard')
+    } else {
+      queryClient.removeQueries()
     }
-  }, [router, data])
+  }, [router, isLoggedIn])
 
-  // console.log({ isFetching, isLoading, user, isError })
-
-  if (data) {
+  if (isLoggedIn && mutate.isIdle) {
     return <div></div>
   }
   return (
@@ -174,7 +174,12 @@ export const SignIn: NextPageWithLayout = () => {
               <a className={classes.link}>Forgot Password ?</a>
             </Link>
           </Group>
-          <Button fullWidth radius="lg" type="submit">
+          <Button
+            fullWidth
+            radius="lg"
+            type="submit"
+            loading={mutate.isLoading}
+          >
             Sign in
           </Button>
         </form>

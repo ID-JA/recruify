@@ -28,4 +28,5 @@ export interface DataGridProps<TData extends RowData>
   striped?: boolean
   highlightOnHover?: boolean
   pageSizes?: string[]
+  isFetching?: boolean
 }

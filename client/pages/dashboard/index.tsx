@@ -1,6 +1,7 @@
-import { Center, Grid, Text, Title } from '@mantine/core'
+import { Center, Grid, Skeleton, Text, Title } from '@mantine/core'
 
 import { RootLayout } from '@/layouts/RootLayout/RootLayout'
+import useAuthStore from '@/store'
 import { NextPageWithLayout } from '@/types'
 
 const MainSections = [
@@ -19,14 +20,19 @@ const MainSections = [
 ]
 
 const Dashboard: NextPageWithLayout = () => {
+  const user = useAuthStore((state) => state.user)
   return (
     <>
       <Title order={1} mb="sm">
         Dashboard
       </Title>
-      <Text size="sm" mb="xl">
-        Welcome Kent - Saturday, Sep 17, 2022
-      </Text>
+      {user ? (
+        <Text size="sm" mb="xl">
+          Welcome {user?.name}
+        </Text>
+      ) : (
+        <Skeleton height={20} width={150} />
+      )}
       <Grid mt={20}>
         {MainSections.map((section, index) => (
           <Grid.Col span={4} key={index}>

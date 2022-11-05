@@ -1,11 +1,12 @@
 import useGetProfile from '@/hooks/use-get-profile'
+import useAuthStore, { User } from '@/store'
 import {
   shouldExcludeHeader,
   shouldExcludeNavbar,
 } from '@/utils/exclude-layout'
 
 import { useRouter } from 'next/router'
-import React, { useEffect, useState } from 'react'
+import React, { useState } from 'react'
 
 import MainHeader from './Header'
 import MainNavbar from './Navbar/Navbar'
@@ -13,31 +14,33 @@ import useStyles from './RootLayout.styles'
 
 export function RootLayout({ children }: { children: React.ReactNode }) {
   const [navbarOpened, setNavBarState] = useState(false)
-  const [token, setToken] = useState<string | null>(null)
   const router = useRouter()
+  const { logout, setUser, isLoggedIn } = useAuthStore((state) => state)
 
   const shouldRenderHeader = !shouldExcludeHeader(router.pathname)
   const shouldRenderNavbar = !shouldExcludeNavbar(router.pathname)
   const { classes, cx } = useStyles({ shouldRenderNavbar })
 
-  const { error, data } = useGetProfile(token)
+  useGetProfile({
+    onSuccess: (res: User) => {
+      setUser(res)
+    },
+    onError: () => {
+      logout()
+      console.log('logout....')
 
-  useEffect(() => {
-    if (window === undefined) return
-    const t = window.localStorage.getItem('token')
-    if (t !== null) {
-      console.log('setting token...')
-      setToken(t)
-      return
-    }
-    if (error) {
-      console.log(error)
-    }
-  }, [error, data])
+      if (router.pathname !== '/') {
+        router.replace('/signin')
+      }
+    },
+  })
 
-  if (error && router.pathname !== '/') {
-    return <div></div>
+  // TODO: if user is logged in, and tried access to home page redirect to dashboard
+
+  if (router.pathname !== '/' && isLoggedIn === false) {
+    return <div>...</div>
   }
+
   return (
     <div
       className={cx({
@@ -46,12 +49,13 @@ export function RootLayout({ children }: { children: React.ReactNode }) {
       })}
     >
       {shouldRenderHeader ? (
-        <MainHeader
-          key="root-header"
-          navbarOpened={navbarOpened}
-          toggleNavbar={() => setNavBarState(!navbarOpened)}
-          user={data}
-        />
+        <>
+          <MainHeader
+            key="root-header"
+            navbarOpened={navbarOpened}
+            toggleNavbar={() => setNavBarState(!navbarOpened)}
+          />
+        </>
       ) : null}
       {shouldRenderNavbar ? (
         <MainNavbar
@@ -60,11 +64,7 @@ export function RootLayout({ children }: { children: React.ReactNode }) {
           onClose={() => setNavBarState(false)}
         />
       ) : null}
-      <main className={classes.main}>
-        <pre>{JSON.stringify(data, null, 2)}</pre>
-
-        {children}
-      </main>
+      <main className={classes.main}>{children}</main>
     </div>
   )
 }

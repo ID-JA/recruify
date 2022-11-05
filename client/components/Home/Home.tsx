@@ -102,6 +102,7 @@ export const Home: NextPageWithLayout = () => {
   ))
   return (
     <>
+      {/* <Header /> */}
       <Container size="xl" pt="80px" px="md">
         <div className={classes.inner}>
           <div className={classes.content}>

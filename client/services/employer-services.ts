@@ -1,12 +1,13 @@
+import { useMutation, useQueryClient } from '@tanstack/react-query'
 import axios, { version } from 'utils/axios'
 
-type JobOffersResponse = {
+export type JobOffersResponse = {
   data: {
     id: string
     title: string
     location: string
     companyName: string
-    createdAt: string
+    createdAt: Date
     candidatesCount: number
     status: number
   }[]
@@ -22,15 +23,32 @@ export const createNewJob = async (data: unknown) => {
   return await axios.post(`${version}/job`, data)
 }
 
-export const getJobOffers = async (pageNumber = 1) => {
-  return await axios
-    .post<JobOffersResponse>(`${version}/employer/jobs`, {
-      pageNumber: pageNumber,
-      pageSize: 10,
-    })
-    .then((res) => res.data)
+export async function getJobOffers({
+  sortBy,
+}: {
+  sortBy: string
+}): Promise<JobOffersResponse> {
+  const response = await axios.post<JobOffersResponse>(
+    `${version}/employer/jobs`,
+    {
+      orderBy: [sortBy],
+      // pageNumber: 1,
+      pageSize: 100, // TODO: make this dynamic
+    }
+  )
+
+  return response.data
 }
 
-export const deleteOffer = async (id: string) => {
+async function DeleteJobOffer(id: string) {
   return await axios.delete(`${version}/job/${id}`)
+}
+
+export function useDeleteJobOffer() {
+  const queryClient = useQueryClient()
+  return useMutation(DeleteJobOffer, {
+    onSuccess: async () => {
+      await queryClient.invalidateQueries(['jobs'])
+    },
+  })
 }

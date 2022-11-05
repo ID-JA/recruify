@@ -1,4 +1,5 @@
 import Logo from '@/components/logo/Logo'
+import useAuthStore from '@/store'
 import {
   Avatar,
   Burger,
@@ -9,7 +10,7 @@ import {
 } from '@mantine/core'
 import Link from 'next/link'
 import { useRouter } from 'next/router'
-import { Logout, Settings } from 'tabler-icons-react'
+import { Logout, Settings, User } from 'tabler-icons-react'
 import { HEADER_HEIGHT, NAVBAR_BREAKPOINT } from './RootLayout.styles'
 
 const useStyles = createStyles((theme, { p }: { p: string }) => ({
@@ -71,13 +72,12 @@ const useStyles = createStyles((theme, { p }: { p: string }) => ({
 type HeaderProps = {
   navbarOpened: boolean
   toggleNavbar(): void
-  // eslint-disable-next-line @typescript-eslint/no-explicit-any
-  user?: any
 }
 
-function MainHeader({ navbarOpened, toggleNavbar, user }: HeaderProps) {
+function MainHeader({ navbarOpened, toggleNavbar }: HeaderProps) {
   const router = useRouter()
   const { classes } = useStyles({ p: router.pathname })
+  const isLoggedIn = useAuthStore((state) => state.isLoggedIn)
 
   return (
     <header className={classes.header}>
@@ -96,7 +96,7 @@ function MainHeader({ navbarOpened, toggleNavbar, user }: HeaderProps) {
           </Link>
         </div>
 
-        {user ? (
+        {isLoggedIn ? (
           <UserAvatar key="user-avatar" />
         ) : (
           <Button key="get-started-btn">Become recruiter</Button>
@@ -108,24 +108,36 @@ function MainHeader({ navbarOpened, toggleNavbar, user }: HeaderProps) {
 
 export default MainHeader
 
-function UserAvatar() {
+export function UserAvatar() {
+  const router = useRouter()
+  const { logout, user } = useAuthStore((state) => state)
+  const logoutHandler = () => {
+    logout()
+    router.replace('/')
+  }
   return (
-    <Menu shadow="md" width={200}>
-      <Menu.Target>
-        <Avatar
-          sx={{
-            cursor: 'pointer',
-          }}
-          radius="xl"
-          color="blue"
-          mr="md"
-        />
-      </Menu.Target>
-      <Menu.Dropdown>
-        <Menu.Item icon={<Settings size={14} />}>Settings</Menu.Item>
-        <Menu.Divider />
-        <Menu.Item icon={<Logout size={14} />}>Sign out</Menu.Item>
-      </Menu.Dropdown>
-    </Menu>
+    <>
+      <Menu shadow="md" width={200}>
+        <Menu.Target>
+          <Avatar
+            sx={{
+              cursor: 'pointer',
+            }}
+            src={`https://avatar.tobi.sh/${user?.email}`}
+            radius="xl"
+            color="blue"
+            mr="md"
+          />
+        </Menu.Target>
+        <Menu.Dropdown>
+          <Menu.Item icon={<User size={14} />}>{user?.name}</Menu.Item>
+          <Menu.Item icon={<Settings size={14} />}>Settings</Menu.Item>
+          <Menu.Divider />
+          <Menu.Item icon={<Logout size={14} />} onClick={logoutHandler}>
+            Sign out
+          </Menu.Item>
+        </Menu.Dropdown>
+      </Menu>
+    </>
   )
 }
