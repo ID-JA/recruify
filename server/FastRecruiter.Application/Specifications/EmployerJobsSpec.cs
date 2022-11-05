@@ -1,4 +1,5 @@
 ﻿using Ardalis.Specification;
+using FastRecruiter.Application.Common.Models;
 using FastRecruiter.Application.Job.Queries;
 using JobEntity = FastRecruiter.Domain.Entities.Job;
 
@@ -10,6 +11,7 @@ namespace FastRecruiter.Application.Specifications
         {
             Query
                 .Include(j => j.Employer)
+                .OrderBy(j=>j.CreatedAt, !request.HasOrderBy())
                 .Include(j => j.Applicants)
                 .Where(j => j.Employer.IdentityId == employerId);
         }

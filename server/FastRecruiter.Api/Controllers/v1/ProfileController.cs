@@ -7,7 +7,6 @@ using System.Security.Claims;
 
 namespace FastRecruiter.Api.Controllers.v1
 {
-    [AllowAnonymous]
     public class ProfileController : VersionedApiController
     {
         private readonly IUserService _userService;
@@ -26,10 +25,6 @@ namespace FastRecruiter.Api.Controllers.v1
                 : Ok(await _userService.GetAsync(userId, cancellationToken));
         }
 
-        [HttpGet("validate")]
-        public ActionResult ValidateToken()
-        {
-            return Ok(new { success = User.Identity?.IsAuthenticated });
-        }
+       
     }
 }
