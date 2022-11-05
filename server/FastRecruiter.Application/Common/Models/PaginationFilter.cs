@@ -1,14 +1,14 @@
 ﻿namespace FastRecruiter.Application.Common.Models
 {
-    public class PaginationFilter : BaseFilter
+    public class PaginationFilter  : BaseFilter
     {
         public int PageNumber { get; set; }
 
         public int PageSize { get; set; } = int.MaxValue;
 
         public string[]? OrderBy { get; set; }
-        //public Filter? AdvancedFilter { get; set; }
 
+        //public string? Filter { get; set; }
     }
 
     public static class PaginationFilterExtensions

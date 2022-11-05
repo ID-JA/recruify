@@ -3,7 +3,7 @@
     public class BaseFilter
     {
 
-        public Search? AdvancedSearch { get; set; }
+        //public Search? AdvancedSearch { get; set; }
 
         public Filter? AdvancedFilter { get; set; }
 

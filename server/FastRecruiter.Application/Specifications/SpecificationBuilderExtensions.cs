@@ -293,6 +293,7 @@ namespace FastRecruiter.Application.Specifications
         {
             if (orderByFields is not null)
             {
+                var z = ParseOrderBy(orderByFields);
                 foreach (var field in ParseOrderBy(orderByFields))
                 {
                     var paramExpr = Expression.Parameter(typeof(T));
