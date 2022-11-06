@@ -61,8 +61,6 @@ function StatusFilter() {
     }
   }, [status])
 
-  console.log({ selectedStatus })
-
   return (
     <Popover
       openPopover={openPopover}
@@ -81,6 +79,7 @@ function StatusFilter() {
             } else {
               newStatusArr = [...selectedStatus, value]
             }
+
             let newQuery
             if (statusArrToStr(newStatusArr) === 'default') {
               delete router.query.status

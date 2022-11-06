@@ -13,12 +13,17 @@ function JobOffersContainer() {
   const router = useRouter()
 
   const { data } = useQuery<JobOffersResponse>(
-    ['jobs', getQueryString(router).split('sort=')[1] ? 'title' : 'createdAt'],
+    [
+      'jobs',
+      {
+        sort: getQueryPrams(router)['sort'] || 'createdAt Desc',
+        status: getQueryPrams(router)['status'] || 'active',
+      },
+    ],
     () =>
       getJobOffers({
-        sortBy: getQueryString(router).split('sort=')[1]
-          ? 'title Asc'
-          : 'createdAt Desc',
+        sortBy: getQueryPrams(router)['sort'] ? 'title Asc' : 'createdAt Desc',
+        status: getQueryPrams(router)['status']?.split(','),
       }),
     {
       retry: false,
@@ -54,6 +59,15 @@ function JobOffersContainer() {
 }
 
 export default JobOffersContainer
+
+export const getQueryPrams = (router: NextRouter) => {
+  const queryPrams = new URLSearchParams(
+    router.query as {
+      [key: string]: string
+    }
+  )
+  return Object.fromEntries(queryPrams.entries())
+}
 
 export const getQueryString = (router: NextRouter): string => {
   // eslint-disable-next-line @typescript-eslint/no-unused-vars

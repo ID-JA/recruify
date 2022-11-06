@@ -25,15 +25,16 @@ export const createNewJob = async (data: unknown) => {
 
 export async function getJobOffers({
   sortBy,
+  status,
 }: {
   sortBy: string
+  status: string[]
 }): Promise<JobOffersResponse> {
   const response = await axios.post<JobOffersResponse>(
     `${version}/employer/jobs`,
     {
+      ...getFiltersFromArray(status),
       orderBy: [sortBy],
-      // pageNumber: 1,
-      pageSize: 100, // TODO: make this dynamic
     }
   )
 
@@ -51,4 +52,48 @@ export function useDeleteJobOffer() {
       await queryClient.invalidateQueries(['jobs'])
     },
   })
+}
+
+const getFiltersFromArray = (filters: string[]) => {
+  if (filters === undefined) {
+    return {
+      advancedFilter: {
+        logic: 'or',
+        filters: [
+          {
+            field: 'status',
+            operator: 'eq',
+            value: '1',
+          },
+        ],
+      },
+    }
+  } else if (filters.includes('all') || filters.includes('none')) {
+    return
+  } else {
+    const f = filters.map((filter) => ({
+      field: 'status',
+      operator: 'eq',
+      value: statusStringToNum(filter),
+    }))
+    return {
+      advancedFilter: {
+        logic: 'or',
+        filters: f,
+      },
+    }
+  }
+}
+
+const statusStringToNum = (status: string) => {
+  switch (status) {
+    case 'draft':
+      return '0'
+    case 'active':
+      return '1'
+    case 'closed':
+      return '2'
+    default:
+      return '4'
+  }
 }
