@@ -1,30 +1,32 @@
 import Popover from '@/components/shared/popover'
 import { Menu } from '@mantine/core'
+
 import { useRouter } from 'next/router'
 import { useMemo, useState } from 'react'
-import { Check, ChevronDown } from 'tabler-icons-react'
+import { Activity, Check, ChevronDown } from 'tabler-icons-react'
+
 import { useStyles } from './offer-filters.styles'
 
 const statuses = [
   {
     label: 'Active',
     value: 'active',
-    color: 'bg-green-500',
+    color: 'green',
   },
   {
     label: 'Closed',
     value: 'closed',
-    color: 'bg-amber-500',
+    color: 'red',
   },
   {
     label: 'Draft',
     value: 'draft',
-    color: 'bg-amber-500',
+    color: 'yellow',
   },
   {
     label: 'Archived',
     value: 'archived',
-    color: 'bg-gray-400',
+    color: 'gray',
   },
 ]
 
@@ -68,6 +70,7 @@ function StatusFilter() {
       content={statuses.map(({ label, value }) => (
         <Menu.Item
           key={value}
+          className={classes.item}
           onClick={() => {
             let newStatusArr
             if (selectedStatus.includes(value)) {
@@ -109,7 +112,18 @@ function StatusFilter() {
     >
       <button className={classes.target} onClick={() => setOpenPopover(true)}>
         <div className={classes.targetLeft}>
-          {/* <ArrowsSort size={18} strokeWidth={1.5} /> */}
+          {/* {statuses.map(({ label, color }) => (
+              <ColorSwatch
+                key={label}
+                color={
+                  selectedStatus.includes(label.toLowerCase())
+                    ? theme.colors[color][5]
+                    : '#fff'
+                }
+                size={12}
+              />
+            ))} */}
+          <Activity strokeWidth={1.2} size={18} />
           <p>Status</p>
         </div>
         <ChevronDown className={classes.chevron} size={18} strokeWidth={1.5} />

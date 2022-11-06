@@ -40,6 +40,7 @@ function OfferSort() {
       setOpenPopover={setOpened}
       content={sortOptions.map((option) => (
         <Menu.Item
+          className={classes.item}
           onClick={() => {
             let newQuery
             newQuery = {

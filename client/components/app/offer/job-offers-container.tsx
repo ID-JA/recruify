@@ -32,7 +32,7 @@ function JobOffersContainer() {
   )
 
   const loading = useMemo(() => {
-    return data && data.data.length > 0 ? false : true
+    return data && data.data.length >= 0 ? false : true
   }, [data])
 
   const jobs = useMemo(() => {
