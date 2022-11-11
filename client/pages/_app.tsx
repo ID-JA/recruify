@@ -1,7 +1,6 @@
 import { MantineProvider } from '@mantine/core'
 import { NotificationsProvider } from '@mantine/notifications'
 import { QueryClient, QueryClientProvider } from '@tanstack/react-query'
-import { ReactQueryDevtools } from '@tanstack/react-query-devtools'
 import { AppProps } from 'next/app'
 import Head from 'next/head'
 
@@ -41,7 +40,7 @@ export default function App(props: AppPropsWithLayout) {
         <MantineProvider withGlobalStyles withNormalizeCSS>
           <NotificationsProvider position="top-right">
             {getLayout(<Component {...pageProps} />)}
-            <ReactQueryDevtools initialIsOpen={false} />
+            {/* <ReactQueryDevtools initialIsOpen={false} /> */}
           </NotificationsProvider>
         </MantineProvider>
       </QueryClientProvider>

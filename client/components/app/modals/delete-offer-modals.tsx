@@ -1,4 +1,3 @@
-/* eslint-disable @typescript-eslint/no-empty-function */
 import { useDeleteJobOffer } from '@/services/employer-services'
 import { JobOfferProps } from '@/types'
 import { Button, Modal, Text, Title } from '@mantine/core'
@@ -8,11 +7,11 @@ import { useCallback, useEffect, useMemo, useState } from 'react'
 export function DeleteJobOfferModal({
   showModal,
   setCloseModal,
-  props,
+  offer,
 }: {
   showModal: boolean
   setCloseModal: () => void
-  props: JobOfferProps
+  offer: JobOfferProps
 }) {
   const mutation = useDeleteJobOffer()
 
@@ -27,12 +26,13 @@ export function DeleteJobOfferModal({
       overlayColor="#fff"
       overlayBlur={2}
       opened={showModal}
+      // eslint-disable-next-line @typescript-eslint/no-empty-function
       onClose={!mutation.isLoading ? setCloseModal : () => {}}
       withCloseButton={false}
       centered
     >
       <Title order={3} align="center" mb={18}>
-        Delete job offer &ldquo;{props.title}&rdquo;?
+        Delete job offer &ldquo;{offer.title}&rdquo;?
       </Title>
       <Text color="gray.7" align="center" mb={30}>
         Deleting this job offer will remove all applications and data related to
@@ -44,7 +44,7 @@ export function DeleteJobOfferModal({
         fullWidth
         mt="md"
         onClick={() => {
-          mutation.mutate(props.id)
+          mutation.mutate(offer.id)
         }}
       >
         Delete Now
@@ -66,7 +66,7 @@ export const useDeleteJobModal = ({ props }: { props?: JobOfferProps }) => {
       <DeleteJobOfferModal
         showModal={showDeleteOfferModal}
         setCloseModal={handleCloseModal}
-        props={props}
+        offer={props}
       />
     ) : null
   }, [props, showDeleteOfferModal, handleCloseModal])

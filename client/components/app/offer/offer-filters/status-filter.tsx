@@ -1,5 +1,5 @@
 import Popover from '@/components/shared/popover'
-import { Menu } from '@mantine/core'
+import { ColorSwatch, Menu } from '@mantine/core'
 
 import { useRouter } from 'next/router'
 import { useMemo, useState } from 'react'
@@ -48,7 +48,7 @@ const statusArrToStr = (newStatusArr: string[]) => {
 
 function StatusFilter() {
   const [openPopover, setOpenPopover] = useState(false)
-  const { classes } = useStyles({ opened: openPopover })
+  const { classes, theme } = useStyles({ opened: openPopover })
 
   const router = useRouter()
   const { status } = router.query as { status?: string }
@@ -67,10 +67,11 @@ function StatusFilter() {
     <Popover
       openPopover={openPopover}
       setOpenPopover={setOpenPopover}
-      content={statuses.map(({ label, value }) => (
+      content={statuses.map(({ label, value, color }) => (
         <Menu.Item
           key={value}
           className={classes.item}
+          icon={<ColorSwatch color={theme.colors[color][7]} size={12} />}
           onClick={() => {
             let newStatusArr
             if (selectedStatus.includes(value)) {

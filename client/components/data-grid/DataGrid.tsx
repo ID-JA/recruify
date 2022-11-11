@@ -51,7 +51,7 @@ function DataGrid<TData extends RowData>({
   })
 
   //----------------------------------------------
-  const showNoRowsOverlay = !isFetching && total === 0
+  // const showNoRowsOverlay = !isFetching && total === 0
 
   const handlePaginationChange: OnChangeFn<PaginationState> = useCallback(
     (arg0) => {

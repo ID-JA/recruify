@@ -1,4 +1,4 @@
-import { CreateJobForm } from '@/components'
+import AddEditOffer from '@/components/jobs/add-edit-offer'
 import { RootLayout } from '@/layouts/RootLayout/RootLayout'
 import { NextPageWithLayout } from '@/types'
 import { Divider, Title } from '@mantine/core'
@@ -10,7 +10,7 @@ const CreateNewJob: NextPageWithLayout = () => {
         Post a job
       </Title>
       <Divider my="lg" />
-      <CreateJobForm />
+      <AddEditOffer />
     </>
   )
 }

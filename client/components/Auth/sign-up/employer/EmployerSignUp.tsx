@@ -148,7 +148,7 @@ export const EmployerSignUp: NextPageWithLayout = () => {
           p="1.5rem"
         >
           <FormProvider {...methods}>
-            <form onSubmit={handleSubmit(onSubmit)}>
+            <form onSubmit={handleSubmit(onSubmit)} autoComplete="off">
               {steps.map(
                 (Step, index) =>
                   state.activeStep === index && (

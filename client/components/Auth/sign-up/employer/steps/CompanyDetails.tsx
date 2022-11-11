@@ -51,7 +51,6 @@ function CompanyDetails() {
   )
 }
 
-/* eslint import/no-anonymous-default-export: [2, {"allowObject": true}] */
 export default {
   Component: CompanyDetails,
   validationSchema,

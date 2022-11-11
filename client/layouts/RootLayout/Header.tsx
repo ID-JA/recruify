@@ -8,6 +8,7 @@ import {
   createStyles,
   Menu,
 } from '@mantine/core'
+import { NextLink } from '@mantine/next'
 import Link from 'next/link'
 import { useRouter } from 'next/router'
 import { Logout, Settings, User } from 'tabler-icons-react'
@@ -99,7 +100,14 @@ function MainHeader({ navbarOpened, toggleNavbar }: HeaderProps) {
         {isLoggedIn ? (
           <UserAvatar key="user-avatar" />
         ) : (
-          <Button key="get-started-btn">Become recruiter</Button>
+          <Button
+            key="get-started-btn"
+            component={NextLink}
+            href="/employer-signup"
+            passHref
+          >
+            Become recruiter
+          </Button>
         )}
       </Container>
     </header>

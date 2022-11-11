@@ -1,5 +1,6 @@
 import axios, { version } from '@/utils/axios'
 import { useQuery, useQueryClient } from '@tanstack/react-query'
+import { AxiosError } from 'axios'
 import { useRouter } from 'next/router'
 import { useEffect, useState } from 'react'
 
@@ -18,7 +19,12 @@ export const useCurrentUser = () => {
     enabled: token ? true : false,
   })
 
-  const { isError, error, data } = query
+  const { isError, error, data } = query as {
+    isError: boolean
+    error: AxiosError
+    // eslint-disable-next-line @typescript-eslint/no-explicit-any
+    data: any
+  }
 
   useEffect(() => {
     if (window === undefined) return

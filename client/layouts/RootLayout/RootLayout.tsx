@@ -4,6 +4,7 @@ import {
   shouldExcludeHeader,
   shouldExcludeNavbar,
 } from '@/utils/exclude-layout'
+import { Global } from '@mantine/core'
 
 import { useRouter } from 'next/router'
 import React, { useState } from 'react'
@@ -42,29 +43,44 @@ export function RootLayout({ children }: { children: React.ReactNode }) {
   }
 
   return (
-    <div
-      className={cx({
-        [classes.withNavbar]: shouldRenderNavbar,
-        [classes.withoutHeader]: shouldRenderHeader,
-      })}
-    >
-      {shouldRenderHeader ? (
-        <>
+    <>
+      <MyGlobalStyles />
+      <div
+        className={cx({
+          [classes.withNavbar]: shouldRenderNavbar,
+          [classes.withoutHeader]: shouldRenderHeader,
+        })}
+      >
+        {shouldRenderHeader ? (
           <MainHeader
             key="root-header"
             navbarOpened={navbarOpened}
             toggleNavbar={() => setNavBarState(!navbarOpened)}
           />
-        </>
-      ) : null}
-      {shouldRenderNavbar ? (
-        <MainNavbar
-          key="root-navbar"
-          opened={navbarOpened}
-          onClose={() => setNavBarState(false)}
-        />
-      ) : null}
-      <main className={classes.main}>{children}</main>
-    </div>
+        ) : null}
+        {shouldRenderNavbar ? (
+          <MainNavbar
+            key="root-navbar"
+            opened={navbarOpened}
+            onClose={() => setNavBarState(false)}
+          />
+        ) : null}
+        <main className={classes.main}>{children}</main>
+      </div>
+    </>
+  )
+}
+
+function MyGlobalStyles() {
+  return (
+    <Global
+      styles={() => ({
+        '*, *::before, *::after': {
+          boxSizing: 'border-box',
+          margin: 0,
+          padding: 0,
+        },
+      })}
+    />
   )
 }

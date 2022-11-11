@@ -14,3 +14,16 @@ export type JobOfferProps = {
   candidatesCount: number
   status: number
 }
+
+export type JobOfferDetails = {
+  id: string
+  title: string
+  location: string
+  address: string
+  description: string
+  employmentType: string
+  skills: []
+  whyUse: string
+  companyDescription: string
+  status: number
+}

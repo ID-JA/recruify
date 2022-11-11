@@ -1,8 +1,7 @@
-import { Center, Grid, Skeleton, Text, Title } from '@mantine/core'
-
 import { RootLayout } from '@/layouts/RootLayout/RootLayout'
 import useAuthStore from '@/store'
 import { NextPageWithLayout } from '@/types'
+import { Center, Grid, Skeleton, Text, Title } from '@mantine/core'
 
 const MainSections = [
   {
@@ -53,6 +52,6 @@ const Dashboard: NextPageWithLayout = () => {
   )
 }
 
-export default Dashboard
-
 Dashboard.getLayout = (page) => <RootLayout>{page}</RootLayout>
+
+export default Dashboard

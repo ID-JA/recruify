@@ -13,7 +13,7 @@ import * as yup from 'yup'
 
 import { useSkills } from '@/hooks/use-skills'
 import { EMPLOYMENT_TYPES } from '@/mock/data'
-import { createNewJob } from '@/services/employer-services'
+import { createNewJob, updateJobOffer } from '@/services/employer-services'
 
 import RichTextEditor from '../RichTextEditor'
 import useStyles from './CreateJob.styles'
@@ -45,7 +45,20 @@ const defaultValues = {
   companyDescription: '',
 }
 
-export function CreateJobForm() {
+export type OfferProps = {
+  id: string
+  title: string
+  location: string
+  address: string
+  employmentType: string
+  description: string
+  skills: []
+  whyUs: string
+  companyDescription: string
+  status: number
+}
+
+export function CreateJobForm({ offer }: { offer?: OfferProps }) {
   const [searchedSkill, setSearchedSkill] = useState('')
   const { classes } = useStyles()
   const queryClient = useQueryClient()
@@ -56,26 +69,30 @@ export function CreateJobForm() {
     control,
     formState: { errors },
   } = useForm({
-    defaultValues,
+    defaultValues: offer || defaultValues,
     resolver: yupResolver(validationSchema),
   })
   const [debounced] = useDebouncedValue(searchedSkill, 500)
   const { data, status: searchStatus } = useSkills(debounced)
 
-  const mutation = useMutation(createNewJob, {
+  const mutation = useMutation(offer?.id ? updateJobOffer : createNewJob, {
     onSuccess: () => {
       queryClient.invalidateQueries(['jobs'])
       router.push('/my-jobs')
       showNotification({
-        title: 'Job created successfully',
-        message: 'Your job has been created successfully',
+        title: offer?.id ? 'Job offer updated' : 'Job offer created',
+        message: offer?.id
+          ? 'Job offer updated successfully'
+          : 'Job offer created successfully',
         color: 'green',
       })
     },
     onError: () => {
       showNotification({
         title: 'Error',
-        message: 'Error occurred while creating job',
+        message: offer?.id
+          ? 'Job offer update failed'
+          : 'Job offer creation failed',
         color: 'red',
       })
     },
@@ -91,8 +108,9 @@ export function CreateJobForm() {
 
   const handleSubmitDraft = (values: typeof defaultValues) => {
     mutation.mutate({
+      ...(offer?.id && { id: offer?.id }),
       ...values,
-      savaAsDraft: 0,
+      savaAsDraft: offer?.status || 0,
       skills: JSON.stringify(values.skills),
     })
   }
@@ -105,6 +123,15 @@ export function CreateJobForm() {
 
   return (
     <div className={classes.wrapper}>
+      <Button
+        type="submit"
+        variant="subtle"
+        onClick={handleSubmit(handleSubmitDraft)}
+        loading={mutation.isLoading}
+        name="draft"
+      >
+        {offer?.id ? 'Save Changes' : 'Save as Draft'}
+      </Button>
       <form>
         <TextInput
           className={classes.field}
@@ -216,7 +243,7 @@ export function CreateJobForm() {
             loading={mutation.isLoading}
             name="draft"
           >
-            Save Draft
+            {offer?.id ? 'Save Changes' : 'Save as Draft'}
           </Button>
         </Group>
       </form>

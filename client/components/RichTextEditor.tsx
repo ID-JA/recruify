@@ -1,5 +1,3 @@
-/* eslint-disable @typescript-eslint/no-explicit-any */
-// RichText.tsx in your components folder
 import { createStyles } from '@mantine/core'
 import { RichTextEditorProps } from '@mantine/rte'
 import { ToolbarControl } from '@mantine/rte/lib/components/Toolbar/controls'
@@ -47,6 +45,7 @@ const useStyles = createStyles(() => ({
 type Props<TFormValues extends FieldValues> = {
   label?: string
   description?: string
+  // eslint-disable-next-line @typescript-eslint/no-explicit-any
   control?: any
   name: Path<TFormValues>
   register?: UseFormRegister<TFormValues>

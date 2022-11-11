@@ -1,26 +1,35 @@
+import Popover from '@/components/shared/popover'
+import {
+  getJobCandidatesCount,
+  UpdateOfferStatus,
+} from '@/services/employer-services'
 import { JobOfferProps } from '@/types'
 import { timeAgo } from '@/utils'
 import {
   ActionIcon,
   Badge,
-  CopyButton,
   createStyles,
   Group,
+  Loader,
+  MediaQuery,
   Menu,
   Paper,
 } from '@mantine/core'
+import { NextLink } from '@mantine/next'
+import { useMutation, useQuery, useQueryClient } from '@tanstack/react-query'
 import Link from 'next/link'
+import { useState } from 'react'
 import {
   Archive,
-  Check,
-  Copy,
   DotsVertical,
   Edit,
+  Eye,
   Trash,
+  Upload,
 } from 'tabler-icons-react'
 import { useDeleteJobModal } from '../modals/delete-offer-modals'
 
-const useStyles = createStyles((theme) => ({
+const useStyles = createStyles((theme, { status }: { status: number }) => ({
   root: {
     position: 'relative',
     padding: `${theme.spacing.lg}px ${theme.spacing.md}px`,
@@ -28,19 +37,27 @@ const useStyles = createStyles((theme) => ({
   },
   inner: {
     color: 'rgb(107,114,128)',
-    // fontWeight: 600,
     fontSize: '0.875rem',
     lineHeight: '1.25rem',
+    display: 'flex',
+    justifyContent: 'space-between',
+    alignItems: 'center',
   },
   title: {
     fontWeight: 600,
     textDecoration: 'none',
+    display: 'block',
     color: 'inherit',
+    '&:hover': {
+      textDecoration: 'underline',
+    },
+    marginBottom: '0.25rem',
   },
   menuItem: {
     color: 'rgb(107,114,128)',
     fontWeight: 600,
   },
+
   deleteMenuItem: {
     color: 'rgb(220 38 38)',
     fontWeight: 600,
@@ -49,160 +66,171 @@ const useStyles = createStyles((theme) => ({
       backgroundColor: 'rgb(220 38 38)',
     },
   },
-  overlay: {
-    position: 'fixed',
-    top: 0,
-    left: 0,
-    right: 0,
-    bottom: 0,
-    zIndex: 1000,
+
+  statusMarker: {
+    marginTop: '5px',
+    marginRight: '8px',
+    width: '12px',
+    height: '12px',
+    borderRadius: '50%',
+    backgroundColor:
+      status === 1 ? '#00B87C' : status === 2 ? 'rgb(220 38 38)' : 'orange',
   },
 }))
-
+// TODO: fix sort by nbr of candidates
 function JobOfferCard(props: JobOfferProps) {
-  const { candidatesCount, createdAt, id, location, status, title } = props
-  const { classes } = useStyles()
+  const { createdAt, id, location, status, title } = props
+  const [openPopover, setOpenPopover] = useState(false)
+  const queryClient = useQueryClient()
+  const { classes } = useStyles({ status })
   const { DeleteJobOfferModal, openDeleteJobModal } = useDeleteJobModal({
     props,
   })
+
+  const { data, isFetching } = useQuery<number>(
+    ['candidatesCount', id],
+    () => getJobCandidatesCount(id),
+    {
+      retry: false,
+      keepPreviousData: true,
+      staleTime: 10000,
+      refetchOnWindowFocus: true,
+    }
+  )
+
+  const mutation = useMutation(UpdateOfferStatus)
+
   return (
     <Paper shadow="xs" className={classes.root}>
-      {/* Modals */}
       <DeleteJobOfferModal />
-      {/* Card */}
-      <StatusMark status={status} />
-      <Group position="apart" className={classes.inner}>
-        <div>
-          <div
-            style={{
-              display: 'flex',
-              alignItems: 'center',
-              gap: '1rem',
-              marginBottom: '0.28rem',
-            }}
-          >
-            <Link href={id} passHref>
-              <a className={classes.title}>
-                <span>{title}</span>
-              </a>
-            </Link>
-            <CopyButton value={`http://localhost:3000/jobs/c/${id}`}>
-              {({ copied, copy }) => (
-                <ActionIcon
-                  size="sm"
-                  variant="light"
-                  color={copied ? 'teal' : 'gray'}
-                  onClick={copy}
-                >
-                  {copied ? <Check /> : <Copy />}
-                </ActionIcon>
-              )}
-            </CopyButton>
-          </div>
-          <div>{location}</div>
-        </div>
-
-        <Group
-          align="center"
-          position="apart"
-          sx={{
-            width: '50%',
+      <div className={classes.inner}>
+        <div
+          style={{
+            display: 'flex',
+            gap: '8px',
           }}
         >
+          {/* <Tooltip
+            color="gray"
+            label={
+              status === 1
+                ? 'Active'
+                : status === 2
+                ? 'Closed'
+                : status === 3
+                ? 'Archived'
+                : 'Draft'
+            }
+          >
+            <span className={classes.statusMarker} />
+          </Tooltip> */}
           <div>
-            <span>
-              {status === 1 ? (
-                <Badge color="green">Active</Badge>
-              ) : status === 2 ? (
-                <Badge color="red">Closed</Badge>
+            <Link href={`/my-jobs/${id}`} passHref>
+              <a className={classes.title}>{title}</a>
+            </Link>
+            <p>{location}</p>
+          </div>
+        </div>
+
+        <Group align="center" position="right" spacing="xl">
+          <MediaQuery smallerThan="md" styles={{ display: 'none' }}>
+            {status === 1 ? (
+              <Badge color="green">Active</Badge>
+            ) : status === 2 ? (
+              <Badge color="red">Closed</Badge>
+            ) : (
+              <Badge color="yellow">Draft</Badge>
+            )}
+          </MediaQuery>
+          <MediaQuery smallerThan="md" styles={{ display: 'none' }}>
+            <Badge color="gray">
+              {isFetching ? (
+                <Loader color="gray" size="sm" variant="dots" />
               ) : (
-                <Badge color="yellow">Draft</Badge>
+                data
               )}
-            </span>
-          </div>
-          <div>
-            <span>
-              <Badge color="gray">{candidatesCount} Candidates</Badge>
-            </span>
-          </div>
-          <div>
-            <span>
+              <span style={{ marginLeft: '5px' }}>Candidates</span>
+            </Badge>
+          </MediaQuery>
+          <MediaQuery smallerThan="md" styles={{ display: 'none' }}>
+            <div>
               Created {'  '}
               {timeAgo(createdAt)}
-            </span>
-          </div>
-          <Menu shadow="md" width={162} position="bottom-end">
-            <Menu.Target>
-              <ActionIcon size="sm">
-                <DotsVertical />
-              </ActionIcon>
-            </Menu.Target>
-            <Menu.Dropdown>
-              <Menu.Item
-                icon={<Edit size={18} />}
-                className={classes.menuItem}
-                onClick={() => {
-                  console.log(`edit row with id: ${id}`)
-                }}
-              >
-                Edit
-              </Menu.Item>
-              <Menu.Item
-                icon={<Archive size={18} />}
-                className={classes.menuItem}
-                onClick={() => {
-                  console.log(`archive row with id: ${id}`)
-                }}
-              >
-                Archive
-              </Menu.Item>
-              <Menu.Item
-                icon={<Trash size={18} />}
-                color="red"
-                className={classes.deleteMenuItem}
-                onClick={() => {
-                  console.log(`delete row with id: ${id}`)
-                  openDeleteJobModal()
-                }}
-              >
-                Delete
-              </Menu.Item>
-            </Menu.Dropdown>
-          </Menu>
+            </div>
+          </MediaQuery>
+
+          <Popover
+            openPopover={openPopover}
+            setOpenPopover={setOpenPopover}
+            content={
+              <>
+                {status === 0 && (
+                  <Menu.Item
+                    color="green"
+                    key="post-job-now"
+                    icon={<Upload size={18} />}
+                    style={{ fontWeight: 600 }}
+                    onClick={() => {
+                      mutation.mutate(
+                        { jobId: id, status: 'publish' },
+                        {
+                          onSuccess: () => {
+                            queryClient.invalidateQueries(['jobs'])
+                          },
+                        }
+                      )
+                    }}
+                  >
+                    Post job
+                  </Menu.Item>
+                )}
+
+                <Menu.Item
+                  component={NextLink}
+                  passHref
+                  href={`/my-jobs/${id}/edit`}
+                  icon={<Edit size={18} />}
+                  className={classes.menuItem}
+                >
+                  Edit
+                </Menu.Item>
+                <Menu.Item
+                  icon={<Eye size={18} />}
+                  className={classes.menuItem}
+                >
+                  Preview
+                </Menu.Item>
+                <Menu.Item
+                  icon={<Archive size={18} />}
+                  className={classes.menuItem}
+                  onClick={() => {
+                    console.log(`archive row with id: ${id}`)
+                  }}
+                >
+                  Archive
+                </Menu.Item>
+                <Menu.Item
+                  icon={<Trash size={18} />}
+                  color="red"
+                  className={classes.deleteMenuItem}
+                  onClick={() => {
+                    console.log(`delete row with id: ${id}`)
+                    openDeleteJobModal()
+                  }}
+                >
+                  Delete
+                </Menu.Item>
+              </>
+            }
+          >
+            <ActionIcon size="sm" onClick={() => setOpenPopover(true)}>
+              <DotsVertical />
+            </ActionIcon>
+          </Popover>
         </Group>
-      </Group>
+      </div>
     </Paper>
   )
 }
 
 export default JobOfferCard
-
-const StatusMark = ({ status }: { status: number }) => {
-  return (
-    <div
-      style={{
-        width: '0.35rem',
-        display: 'flex',
-        position: 'absolute',
-        top: '0',
-        left: '0',
-        height: '100%',
-      }}
-    >
-      <div
-        style={{
-          width: '0.35rem',
-          height: '100%',
-          borderTopLeftRadius: '0.2rem',
-          borderBottomLeftRadius: '0.2rem',
-          backgroundColor:
-            status === 1
-              ? '#00B87C'
-              : status === 2
-              ? 'rgb(220 38 38)'
-              : 'orange',
-        }}
-      ></div>
-    </div>
-  )
-}

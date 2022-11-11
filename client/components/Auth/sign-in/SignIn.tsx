@@ -91,7 +91,7 @@ export const SignIn: NextPageWithLayout = () => {
         },
       })
     },
-    [mutate, router]
+    [mutate, router, setIsLoggedIn]
   )
 
   const handleChangeTab = (v: string) => {
@@ -105,7 +105,7 @@ export const SignIn: NextPageWithLayout = () => {
     } else {
       queryClient.removeQueries()
     }
-  }, [router, isLoggedIn])
+  }, [router, isLoggedIn, queryClient])
 
   if (isLoggedIn && mutate.isIdle) {
     return <div></div>

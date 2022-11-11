@@ -1,4 +1,5 @@
-import { MainLayout, ProfileLayout } from '@/components'
+import { RootLayout } from '@/layouts/RootLayout/RootLayout'
+import SettingsLayout from '@/layouts/SettingsLayout/SettingsLayout'
 import { NextPageWithLayout } from '@/types'
 import { Alert } from '@mantine/core'
 import { AlertCircle } from 'tabler-icons-react'
@@ -20,9 +21,9 @@ const Options: NextPageWithLayout = () => {
 
 Options.getLayout = (page) => {
   return (
-    <MainLayout>
-      <ProfileLayout>{page}</ProfileLayout>
-    </MainLayout>
+    <RootLayout>
+      <SettingsLayout>{page}</SettingsLayout>
+    </RootLayout>
   )
 }
 

@@ -23,6 +23,23 @@ export const createNewJob = async (data: unknown) => {
   return await axios.post(`${version}/job`, data)
 }
 
+type DataProps = {
+  id?: string
+  title: string
+  location: string
+  address: string
+  employmentType: string
+  description: string
+  skills: string
+  whyUs: string
+  companyDescription: string
+  savaAsDraft: number
+}
+
+export const updateJobOffer = async (data: DataProps) => {
+  return await axios.put(`${version}/job/${data?.id}`, data)
+}
+
 export async function getJobOffers({
   sortBy,
   status,
@@ -41,6 +58,13 @@ export async function getJobOffers({
   return response.data
 }
 
+// get number of candidates
+export async function getJobCandidatesCount(id: string) {
+  const response = await axios.get(`${version}/job/${id}/candidates/count`)
+  return response.data
+}
+
+// Delete offer
 async function DeleteJobOffer(id: string) {
   return await axios.delete(`${version}/job/${id}`)
 }
@@ -54,6 +78,7 @@ export function useDeleteJobOffer() {
   })
 }
 
+// utils
 const getFiltersFromArray = (filters: string[]) => {
   if (filters === undefined) {
     return {
@@ -96,4 +121,28 @@ const statusStringToNum = (status: string) => {
     default:
       return '4'
   }
+}
+
+// ++++++++++++++++++++++++++++++++++++++
+// apply to job offer
+export const getJobOffer = async (id: string) => {
+  const response = await axios.get(`${version}/job/${id}`)
+  return response.data
+}
+
+// ++++++++++++++++++++++++++++++++++++++
+
+// update job status
+export const UpdateOfferStatus = async ({
+  jobId,
+  status,
+}: {
+  jobId: string
+  status: string
+}) => {
+  const response = await axios.post(`${version}/job/${jobId}/update-status`, {
+    jobId,
+    status,
+  })
+  return response.data
 }

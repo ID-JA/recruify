@@ -22,12 +22,14 @@ function JobOffersContainer() {
     ],
     () =>
       getJobOffers({
-        sortBy: getQueryPrams(router)['sort'] ? 'title Asc' : 'createdAt Desc',
+        sortBy: getQueryPrams(router)['sort']
+          ? 'nbrCandidates Desc'
+          : 'createdAt Desc',
         status: getQueryPrams(router)['status']?.split(','),
       }),
     {
       retry: false,
-      staleTime: 10000,
+      staleTime: 30000,
     }
   )
 
@@ -43,9 +45,9 @@ function JobOffersContainer() {
     <div>
       <OfferFilters />
       {loading ? (
-        Array.from({ length: 5 }).map((_, i) => <JobOfferPlaceholder key={i} />)
+        Array.from({ length: 4 }).map((_, i) => <JobOfferPlaceholder key={i} />)
       ) : jobs.length > 0 ? (
-        jobs.map((props) => <JobOfferCard key={props.id} {...props} />)
+        jobs.map((job) => <JobOfferCard key={job.id} {...job} />)
       ) : (
         <>
           <Title align="center">You don&rsquo;t have any job offers yet</Title>
@@ -70,8 +72,7 @@ export const getQueryPrams = (router: NextRouter) => {
 }
 
 export const getQueryString = (router: NextRouter): string => {
-  // eslint-disable-next-line @typescript-eslint/no-unused-vars
-  const { slug: omit, ...queryWithoutSlug } = router.query as {
+  const { ...queryWithoutSlug } = router.query as {
     slug: string
     [key: string]: string
   }
