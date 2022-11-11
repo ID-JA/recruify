@@ -20,7 +20,7 @@ namespace FastRecruiter.Api.Controllers.v1
         [HttpPost("{id}")]
         public async Task<ActionResult<string>> ApplyToOffer(ApplyToJobCommand request, string id)
         {
-            return id != request.JobId
+            return id != request.jobId
                 ? BadRequest()
                 : await Mediator.Send(request);
         }

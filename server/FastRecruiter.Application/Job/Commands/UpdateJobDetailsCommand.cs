@@ -17,6 +17,7 @@ namespace FastRecruiter.Application.Job.Commands
         public string Skills { get; set; }
         public string WhyUs { get; set; }
         public string CompanyDescription { get; set; }
+        public int savaAsDraft { get; set; }
     }
 
     public class UpdateJobDetailsCommandValidator : AbstractValidator<UpdateJobDetailsCommand>
@@ -50,7 +51,7 @@ namespace FastRecruiter.Application.Job.Commands
             if (job == null)
                 throw new NotFoundException("Job not found");
 
-            job.UpdateJob(request.Title, request.Location, request.Address, request.EmploymentType, request.Description, request.WhyUs, request.CompanyDescription, request.Skills);
+            job.UpdateJob(request.Title, request.Location, request.Address, request.EmploymentType, request.Description, request.WhyUs, request.CompanyDescription, request.Skills, request.savaAsDraft);
 
             await _jobRepository.UpdateAsync(job);
 

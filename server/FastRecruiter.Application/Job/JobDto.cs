@@ -10,8 +10,8 @@ namespace FastRecruiter.Application.Job
         public string Title { get; set; }
         public string Location { get; set; }
         public string CompanyName { get; set; }
+        public int nbrCandidates { get; set; }
         public DateTime CreatedAt { get; set; }
-        public int CandidatesCount { get; set; }
         public int Status { get; set; }
 
         public static TypeAdapterConfig GetMapsterConfig()
@@ -19,8 +19,8 @@ namespace FastRecruiter.Application.Job
             var config = new TypeAdapterConfig();
             config.NewConfig<JobEntity, JobDto>()
                 .Map(dest => dest.CompanyName, src => src.Employer.CompanyName)
-                .Map(dest => dest.Status, src => (int)src.Status)
-                .Map(dest => dest.CandidatesCount, src => src.TotalApplicants());
+                .Map(dest => dest.Status, src => (int)src.Status);
+            // .Map(dest => dest.CandidatesCount, src => src.TotalApplicants());
 
             return config;
         }

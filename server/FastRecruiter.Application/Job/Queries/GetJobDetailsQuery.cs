@@ -8,7 +8,7 @@ using JobEntity = FastRecruiter.Domain.Entities.Job;
 
 namespace FastRecruiter.Application.Job.Queries
 {
-    public class GetJobDetailsQuery : IRequest<JobDetailsVm>
+    public class GetJobDetailsQuery : IRequest<OfferDto>
     {
         public string JobId { get; set; }
         public string IdentityId { get; set; }
@@ -20,7 +20,7 @@ namespace FastRecruiter.Application.Job.Queries
         }
     }
 
-    public class GetJobDetailsQueryHandler : IRequestHandler<GetJobDetailsQuery, JobDetailsVm>
+    public class GetJobDetailsQueryHandler : IRequestHandler<GetJobDetailsQuery, OfferDto>
     {
         private readonly IReadRepository<JobEntity> _jobRepository;
         private readonly IReadRepository<Employer> _employerRepository;
@@ -31,7 +31,7 @@ namespace FastRecruiter.Application.Job.Queries
             _employerRepository = employerRepository;
         }
 
-        public async Task<JobDetailsVm> Handle(GetJobDetailsQuery request, CancellationToken cancellationToken)
+        public async Task<OfferDto> Handle(GetJobDetailsQuery request, CancellationToken cancellationToken)
         {
             var employerSpec = new EmployerByAuthIdSpec(request.IdentityId);
             var employer = await _employerRepository.FirstOrDefaultAsync(employerSpec);
@@ -42,7 +42,7 @@ namespace FastRecruiter.Application.Job.Queries
             if (job is null)
                 throw new NotFoundException("Job not found");
 
-            var vm = job.Adapt<JobDetailsVm>();
+            var vm = job.Adapt<OfferDto>(OfferDto.GetMapsterConfig());
 
             return vm;
         }

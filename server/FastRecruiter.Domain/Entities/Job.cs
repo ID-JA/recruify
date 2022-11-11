@@ -30,6 +30,8 @@ public class Job : IAggregateRoot
 
     public string CompanyDescription { get; private set; }
 
+    public int nbrCandidates { get; private set; }
+
     public Status Status { get; private set; }
 
     public DateTime CreatedAt { get; private set; }
@@ -54,6 +56,7 @@ public class Job : IAggregateRoot
             WhyUs = whyUs,
             CompanyDescription = companyDescription,
             Skills = skills,
+            nbrCandidates = 0,
             Status = SavaAsDraft == 0 ? Status.Draft : Status.Published,  // if user click on publish button then status will be published otherwise it will be draft
             CreatedAt = DateTime.UtcNow,
             UpdatedAt = DateTime.UtcNow
@@ -62,7 +65,7 @@ public class Job : IAggregateRoot
         return job;
     }
 
-    public void UpdateJob(string title, string location, string address, string employmentType, string description, string whyUs, string companyDescription, string skills)
+    public void UpdateJob(string title, string location, string address, string employmentType, string description, string whyUs, string companyDescription, string skills, int savaAsDraft)
     {
         Title = title;
         Location = location;
@@ -72,6 +75,7 @@ public class Job : IAggregateRoot
         WhyUs = whyUs;
         CompanyDescription = companyDescription;
         Skills = skills;
+        Status = savaAsDraft == 1 ? Status.Published : savaAsDraft == 0 ? Status.Draft : Status.Closed;
         UpdatedAt = DateTime.UtcNow;
     }
 
@@ -94,9 +98,10 @@ public class Job : IAggregateRoot
     }
 
     // apply to job offer method
-    public void ApplyToJob(Applicant newApplicant)
+    public void ApplyToJob()
     {
-        Applicants.Add(newApplicant);
+        // Applicants.Add(newApplicant);
+        nbrCandidates++;
     }
 
     // remove applicant

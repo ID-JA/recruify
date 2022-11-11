@@ -1,27 +1,37 @@
-﻿using FastRecruiter.Application.Common.Persistence;
+﻿using FastRecruiter.Application.Common.Exceptions;
+using FastRecruiter.Application.Common.Persistence;
 using FastRecruiter.Domain.Entities;
 using MediatR;
-
+using JobEntity = FastRecruiter.Domain.Entities.Job;
 namespace FastRecruiter.Application.Job.Commands
 {
     public class ApplyToJobCommand : IRequest<string>
     {
-        public string JobId { get; set; }
+        public string jobId { get; set; }
         public ApplicantDto applicant { get; set; }
     }
 
     public class ApplyToJobCommandHandler : IRequestHandler<ApplyToJobCommand, string>
     {
         private readonly IRepository<Applicant> _applicantRepository;
+        private readonly IRepository<JobEntity> _jobRepository;
 
-        public ApplyToJobCommandHandler(IRepository<Applicant> applicantRepository)
+
+        public ApplyToJobCommandHandler(IRepository<Applicant> applicantRepository, IRepository<JobEntity> jobRepository)
         {
             _applicantRepository = applicantRepository;
+            _jobRepository = jobRepository;
         }
 
         public async Task<string> Handle(ApplyToJobCommand request, CancellationToken cancellationToken)
         {
-            var applicant = Applicant.CreateApplicant(request.applicant.Name, request.applicant.Email, request.applicant.PhoneNumber, request.JobId);
+            var job = await _jobRepository.GetByIdAsync(request.jobId);
+            if (job is null)
+            {
+                throw new NotFoundException("job not found");
+            }
+
+            var applicant = Applicant.CreateApplicant(request.applicant.Name, request.applicant.Email, request.applicant.PhoneNumber, request.jobId);
 
             foreach (var exp in request.applicant.Experiences)
             {
@@ -52,7 +62,10 @@ namespace FastRecruiter.Application.Job.Commands
 
             await _applicantRepository.AddAsync(applicant);
 
-            return $"you have been successfully applied to job with id: {request.JobId}";
+            job.ApplyToJob();
+
+            await _jobRepository.SaveChangesAsync();
+            return $"you have been successfully applied to job with id: {request.jobId}";
         }
     }
 }

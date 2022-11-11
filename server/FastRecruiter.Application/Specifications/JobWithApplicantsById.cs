@@ -12,5 +12,7 @@ namespace FastRecruiter.Application.Specifications
                 .Include(j => j.Applicants).ThenInclude(a => a.Experiences).AsSplitQuery()
                 .Where(j => j.Id == jobId && j.EmployerId == employerId);
         }
+
+
     }
 }

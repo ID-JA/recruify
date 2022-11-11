@@ -6,6 +6,8 @@ namespace FastRecruiter.Application.Job
     {
         public string Title { get; set; }
 
+        public string CompanyName { get; set; }
+
         public string Address { get; set; }
 
         public string Location { get; set; }

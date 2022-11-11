@@ -13,7 +13,8 @@ namespace FastRecruiter.Application.Specifications
 
         public OfferByIdSpec(string jobId, string employerId)
         {
-            Query.Where(j => j.Id == jobId && j.EmployerId == employerId);
+            Query.Include(j => j.Employer)
+            .Where(j => j.Id == jobId && j.EmployerId == employerId);
         }
     }
 }

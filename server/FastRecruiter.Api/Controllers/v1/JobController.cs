@@ -16,10 +16,18 @@ namespace FastRecruiter.Api.Controllers.v1
 
         [HttpGet("{id}")]
         [OpenApiOperation("Get a job Details.", "")]
-        public Task<JobDetailsVm> GetJob(string id)
+        public Task<OfferDto> GetJob(string id)
         {
             return Mediator.Send(new GetJobDetailsQuery(id, User.FindFirstValue(ClaimTypes.NameIdentifier)));
         }
+
+        [HttpGet("{id}/candidates/count")]
+        [OpenApiOperation("Get total candidates.", "")]
+        public Task<int> CountCandidates(string id)
+        {
+            return Mediator.Send(new GetTotlaCandidtesByJobQuery(id));
+        }
+
 
         [HttpGet("{id}/candidates")]
         [OpenApiOperation("Get a job with applicants.", "")]
