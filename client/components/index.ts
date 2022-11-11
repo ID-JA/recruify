@@ -1,4 +1,4 @@
-export * from './Auth'
+export * from './auth'
 export * from './data-grid/DataGrid'
 export * from './Home/Home'
 export * from './jobs'
