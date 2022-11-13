@@ -8,6 +8,7 @@ export const getJobOffer = async (id: string) => {
 }
 
 export type Offer = {
+  companyName: string
   employmentType: string
   title: string
   description: string
@@ -28,6 +29,7 @@ export const useJobOffer = () => {
 
   const { data, error } = useQuery<Offer>(['offer'], () => getJobOffer(jobId), {
     enabled: !!jobId,
+    retry: false,
   })
 
   return {
