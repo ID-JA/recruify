@@ -1,14 +1,8 @@
-import { getJobOffer } from '@/services/employer-services'
+import { Offer } from '@/hooks/use-offer'
 import { Alert, Button, Paper, Text, Title } from '@mantine/core'
-import { useQuery } from '@tanstack/react-query'
 import { Briefcase } from 'tabler-icons-react'
 
-function JobPreview({ id }: { id: string }) {
-  const { data } = useQuery(['job', id], () => getJobOffer(id), {
-    enabled: !!id,
-    retry: false,
-  })
-
+function JobPreview({ offer }: { offer: Offer }) {
   return (
     <Paper
       withBorder
@@ -24,10 +18,10 @@ function JobPreview({ id }: { id: string }) {
         }}
       >
         <Title order={2} mb="xs">
-          {data?.title}
+          {offer?.title}
         </Title>
-        <Text>{data?.companyName}</Text>
-        <Text>{data?.address}</Text>
+        <Text>{offer?.companyName}</Text>
+        <Text>{offer?.address}</Text>
       </div>
       <div
         style={{
@@ -38,16 +32,15 @@ function JobPreview({ id }: { id: string }) {
         }}
       >
         <Briefcase size={20} color="#2f3639" />
-        <span>{data?.employmentType}</span>
+        <span>{offer?.employmentType}</span>
       </div>
-      {data?.whyUs && <Alert title="Why us">{data?.whyUs}</Alert>}
+      {offer?.whyUs && <Alert title="Why us">{offer?.whyUs}</Alert>}
       <div
         style={{
           marginTop: '1rem',
         }}
-        dangerouslySetInnerHTML={{ __html: data?.description }}
+        dangerouslySetInnerHTML={{ __html: offer?.description }}
       />
-      {/* <div>render skills</div> */}
       <div
         style={{
           marginTop: '1rem',
