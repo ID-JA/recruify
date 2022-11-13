@@ -4,7 +4,7 @@ export const version = 'v1'
 export const baseURL = 'https://localhost:7112/api'
 
 const axiosInstance = axios.create({
-  baseURL: baseURL,
+  baseURL: process.env.NODE_ENV === 'production' ? process.env.HOST : baseURL,
   headers: { 'Content-Type': 'application/json', charset: 'utf-8' },
 })
 
