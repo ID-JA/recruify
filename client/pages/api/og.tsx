@@ -17,8 +17,6 @@ export default function handler(req: NextRequest) {
       (
         <div
           style={{
-            backgroundColor: 'black',
-            backgroundSize: '150px 150px',
             height: '100%',
             width: '100%',
             display: 'flex',
@@ -27,21 +25,24 @@ export default function handler(req: NextRequest) {
             justifyContent: 'center',
             flexDirection: 'column',
             flexWrap: 'nowrap',
+            backgroundColor: 'white',
+            backgroundImage:
+              'radial-gradient(circle at 25px 25px, lightgray 2%, transparent 0%), radial-gradient(circle at 75px 75px, lightgray 2%, transparent 0%)',
+            backgroundSize: '100px 100px',
           }}
         >
           <div
             style={{
-              fontSize: 60,
+              display: 'flex',
+              fontSize: 40,
               fontStyle: 'normal',
-              letterSpacing: '-0.025em',
-              color: 'white',
+              color: 'black',
               marginTop: 30,
-              padding: '0 120px',
-              lineHeight: 1.4,
+              lineHeight: 1.8,
               whiteSpace: 'pre-wrap',
             }}
           >
-            {title} is hiring
+            <b>{title} is hiring</b>
           </div>
         </div>
       ),
