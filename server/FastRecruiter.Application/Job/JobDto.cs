@@ -20,7 +20,6 @@ namespace FastRecruiter.Application.Job
             config.NewConfig<JobEntity, JobDto>()
                 .Map(dest => dest.CompanyName, src => src.Employer.CompanyName)
                 .Map(dest => dest.Status, src => (int)src.Status);
-            // .Map(dest => dest.CandidatesCount, src => src.TotalApplicants());
 
             return config;
         }

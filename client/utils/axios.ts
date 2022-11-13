@@ -4,7 +4,7 @@ export const version = 'v1'
 export const baseURL =
   process.env.NODE_ENV === 'production'
     ? 'http://lockas-001-site1.dtempurl.com/api'
-    : 'http://localhost:7112/api'
+    : 'https://localhost:7112/api'
 
 const axiosInstance = axios.create({
   baseURL,

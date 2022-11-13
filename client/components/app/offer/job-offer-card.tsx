@@ -19,14 +19,8 @@ import { NextLink } from '@mantine/next'
 import { useMutation, useQuery, useQueryClient } from '@tanstack/react-query'
 import Link from 'next/link'
 import { useState } from 'react'
-import {
-  Archive,
-  DotsVertical,
-  Edit,
-  Eye,
-  Trash,
-  Upload,
-} from 'tabler-icons-react'
+import { Archive, DotsVertical, Edit, Trash, Upload } from 'tabler-icons-react'
+import { useCloseJobModal } from '../modals/close-offer-modal'
 import { useDeleteJobModal } from '../modals/delete-offer-modals'
 
 const useStyles = createStyles((theme, { status }: { status: number }) => ({
@@ -83,6 +77,8 @@ function JobOfferCard(props: JobOfferProps) {
   const [openPopover, setOpenPopover] = useState(false)
   const queryClient = useQueryClient()
   const { classes } = useStyles({ status })
+
+  const { CloseJobOfferModal, openCloseJobModal } = useCloseJobModal({ props })
   const { DeleteJobOfferModal, openDeleteJobModal } = useDeleteJobModal({
     props,
   })
@@ -102,6 +98,7 @@ function JobOfferCard(props: JobOfferProps) {
 
   return (
     <Paper shadow="xs" className={classes.root}>
+      <CloseJobOfferModal />
       <DeleteJobOfferModal />
       <div className={classes.inner}>
         <div
@@ -194,21 +191,19 @@ function JobOfferCard(props: JobOfferProps) {
                 >
                   Edit
                 </Menu.Item>
-                <Menu.Item
-                  icon={<Eye size={18} />}
-                  className={classes.menuItem}
-                >
-                  Preview
-                </Menu.Item>
-                <Menu.Item
-                  icon={<Archive size={18} />}
-                  className={classes.menuItem}
-                  onClick={() => {
-                    console.log(`archive row with id: ${id}`)
-                  }}
-                >
-                  Archive
-                </Menu.Item>
+                {status !== 2 && (
+                  <Menu.Item
+                    key="close-offer"
+                    icon={<Archive size={18} />}
+                    className={classes.menuItem}
+                    onClick={() => {
+                      console.log(`archive row with id: ${id}`)
+                      openCloseJobModal()
+                    }}
+                  >
+                    Archive
+                  </Menu.Item>
+                )}
                 <Menu.Item
                   icon={<Trash size={18} />}
                   color="red"

@@ -44,12 +44,14 @@ namespace FastRecruiter.Application.Job.Commands
                     offer.DraftJob();
                     await _jobRepository.UpdateAsync(offer);
                     return "Job offer has been drafted successfully";
-
                 case "publish":
                     offer.PublishJob();
                     await _jobRepository.UpdateAsync(offer);
                     return "Job offer has been published successfully";
-
+                case "archive":
+                    offer.ArchiveJob();
+                    await _jobRepository.UpdateAsync(offer);
+                    return "Job offer has been archived successfully";
                 case "close":
                     offer.CloseJob();
                     await _jobRepository.UpdateAsync(offer);

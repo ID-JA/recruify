@@ -4,7 +4,6 @@ using FastRecruiter.Application.Job;
 using FastRecruiter.Application.Job.Queries;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
-using System.Security.Claims;
 
 namespace FastRecruiter.Api.Controllers.v1
 {

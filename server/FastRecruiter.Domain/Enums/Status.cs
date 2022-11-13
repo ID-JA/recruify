@@ -4,6 +4,7 @@
     {
         Draft,
         Published,
-        Closed
+        Closed,
+        Archived
     }
 }

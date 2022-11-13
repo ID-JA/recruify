@@ -85,6 +85,12 @@ public class Job : IAggregateRoot
         UpdatedAt = DateTime.UtcNow;
     }
 
+    public void ArchiveJob()
+    {
+        Status = Status.Archived;
+        UpdatedAt = DateTime.UtcNow;
+    }
+
     public void DraftJob()
     {
         Status = Status.Draft;

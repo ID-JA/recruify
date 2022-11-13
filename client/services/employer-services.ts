@@ -19,10 +19,6 @@ export type JobOffersResponse = {
   hasNextPage: boolean
 }
 
-export const createNewJob = async (data: unknown) => {
-  return await axios.post(`${version}/job`, data)
-}
-
 type DataProps = {
   id?: string
   title: string
@@ -34,6 +30,10 @@ type DataProps = {
   whyUs: string
   companyDescription: string
   savaAsDraft: number
+}
+
+export const createNewJob = async (data: unknown) => {
+  return await axios.post(`${version}/job`, data)
 }
 
 export const updateJobOffer = async (data: DataProps) => {
