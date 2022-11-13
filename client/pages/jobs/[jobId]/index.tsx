@@ -1,6 +1,7 @@
 import JobPreview from '@/components/jobs/job-preview'
 import { useJobOffer } from '@/hooks/use-offer'
 import { Container, createStyles } from '@mantine/core'
+import Head from 'next/head'
 
 const useStyles = createStyles((theme) => ({
   wrapper: {
@@ -49,9 +50,18 @@ function JobOffer() {
   const { jobId } = useJobOffer()
 
   return (
-    <Container className={classes.wrapper}>
-      <JobPreview id={jobId} />
-    </Container>
+    <>
+      <Head>
+        <title>Google is hiring</title>
+        <meta
+          property="og:image"
+          content="https://og-examples.vercel.sh/api/static?companyName=GOOGLE"
+        />
+      </Head>
+      <Container className={classes.wrapper}>
+        <JobPreview id={jobId} />
+      </Container>
+    </>
   )
 }
 
