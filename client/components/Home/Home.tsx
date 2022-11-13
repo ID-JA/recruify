@@ -101,64 +101,59 @@ export const Home: NextPageWithLayout = () => {
     </div>
   ))
   return (
-    <>
-      {/* <Header /> */}
-      <Container size="xl" pt="80px" px="md">
-        <div className={classes.inner}>
-          <div className={classes.content}>
-            <Title className={classes.title} order={1}>
-              Create, Post, and Manage your job offers
-            </Title>
-            <Text className={classes.subtitle}>
-              <span className={classes.highlight}>FastRecruiter</span> is the
-              fastest and most effective way to hire and attract top talent
-            </Text>
-            <div className={classes.controls}>
-              <Link href="/signin" passHref>
-                <Button component="a" variant="filled" color="blue" radius="md">
-                  Get Started
-                </Button>
-              </Link>
-              <Link
-                href="https://www.github.com/ID-JA/fast-recruiter"
-                target="_blank"
-                passHref
-              >
-                <Button
-                  leftIcon={<BrandGithub />}
-                  variant="light"
-                  color="blue"
-                  radius="md"
-                  component="a"
-                  target="_blank"
-                >
-                  Code source
-                </Button>
-              </Link>
-            </div>
-            {/* Features section */}
-
-            <SimpleGrid
-              cols={3}
-              breakpoints={[{ maxWidth: 600, cols: 1, spacing: 'sm' }]}
-              style={{
-                marginTop: '2rem',
-              }}
+    <Container size="xl" pt="80px" px="md">
+      <div className={classes.inner}>
+        <div className={classes.content}>
+          <Title className={classes.title} order={1}>
+            Create, Post, and Manage your job offers
+          </Title>
+          <Text className={classes.subtitle}>
+            <span className={classes.highlight}>FastRecruiter</span> is the
+            fastest and most effective way to hire and attract top talent
+          </Text>
+          <div className={classes.controls}>
+            <Link href="/signin" passHref>
+              <Button component="a" variant="filled" color="blue" radius="md">
+                Get Started
+              </Button>
+            </Link>
+            <Link
+              href="https://www.github.com/ID-JA/fast-recruiter"
+              target="_blank"
+              passHref
             >
-              {features}
-            </SimpleGrid>
+              <Button
+                leftIcon={<BrandGithub />}
+                variant="light"
+                color="blue"
+                radius="md"
+                component="a"
+                target="_blank"
+              >
+                Code source
+              </Button>
+            </Link>
           </div>
-          <div className={classes.imageContainer}>
-            <Image
-              alt="hero"
-              src="/hero-illustration.webp"
-              height={800}
-              width={1200}
-            />
-          </div>
+          <SimpleGrid
+            cols={3}
+            breakpoints={[{ maxWidth: 600, cols: 1, spacing: 'sm' }]}
+            style={{
+              marginTop: '2rem',
+            }}
+          >
+            {features}
+          </SimpleGrid>
         </div>
-      </Container>
-    </>
+        <div className={classes.imageContainer}>
+          <Image
+            alt="hero"
+            src="/hero-illustration.webp"
+            height={800}
+            width={1200}
+          />
+        </div>
+      </div>
+    </Container>
   )
 }
 

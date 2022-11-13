@@ -15,7 +15,7 @@ import { InputActionMeta } from 'react-select'
 import * as yup from 'yup'
 
 import ReactSelectCreatable from 'react-select/creatable'
-import RichTextEditor from '../RichTextEditor'
+import RichTextEditor from '../shared/RichTextEditor'
 import useStyles from './CreateJob.styles'
 
 // TODO: Check if form on Edit mode or create mode

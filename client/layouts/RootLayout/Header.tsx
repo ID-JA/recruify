@@ -1,4 +1,4 @@
-import Logo from '@/components/logo/Logo'
+import Logo from '@/components/shared/logo/Logo'
 import useAuthStore from '@/store'
 import {
   Avatar,

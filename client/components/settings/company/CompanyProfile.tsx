@@ -1,39 +1,5 @@
-import { Button, Divider, Group, TextInput } from '@mantine/core'
-import { BrandFacebook, BrandLinkedin, BrandTwitter } from 'tabler-icons-react'
+import { Button, Group, TextInput } from '@mantine/core'
 import { SettingSection } from '../SettingsContainer'
-
-const CompanySocials = () => {
-  return (
-    <SettingSection title="Social profiles">
-      <TextInput
-        styles={{
-          label: {
-            marginBottom: '10px',
-          },
-        }}
-        mb="lg"
-        icon={<BrandFacebook strokeWidth={1.5} />}
-      />
-      <TextInput
-        styles={{
-          label: {
-            marginBottom: '10px',
-          },
-        }}
-        mb="lg"
-        icon={<BrandTwitter strokeWidth={1.5} />}
-      />
-      <TextInput
-        styles={{
-          label: {
-            marginBottom: '10px',
-          },
-        }}
-        icon={<BrandLinkedin strokeWidth={1.5} />}
-      />
-    </SettingSection>
-  )
-}
 
 function CompanyInfo() {
   return (
@@ -98,8 +64,6 @@ function CompanyInfo() {
           label="Email Address"
         />
       </SettingSection>
-      <Divider my="lg" />
-      <CompanySocials />
       <Group position="right" mt="lg">
         <Button variant="light">Cancel</Button>
         <Button ml="sm">Save</Button>

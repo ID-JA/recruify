@@ -1,4 +1,4 @@
-import Logo from '@/components/logo/Logo'
+import Logo from '@/components/shared/logo/Logo'
 import { signupEmployer } from '@/services/auth-service'
 import { NextPageWithLayout } from '@/types'
 import { yupResolver } from '@hookform/resolvers/yup'

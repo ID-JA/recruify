@@ -3,22 +3,6 @@ import { Alert, Button, Paper, Text, Title } from '@mantine/core'
 import { useQuery } from '@tanstack/react-query'
 import { Briefcase } from 'tabler-icons-react'
 
-// TODO: insert formatted employment type to database
-const formatEmploymentType = (type: string) => {
-  switch (type) {
-    case 'full_time':
-      return 'Full time'
-    case 'part_time':
-      return 'Part time'
-    case 'contract':
-      return 'Contract'
-    case 'internship':
-      return 'Internship'
-    default:
-      return 'Full time'
-  }
-}
-
 function JobPreview({ id }: { id: string }) {
   const { data } = useQuery(['job', id], () => getJobOffer(id), {
     enabled: !!id,
@@ -54,7 +38,7 @@ function JobPreview({ id }: { id: string }) {
         }}
       >
         <Briefcase size={20} color="#2f3639" />
-        <span>{formatEmploymentType(data?.employmentType)}</span>
+        <span>{data?.employmentType}</span>
       </div>
       {data?.whyUs && <Alert title="Why us">{data?.whyUs}</Alert>}
       <div
