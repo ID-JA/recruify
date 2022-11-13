@@ -55,7 +55,7 @@ function JobOffer() {
         <title>Google is hiring</title>
         <meta
           property="og:image"
-          content="https://og-examples.vercel.sh/api/static?companyName=GOOGLE"
+          content="https://my-og-img.vercel.app/api/og?company=X-Hub"
         />
       </Head>
       <Container className={classes.wrapper}>
