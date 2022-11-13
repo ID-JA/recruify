@@ -4,7 +4,7 @@ export const config = {
   runtime: 'experimental-edge',
 }
 
-export default function (req) {
+export default function (req: { url: string | URL }) {
   const searchPrams = new URL(req.url)
   const companyName = searchPrams.searchParams.get('companyName') ?? 'GOOGLE'
   return new ImageResponse(
