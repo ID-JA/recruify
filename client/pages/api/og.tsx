@@ -1,5 +1,5 @@
-import { ImageResponse } from '@vercel/og'
-import { NextRequest } from 'next/server'
+import {ImageResponse} from '@vercel/og'
+import {NextRequest} from 'next/server'
 
 export const config = {
   runtime: 'experimental-edge',
@@ -7,11 +7,11 @@ export const config = {
 
 export default function handler(req: NextRequest) {
   try {
-    const { searchParams } = new URL(req.url)
+    const {searchParams} = new URL(req.url)
 
     // ?title=<title>
     const hasTitle = searchParams.has('company')
-    const title = hasTitle ? searchParams.get('title')?.slice(0, 100) : 'Google'
+    const title = hasTitle ? searchParams.get('title') : 'Google'
 
     return new ImageResponse(
       (
@@ -49,7 +49,7 @@ export default function handler(req: NextRequest) {
       {
         width: 1200,
         height: 630,
-      }
+      },
     )
     // eslint-disable-next-line @typescript-eslint/no-explicit-any
   } catch (e: any) {
