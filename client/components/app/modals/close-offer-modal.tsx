@@ -25,10 +25,10 @@ function CloseOfferModal({
       centered
     >
       <Title order={3} align="center" mb={18}>
-        Archive job offer <br /> &ldquo;{offer.title}&rdquo;?
+        Close job offer <br /> &ldquo;{offer.title}&rdquo;?
       </Title>
       <Text color="gray.7" size="sm" align="center" mb={30}>
-        Archiving this job offer will remove it from your active job offers. And
+        Closing this job offer will remove it from your active job offers. And
         candidates will no longer be able to apply to it.
       </Text>
       <Button
@@ -51,7 +51,7 @@ function CloseOfferModal({
           )
         }}
       >
-        Archive Now
+        Close Now
       </Button>
     </Modal>
   )

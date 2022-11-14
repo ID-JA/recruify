@@ -19,7 +19,14 @@ import { NextLink } from '@mantine/next'
 import { useMutation, useQuery, useQueryClient } from '@tanstack/react-query'
 import Link from 'next/link'
 import { useState } from 'react'
-import { Archive, DotsVertical, Edit, Trash, Upload } from 'tabler-icons-react'
+import {
+  Archive,
+  Copy,
+  DotsVertical,
+  Edit,
+  Trash,
+  Upload,
+} from 'tabler-icons-react'
 import { useCloseJobModal } from '../modals/close-offer-modal'
 import { useDeleteJobModal } from '../modals/delete-offer-modals'
 
@@ -107,24 +114,29 @@ function JobOfferCard(props: JobOfferProps) {
             gap: '8px',
           }}
         >
-          {/* <Tooltip
-            color="gray"
-            label={
-              status === 1
-                ? 'Active'
-                : status === 2
-                ? 'Closed'
-                : status === 3
-                ? 'Archived'
-                : 'Draft'
-            }
-          >
-            <span className={classes.statusMarker} />
-          </Tooltip> */}
           <div>
-            <Link href={`/my-jobs/${id}`} passHref>
-              <a className={classes.title}>{title}</a>
-            </Link>
+            <div
+              style={{
+                display: 'flex',
+                alignItems: 'center',
+                gap: '8px',
+              }}
+            >
+              <Link href={`/my-jobs/${id}`} passHref>
+                <a className={classes.title}>{title}</a>
+              </Link>
+              <div>
+                <ActionIcon
+                  title="Copy link"
+                  color="blue"
+                  size="sm"
+                  variant="default"
+                  radius="xl"
+                >
+                  <Copy size="18px" strokeWidth="1.02px" />
+                </ActionIcon>
+              </div>
+            </div>
             <p>{location}</p>
           </div>
         </div>
@@ -178,7 +190,7 @@ function JobOfferCard(props: JobOfferProps) {
                       )
                     }}
                   >
-                    Post job
+                    Post
                   </Menu.Item>
                 )}
 
@@ -197,11 +209,10 @@ function JobOfferCard(props: JobOfferProps) {
                     icon={<Archive size={18} />}
                     className={classes.menuItem}
                     onClick={() => {
-                      console.log(`archive row with id: ${id}`)
                       openCloseJobModal()
                     }}
                   >
-                    Archive
+                    Close
                   </Menu.Item>
                 )}
                 <Menu.Item
@@ -209,7 +220,6 @@ function JobOfferCard(props: JobOfferProps) {
                   color="red"
                   className={classes.deleteMenuItem}
                   onClick={() => {
-                    console.log(`delete row with id: ${id}`)
                     openDeleteJobModal()
                   }}
                 >
