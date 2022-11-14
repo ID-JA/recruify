@@ -11,7 +11,7 @@ export default function handler(req: NextRequest) {
 
     // ?title=<title>
     const hasTitle = searchParams.has('company')
-    const title = hasTitle ? searchParams.get('title') : 'Google'
+    const title = hasTitle ? searchParams.get('company') : 'Google'
 
     return new ImageResponse(
       (
