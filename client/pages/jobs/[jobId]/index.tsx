@@ -1,11 +1,11 @@
 import JobPreview from '@/components/jobs/job-preview'
 import JobPreviewPlaceholder from '@/components/jobs/job-preview-plcaeholder'
-import { useJobOffer } from '@/hooks/use-offer'
-import { Container, createStyles } from '@mantine/core'
+import {useJobOffer} from '@/hooks/use-offer'
+import {Container, createStyles} from '@mantine/core'
 import Head from 'next/head'
-import { useMemo } from 'react'
+import {useMemo} from 'react'
 
-const useStyles = createStyles((theme) => ({
+const useStyles = createStyles(theme => ({
   wrapper: {
     paddingTop: theme.spacing.xl,
     paddingBottom: theme.spacing.xl,
@@ -48,8 +48,8 @@ const useStyles = createStyles((theme) => ({
 }))
 
 function JobOffer() {
-  const { classes } = useStyles()
-  const { data, error } = useJobOffer()
+  const {classes} = useStyles()
+  const {data, error} = useJobOffer()
 
   const loading = useMemo(() => {
     return !data && !error
@@ -63,7 +63,7 @@ function JobOffer() {
         </title>
         <meta
           property="og:image"
-          content={`https://fast-recruiter.vercel.app/api/og?company=google`}
+          content={`https://fast-recruiter.vercel.app/api/og?company=XCompany`}
         />
       </Head>
       <Container className={classes.wrapper}>
