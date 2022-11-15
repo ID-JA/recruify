@@ -8,9 +8,9 @@ public class Employer : IAggregateRoot
     {
 
     }
-    public string Id { get; private set; } // PK
+    public string Id { get; private set; } // PK Employer Id
 
-    public string IdentityId { get; private set; } // FK
+    public string IdentityId { get; private set; } // User Id
 
     public string CompanyName { get; private set; }
 

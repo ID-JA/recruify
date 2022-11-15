@@ -32,6 +32,10 @@ public class Job : IAggregateRoot
 
     public int nbrCandidates { get; private set; }
 
+    public string? ShortUrl { get; set; }
+
+    public string? Url { get; set; }
+
     public Status Status { get; private set; }
 
     public DateTime CreatedAt { get; private set; }
@@ -42,7 +46,7 @@ public class Job : IAggregateRoot
 
     public ICollection<Applicant> Applicants { get; private set; }
 
-    public static Job CreateJob(string employerId, string title, string location, string address, string employmentType, string description, string whyUs, string companyDescription, int SavaAsDraft, string skills)
+    public static Job CreateJob(string employerId, string title, string location, string address, string employmentType, string description, string whyUs, string companyDescription, int SavaAsDraft, string skills,string url)
     {
         var job = new Job
         {
@@ -56,6 +60,7 @@ public class Job : IAggregateRoot
             WhyUs = whyUs,
             CompanyDescription = companyDescription,
             Skills = skills,
+            Url = url,
             nbrCandidates = 0,
             Status = SavaAsDraft == 0 ? Status.Draft : Status.Published,  // if user click on publish button then status will be published otherwise it will be draft
             CreatedAt = DateTime.UtcNow,

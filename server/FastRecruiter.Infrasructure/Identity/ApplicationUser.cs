@@ -6,11 +6,10 @@ namespace FastRecruiter.Infrasructure.Identity
     {
         public string FullName { get; set; }
 
-        public string? ImageUrl { get; set; }
-
         public int? ZipCode { get; set; }
 
         public string? RefreshToken { get; set; }
+        //public string? ImageUrl { get; set; }
 
         public DateTime RefreshTokenExpiryTime { get; set; }
     }

@@ -72,7 +72,6 @@ namespace FastRecruiter.Infrasructure.Identity
             new(ClaimTypes.Name, user.FullName ?? string.Empty),
             new(ClaimTypes.Surname, user.FullName ?? string.Empty),
             new("ipAddress", ipAddress),
-            new("image_url", user.ImageUrl ?? string.Empty),
             new(ClaimTypes.MobilePhone, user.PhoneNumber ?? string.Empty)
             };
 

@@ -147,8 +147,7 @@ namespace FastRecruiter.Infrasructure.Identity
                 .Map(dest => dest.CompanyName, src => src.emp.CompanyName)
                 .Map(dest => dest.Position, src => src.emp.Position)
                 .Map(dest => dest.PhoneNumber, src => src.u.PhoneNumber)
-                .Map(dest => dest.EmailConfirmed, src => src.u.EmailConfirmed)
-                .Map(dest => dest.ImageUrl, src => src.u.ImageUrl);
+                .Map(dest => dest.EmailConfirmed, src => src.u.EmailConfirmed);
 
             return (employer, user).Adapt<UserDetailsDto>(config);
         }
