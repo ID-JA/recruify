@@ -146,3 +146,7 @@ export const UpdateOfferStatus = async ({
   })
   return response.data
 }
+
+export const applyToOffer = async ({ data, id }) => {
+  return await axios.post(`${version}/apply/${id}`, { jobId: id, ...data })
+}

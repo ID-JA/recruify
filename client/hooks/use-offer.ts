@@ -27,10 +27,37 @@ export const useJobOffer = () => {
 
   const { jobId } = router.query as { jobId: string }
 
-  const { data, error } = useQuery<Offer>(['offer'], () => getJobOffer(jobId), {
+  const { data, error } = useQuery<Offer>(['job'], () => getJobOffer(jobId), {
     enabled: !!jobId,
     retry: false,
   })
+
+  return {
+    jobId,
+    error,
+    data,
+  }
+}
+
+// get offer for candidate
+const getOffer = async (id: string) => {
+  const response = await axiosInstance.get(`${version}/apply/${id}`)
+  return response.data
+}
+
+export const useOffer = () => {
+  const router = useRouter()
+
+  const { jobId } = router.query as { jobId: string }
+
+  const { data, error } = useQuery<Offer>(
+    ['offer', jobId],
+    () => getOffer(jobId),
+    {
+      enabled: !!jobId,
+      retry: false,
+    }
+  )
 
   return {
     jobId,

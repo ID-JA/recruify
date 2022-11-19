@@ -17,33 +17,33 @@ const months = getMonthsNames('en', 'MMMM').map((month) => ({
 }))
 
 const validationSchema = yup.object().shape({
-  job_position: yup.string().required('this field is required'),
-  company_name: yup.string().required('this field is required'),
-  current: yup.bool(),
-  start_year: yup.string().required('this field is required'),
-  start_month: yup.string().required('this field is required'),
-  end_year: yup.string().when('current', {
+  position: yup.string().required('this field is required'),
+  company: yup.string().required('this field is required'),
+  stillWorking: yup.bool(),
+  startYear: yup.string().required('this field is required'),
+  startMonth: yup.string().required('this field is required'),
+  endYear: yup.string().when('stillWorking', {
     is: undefined,
     then: yup.string().required('this field is required'),
     otherwise: yup.string().notRequired(),
   }),
-  end_month: yup.string().when('current', {
+  endMonth: yup.string().when('stillWorking', {
     is: undefined,
     then: yup.string().required('this field is required'),
     otherwise: yup.string().notRequired(),
   }),
-  exp_description: yup.string(),
+  description: yup.string(),
 })
 
 const defaultValues = {
-  job_position: 'sa',
-  company_name: '',
-  current: undefined,
-  start_year: '',
-  start_month: '',
-  end_year: '',
-  end_month: '',
-  exp_description: '',
+  position: '',
+  company: '',
+  stillWorking: undefined,
+  startYear: '',
+  startMonth: '',
+  endYear: '',
+  endMonth: '',
+  description: '',
 }
 
 function Experience() {
@@ -65,8 +65,8 @@ function Experience() {
         }}
         mb="lg"
         label="Job Title"
-        {...register('job_position')}
-        error={errors.job_position && errors.job_position.message}
+        {...register('position')}
+        error={errors.position && errors.position.message}
       />
       <TextInput
         styles={{
@@ -76,16 +76,16 @@ function Experience() {
         }}
         mb="lg"
         label="Company Name"
-        {...register('company_name')}
-        error={errors.company_name && errors.company_name.message}
+        {...register('company')}
+        error={errors.company && errors.company.message}
       />
       <Controller
-        name="current"
+        name="stillWorking"
         render={({ field }) => (
           <Checkbox
             mb="lg"
             label="I currently work here"
-            {...register('current')}
+            {...register('stillWorking')}
             {...field}
           />
         )}
@@ -93,25 +93,25 @@ function Experience() {
       />
       <div className={classes.row}>
         <Controller
-          name="start_year"
+          name="startYear"
           control={control}
           render={({ field }) => (
             <Select
               label="Start Year"
               data={years}
-              error={errors.start_year && errors.start_year.message}
+              error={errors.startYear && errors.startYear.message}
               styles={{
                 label: {
                   marginBottom: '12px',
                 },
               }}
-              {...register('start_year')}
+              {...register('startYear')}
               {...field}
             />
           )}
         />
         <Controller
-          name="start_month"
+          name="startMonth"
           render={({ field }) => (
             <Select
               label="Start Month"
@@ -121,18 +121,18 @@ function Experience() {
                 },
               }}
               data={months}
-              {...register('start_month')}
+              {...register('startMonth')}
               {...field}
-              error={errors.start_month && errors.start_month.message}
+              error={errors.startMonth && errors.startMonth.message}
             />
           )}
           control={control}
         />
       </div>
-      {!watch('current') && (
+      {!watch('stillWorking') && (
         <div className={classes.row}>
           <Controller
-            name="end_year"
+            name="endYear"
             render={({ field }) => (
               <Select
                 label="End Year"
@@ -142,16 +142,16 @@ function Experience() {
                   },
                 }}
                 data={years}
-                {...register('end_year')}
+                {...register('endYear')}
                 {...field}
-                error={errors.end_year && errors.end_year.message}
+                error={errors.endYear && errors.endYear.message}
               />
             )}
             control={control}
           />
 
           <Controller
-            name="end_month"
+            name="endMonth"
             render={({ field }) => (
               <Select
                 label="End Month"
@@ -161,9 +161,9 @@ function Experience() {
                   },
                 }}
                 data={months}
-                {...register('end_month')}
+                {...register('endMonth')}
                 {...field}
-                error={errors.end_month && errors.end_month.message}
+                error={errors.endMonth && errors.endMonth.message}
               />
             )}
             control={control}
@@ -174,13 +174,13 @@ function Experience() {
       <Textarea
         mb="lg"
         label="Description"
-        error={errors.exp_description && errors.exp_description.message}
+        error={errors.description && errors.description.message}
         styles={{
           label: {
             marginBottom: '12px',
           },
         }}
-        {...register('exp_description')}
+        {...register('description')}
       />
     </>
   )

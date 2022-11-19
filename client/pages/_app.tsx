@@ -6,6 +6,7 @@ import Head from 'next/head'
 
 import '@/styles/global.css'
 import { NextPageWithLayout } from '@/types'
+import { ReactQueryDevtools } from '@tanstack/react-query-devtools'
 
 type AppPropsWithLayout = AppProps & {
   Component: NextPageWithLayout
@@ -40,7 +41,7 @@ export default function App(props: AppPropsWithLayout) {
         <MantineProvider withGlobalStyles withNormalizeCSS>
           <NotificationsProvider position="top-right">
             {getLayout(<Component {...pageProps} />)}
-            {/* <ReactQueryDevtools initialIsOpen={false} /> */}
+            <ReactQueryDevtools initialIsOpen={false} />
           </NotificationsProvider>
         </MantineProvider>
       </QueryClientProvider>

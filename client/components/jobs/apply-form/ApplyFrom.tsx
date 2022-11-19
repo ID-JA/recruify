@@ -1,12 +1,8 @@
+import { applyToOffer } from '@/services/employer-services'
 import { yupResolver } from '@hookform/resolvers/yup'
-import {
-  Button,
-  Container,
-  createStyles,
-  Divider,
-  Paper,
-  Text,
-} from '@mantine/core'
+import { Button, createStyles, Text } from '@mantine/core'
+import { useMutation } from '@tanstack/react-query'
+import { useRouter } from 'next/router'
 import { useState } from 'react'
 import { FormProvider, useForm } from 'react-hook-form'
 import BasicInformation from './steps/BasicInformation'
@@ -14,6 +10,9 @@ import Education from './steps/Education'
 import Experience from './steps/Experience'
 
 export const useStyles = createStyles(() => ({
+  root: {
+    padding: '24px 16px',
+  },
   titleWrapper: {
     marginBottom: 24,
   },
@@ -49,13 +48,15 @@ export const useStyles = createStyles(() => ({
 
 const steps = [BasicInformation, Experience, Education]
 
-type ApplyFormType =
-  | typeof BasicInformation.defaultValues
-  | typeof Experience.defaultValues
-  | typeof Education.defaultValues
+type ApplyFormType = typeof BasicInformation.defaultValues &
+  typeof Experience.defaultValues &
+  typeof Education.defaultValues
 
 function AppLyForm() {
+  const router = useRouter()
+  const { jobId } = router.query
   const [active, setActive] = useState(0)
+
   const { classes } = useStyles()
   const methods = useForm<ApplyFormType>({
     defaultValues: {
@@ -68,51 +69,106 @@ function AppLyForm() {
 
   const { handleSubmit } = methods
 
+  const mutation = useMutation(applyToOffer)
+
   const onSubmit = (values: ApplyFormType) => {
     if (active === 2) {
-      console.log(values)
+      console.log({
+        applicant: {
+          name: values.name,
+          email: values.email,
+          phoneNumber: values.phoneNumber,
+          experiences: [
+            {
+              position: values.position,
+              company: values.company,
+              startYear: values.startYear,
+              startMonth: values.startMonth,
+
+              endYear: values.endYear,
+              endMonth: values.endMonth,
+              description: values.description,
+            },
+          ],
+          educations: [
+            {
+              school: values.school,
+              degree: values.degree,
+              inProgress: values.inProgress,
+              degreeYear: values.degreeYear,
+              description: values.description,
+            },
+          ],
+        },
+      })
+      mutation.mutate(
+        {
+          data: {
+            applicant: {
+              name: values.name,
+              email: values.email,
+              phoneNumber: values.phoneNumber,
+              experiences: [
+                {
+                  position: values.position,
+                  company: values.company,
+                  startYear: values.startYear,
+                  startMonth: values.startMonth,
+
+                  endYear: values.endYear,
+                  endMonth: values.endMonth,
+                  description: values.description,
+                },
+              ],
+              educations: [
+                {
+                  school: values.school,
+                  degree: values.degree,
+                  inProgress: values.inProgress,
+                  degreeYear: values.degreeYear,
+                  description: values.description,
+                },
+              ],
+            },
+          },
+          id: jobId as string,
+        },
+        {
+          onSuccess: () => {
+            router.push('/')
+          },
+        }
+      )
     } else {
       setActive((prev) => prev + 1)
     }
   }
 
   return (
-    <Container size="sm" py="xl">
-      <Paper withBorder p="xl">
-        <FormProvider {...methods}>
-          <form onSubmit={handleSubmit(onSubmit)}>
-            <div className={classes.titleWrapper}>
-              <Text className={classes.smallTitle}>Applying to:</Text>
-              <Text className={classes.title}>JavaScript developer</Text>
-              <Text className={classes.smallTitle}>Boston, MA, USA</Text>
-            </div>
-            <Divider mb="lg" />
-            <Text className={classes.stepTitle}>{steps[active].stepTitle}</Text>
-            {steps.map(
-              (Step, index) =>
-                index === active && (
-                  <Step.Component key={`apply-step-${index + 1}`} />
-                )
-            )}
-
-            {active > 0 && (
-              <Button
-                radius="sm"
-                variant="outline"
-                onClick={() => setActive((prev) => prev - 1)}
-                mr="sm"
-              >
-                Previous
-              </Button>
-            )}
-            <Button type="submit">
-              {active < steps.length - 1 ? 'Continue' : 'Apply'}
-            </Button>
-          </form>
-        </FormProvider>
-      </Paper>
-    </Container>
+    <FormProvider {...methods}>
+      <form onSubmit={handleSubmit(onSubmit)}>
+        <Text className={classes.stepTitle}>{steps[active].stepTitle}</Text>
+        {steps.map(
+          (Step, index) =>
+            index === active && (
+              <Step.Component key={`apply-step-${index + 1}`} />
+            )
+        )}
+        {active > 0 && (
+          <Button
+            radius="sm"
+            variant="outline"
+            onClick={() => setActive((prev) => prev - 1)}
+            mr="sm"
+          >
+            Previous
+          </Button>
+        )}
+        <Button type="submit" loading={mutation.isLoading}>
+          {active < steps.length - 1 ? 'Continue' : 'Apply'}
+        </Button>
+      </form>
+    </FormProvider>
   )
 }
-
-export { AppLyForm }
+export default AppLyForm

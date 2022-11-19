@@ -1,3 +1,4 @@
+import CopyButton from '@/components/shared/CopyButton'
 import Popover from '@/components/shared/popover'
 import {
   getJobCandidatesCount,
@@ -19,14 +20,7 @@ import { NextLink } from '@mantine/next'
 import { useMutation, useQuery, useQueryClient } from '@tanstack/react-query'
 import Link from 'next/link'
 import { useState } from 'react'
-import {
-  Archive,
-  Copy,
-  DotsVertical,
-  Edit,
-  Trash,
-  Upload,
-} from 'tabler-icons-react'
+import { Archive, DotsVertical, Edit, Trash, Upload } from 'tabler-icons-react'
 import { useCloseJobModal } from '../modals/close-offer-modal'
 import { useDeleteJobModal } from '../modals/delete-offer-modals'
 
@@ -82,6 +76,7 @@ const useStyles = createStyles((theme, { status }: { status: number }) => ({
 function JobOfferCard(props: JobOfferProps) {
   const { createdAt, id, location, status, title } = props
   const [openPopover, setOpenPopover] = useState(false)
+
   const queryClient = useQueryClient()
   const { classes } = useStyles({ status })
 
@@ -126,15 +121,7 @@ function JobOfferCard(props: JobOfferProps) {
                 <a className={classes.title}>{title}</a>
               </Link>
               <div>
-                <ActionIcon
-                  title="Copy link"
-                  color="blue"
-                  size="sm"
-                  variant="default"
-                  radius="xl"
-                >
-                  <Copy size="18px" strokeWidth="1.02px" />
-                </ActionIcon>
+                <CopyButton url={`http://localhost:3000/jobs/${id}`} />
               </div>
             </div>
             <p>{location}</p>

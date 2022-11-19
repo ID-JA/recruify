@@ -6,21 +6,21 @@ import * as yup from 'yup'
 const validationSchema = yup.object().shape({
   school: yup.string().required('This field is required'),
   degree: yup.string().required('This field is required'),
-  edu_current: yup.bool(),
-  degree_year: yup.string().when('edu_current', {
+  inProgress: yup.bool(),
+  degreeYear: yup.string().when('inProgress', {
     is: undefined,
     then: yup.string().required('This field is required'),
     otherwise: yup.string().notRequired(),
   }),
-  edu_description: yup.string(),
+  description: yup.string(),
 })
 
 const defaultValues = {
   school: '',
   degree: '',
-  edu_current: undefined,
-  degree_year: '',
-  edu_description: '',
+  inProgress: undefined,
+  degreeYear: '',
+  description: '',
 }
 
 const years = getYearsRange({ from: 1930, to: 2022 })
@@ -63,20 +63,20 @@ function Education() {
         error={errors.degree && errors.degree.message}
       />
       <Controller
-        name="edu_current"
+        name="inProgress"
         render={({ field }) => (
           <Checkbox
             mb="lg"
             label="Currently in progress"
-            {...register('edu_current')}
+            {...register('inProgress')}
             {...field}
           />
         )}
         control={control}
       />
-      {!watch('edu_current') && (
+      {!watch('inProgress') && (
         <Controller
-          name="degree_year"
+          name="degreeYear"
           render={({ field }) => (
             <Select
               label="Degree Year"
@@ -87,9 +87,9 @@ function Education() {
               }}
               mb="lg"
               data={years}
-              {...register('degree_year')}
+              {...register('degreeYear')}
               {...field}
-              error={errors.degree_year && errors.degree_year.message}
+              error={errors.degreeYear && errors.degreeYear.message}
             />
           )}
           control={control}
@@ -103,8 +103,8 @@ function Education() {
         }}
         mb="lg"
         label="Description"
-        {...register('edu_description')}
-        error={errors.edu_description && errors.edu_description.message}
+        {...register('description')}
+        error={errors.description && errors.description.message}
       />
     </>
   )

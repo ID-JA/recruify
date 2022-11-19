@@ -3,15 +3,15 @@ import { useFormContext } from 'react-hook-form'
 import * as yup from 'yup'
 
 const validationSchema = yup.object().shape({
-  full_name: yup.string().required('this field is required'),
+  name: yup.string().required('this field is required'),
   phoneNumber: yup.string().required('this field is required'),
   email: yup.string().email().required('this field is required'),
 })
 
 const defaultValues = {
-  full_name: 'Jamal Id Aissa',
-  phoneNumber: '',
+  name: '',
   email: '',
+  phoneNumber: '',
 }
 function BasicInformation() {
   const {
@@ -28,8 +28,8 @@ function BasicInformation() {
         }}
         mb="lg"
         label="Full Name"
-        {...register('full_name')}
-        error={errors.full_name && errors.full_name.message}
+        {...register('name')}
+        error={errors.name && errors.name.message}
       />
       <TextInput
         styles={{
