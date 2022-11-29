@@ -147,6 +147,18 @@ export const UpdateOfferStatus = async ({
   return response.data
 }
 
-export const applyToOffer = async ({ data, id }) => {
+export const applyToOffer = async ({
+  data,
+  id,
+}: {
+  // eslint-disable-next-line @typescript-eslint/no-explicit-any
+  data: any
+  id: string
+}) => {
   return await axios.post(`${version}/apply/${id}`, { jobId: id, ...data })
+}
+
+export const fetchApplicants = async (id: string) => {
+  const response = await axios.get(`${version}/job/${id}/candidates`)
+  return response.data
 }

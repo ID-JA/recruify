@@ -1,9 +1,18 @@
-import { Checkbox, Select, Textarea, TextInput } from '@mantine/core'
+import {
+  ActionIcon,
+  Button,
+  Checkbox,
+  Select,
+  Text,
+  Textarea,
+  TextInput,
+} from '@mantine/core'
 import { getYearsRange } from '@mantine/dates'
-import { Controller, useFormContext } from 'react-hook-form'
+import { Controller, useFieldArray, useFormContext } from 'react-hook-form'
+import { Minus } from 'tabler-icons-react'
 import * as yup from 'yup'
 
-const validationSchema = yup.object().shape({
+const formState = {
   school: yup.string().required('This field is required'),
   degree: yup.string().required('This field is required'),
   inProgress: yup.bool(),
@@ -13,6 +22,14 @@ const validationSchema = yup.object().shape({
     otherwise: yup.string().notRequired(),
   }),
   description: yup.string(),
+}
+
+const validationSchema = yup.object().shape({
+  educations: yup
+    .array()
+    .of(yup.object().shape(formState))
+    .required('Must have fields')
+    .min(1, 'Minimum of 1 field'),
 })
 
 const defaultValues = {
@@ -36,76 +53,135 @@ function Education() {
     control,
     watch,
     formState: { errors },
-  } = useFormContext<typeof defaultValues>()
+  } = useFormContext<{
+    educations: typeof defaultValues[]
+  }>()
+
+  const { fields, append, remove } = useFieldArray<{
+    educations: {
+      school: string
+      degree: string
+      inProgress: undefined
+      degreeYear: string
+      description: string
+    }[]
+  }>({
+    name: 'educations',
+  })
 
   return (
     <>
-      <TextInput
-        styles={{
-          label: {
-            marginBottom: '12px',
-          },
-        }}
-        mb="lg"
-        label="School"
-        {...register('school')}
-        error={errors.school && errors.school.message}
-      />
-      <TextInput
-        styles={{
-          label: {
-            marginBottom: '12px',
-          },
-        }}
-        mb="lg"
-        label="Degree"
-        {...register('degree')}
-        error={errors.degree && errors.degree.message}
-      />
-      <Controller
-        name="inProgress"
-        render={({ field }) => (
-          <Checkbox
-            mb="lg"
-            label="Currently in progress"
-            {...register('inProgress')}
-            {...field}
-          />
-        )}
-        control={control}
-      />
-      {!watch('inProgress') && (
-        <Controller
-          name="degreeYear"
-          render={({ field }) => (
-            <Select
-              label="Degree Year"
-              styles={{
-                label: {
-                  marginBottom: '12px',
-                },
+      {fields.map((field, index) => (
+        <div key={field.id}>
+          <div
+            style={{
+              display: 'flex',
+              alignItems: 'center',
+              justifyContent: 'space-between',
+              marginBottom: 20,
+            }}
+          >
+            <Text>
+              <b>
+                {index + 1} /{fields.length}
+              </b>
+            </Text>
+            <ActionIcon
+              variant="outline"
+              color="red"
+              onClick={() => {
+                remove(index)
               }}
-              mb="lg"
-              data={years}
-              {...register('degreeYear')}
-              {...field}
-              error={errors.degreeYear && errors.degreeYear.message}
+            >
+              <Minus size={20} strokeWidth={2.5} />
+            </ActionIcon>
+          </div>
+          <TextInput
+            styles={{
+              label: {
+                marginBottom: '12px',
+              },
+            }}
+            mb="lg"
+            label="School"
+            {...register(`educations.${index}.school`)}
+            error={errors.educations?.[index]?.school?.message}
+          />
+          <TextInput
+            styles={{
+              label: {
+                marginBottom: '12px',
+              },
+            }}
+            mb="lg"
+            label="Degree"
+            {...register(`educations.${index}.degree`)}
+            error={errors.educations?.[index]?.degree?.message}
+          />
+          <Controller
+            name={`educations.${index}.inProgress`}
+            render={({ field }) => (
+              <Checkbox
+                mb="lg"
+                label="Currently in progress"
+                {...register(`educations.${index}.inProgress`)}
+                {...field}
+              />
+            )}
+            control={control}
+          />
+          {!watch(`educations.${index}.inProgress`) && (
+            <Controller
+              name={`educations.${index}.degreeYear`}
+              render={({ field }) => (
+                <Select
+                  label="Degree Year"
+                  styles={{
+                    label: {
+                      marginBottom: '12px',
+                    },
+                  }}
+                  mb="lg"
+                  data={years}
+                  {...register(`educations.${index}.degreeYear`)}
+                  {...field}
+                  error={errors.educations?.[index]?.degreeYear?.message}
+                />
+              )}
+              control={control}
             />
           )}
-          control={control}
-        />
-      )}
-      <Textarea
-        styles={{
-          label: {
-            marginBottom: '12px',
-          },
+          <Textarea
+            styles={{
+              label: {
+                marginBottom: '12px',
+              },
+            }}
+            mb="lg"
+            label="Description"
+            {...register(`educations.${index}.description`)}
+            error={errors.educations?.[index]?.description?.message}
+          />
+        </div>
+      ))}
+      <div
+        style={{
+          display: 'flex',
+          alignItems: 'center',
+          justifyContent: 'center',
         }}
-        mb="lg"
-        label="Description"
-        {...register('description')}
-        error={errors.description && errors.description.message}
-      />
+      >
+        <Button
+          variant="subtle"
+          mb={20}
+          type="button"
+          onClick={() => {
+            append(defaultValues)
+          }}
+        >
+          Add Experience
+        </Button>
+      </div>
     </>
   )
 }

@@ -8,6 +8,7 @@ import {
   Divider,
   Group,
   Paper,
+  PasswordInput,
   SegmentedControl,
   SegmentedControlProps,
   Text,
@@ -163,8 +164,8 @@ export const SignIn: NextPageWithLayout = () => {
             error={errors.email && errors.email.message}
             {...register('email')}
           />
-          <TextInput
-            label="password"
+          <PasswordInput
+            label="Password"
             mb="20px"
             error={errors.password && errors.password.message}
             {...register('password')}

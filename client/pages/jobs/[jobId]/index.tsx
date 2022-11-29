@@ -1,7 +1,7 @@
 import JobPreview from '@/components/jobs/job-preview'
 import JobPreviewPlaceholder from '@/components/jobs/job-preview-plcaeholder'
 import { useOffer } from '@/hooks/use-offer'
-import { Container, createStyles } from '@mantine/core'
+import { Container, createStyles, ScrollArea } from '@mantine/core'
 import Head from 'next/head'
 import { useMemo } from 'react'
 
@@ -66,17 +66,19 @@ function JobOffer() {
           content={`https://fast-recruiter.vercel.app/api/og?company=XCompany`}
         />
       </Head>
-      <Container className={classes.wrapper}>
-        {loading ? (
-          <JobPreviewPlaceholder />
-        ) : !data ? (
-          <div>
-            <h1>Job not found</h1>
-          </div>
-        ) : (
-          <JobPreview offer={data} />
-        )}
-      </Container>
+      <ScrollArea style={{ height: 700 }}>
+        <Container className={classes.wrapper}>
+          {loading ? (
+            <JobPreviewPlaceholder />
+          ) : !data ? (
+            <div>
+              <h1>Job not found</h1>
+            </div>
+          ) : (
+            <JobPreview offer={data} />
+          )}
+        </Container>
+      </ScrollArea>
     </>
   )
 }

@@ -1,10 +1,11 @@
 import { applyToOffer } from '@/services/employer-services'
 import { yupResolver } from '@hookform/resolvers/yup'
-import { Button, createStyles, Text } from '@mantine/core'
+import { Button, createStyles, Text, ThemeIcon, Title } from '@mantine/core'
 import { useMutation } from '@tanstack/react-query'
 import { useRouter } from 'next/router'
 import { useState } from 'react'
 import { FormProvider, useForm } from 'react-hook-form'
+import { CircleCheck } from 'tabler-icons-react'
 import BasicInformation from './steps/BasicInformation'
 import Education from './steps/Education'
 import Experience from './steps/Experience'
@@ -48,57 +49,57 @@ export const useStyles = createStyles(() => ({
 
 const steps = [BasicInformation, Experience, Education]
 
-type ApplyFormType = typeof BasicInformation.defaultValues &
-  typeof Experience.defaultValues &
-  typeof Education.defaultValues
-
+const defaultValues = {
+  name: '',
+  email: '',
+  phoneNumber: '',
+  experiences: [
+    {
+      company: '',
+      position: '',
+      startYear: '',
+      endYear: '',
+      endMonth: '',
+      stillWorking: undefined,
+      startMonth: '',
+    },
+  ],
+  educations: [
+    {
+      school: '',
+      degree: '',
+      inProgress: undefined,
+      degreeYear: '',
+      description: '',
+    },
+  ],
+}
 function AppLyForm() {
   const router = useRouter()
   const { jobId } = router.query
   const [active, setActive] = useState(0)
 
   const { classes } = useStyles()
-  const methods = useForm<ApplyFormType>({
-    defaultValues: {
-      ...BasicInformation.defaultValues,
-      ...Experience.defaultValues,
-      ...Education.defaultValues,
-    },
-    resolver: yupResolver(steps[active].validationSchema),
+  const methods = useForm<typeof defaultValues>({
+    defaultValues,
+    resolver: yupResolver(steps[active]?.validationSchema),
   })
 
   const { handleSubmit } = methods
 
   const mutation = useMutation(applyToOffer)
 
-  const onSubmit = (values: ApplyFormType) => {
+  const onSubmit = (values: typeof defaultValues) => {
+    console.log(values)
+
     if (active === 2) {
       console.log({
         applicant: {
           name: values.name,
           email: values.email,
           phoneNumber: values.phoneNumber,
-          experiences: [
-            {
-              position: values.position,
-              company: values.company,
-              startYear: values.startYear,
-              startMonth: values.startMonth,
-
-              endYear: values.endYear,
-              endMonth: values.endMonth,
-              description: values.description,
-            },
-          ],
-          educations: [
-            {
-              school: values.school,
-              degree: values.degree,
-              inProgress: values.inProgress,
-              degreeYear: values.degreeYear,
-              description: values.description,
-            },
-          ],
+          experiences: values.experiences,
+          educations: values.educations,
         },
       })
       mutation.mutate(
@@ -108,34 +109,15 @@ function AppLyForm() {
               name: values.name,
               email: values.email,
               phoneNumber: values.phoneNumber,
-              experiences: [
-                {
-                  position: values.position,
-                  company: values.company,
-                  startYear: values.startYear,
-                  startMonth: values.startMonth,
-
-                  endYear: values.endYear,
-                  endMonth: values.endMonth,
-                  description: values.description,
-                },
-              ],
-              educations: [
-                {
-                  school: values.school,
-                  degree: values.degree,
-                  inProgress: values.inProgress,
-                  degreeYear: values.degreeYear,
-                  description: values.description,
-                },
-              ],
+              experiences: values.experiences, // FIXME: endYear and endMonth are not required if stillWorking is true
+              educations: values.educations, // FIXME: degreeYear is not required if inProgress is true
             },
           },
           id: jobId as string,
         },
         {
           onSuccess: () => {
-            router.push('/')
+            setActive((prev) => prev + 1)
           },
         }
       )
@@ -146,28 +128,48 @@ function AppLyForm() {
 
   return (
     <FormProvider {...methods}>
-      <form onSubmit={handleSubmit(onSubmit)}>
-        <Text className={classes.stepTitle}>{steps[active].stepTitle}</Text>
-        {steps.map(
-          (Step, index) =>
-            index === active && (
-              <Step.Component key={`apply-step-${index + 1}`} />
-            )
-        )}
-        {active > 0 && (
-          <Button
-            radius="sm"
-            variant="outline"
-            onClick={() => setActive((prev) => prev - 1)}
-            mr="sm"
-          >
-            Previous
+      {active < 3 ? (
+        <form onSubmit={handleSubmit(onSubmit)}>
+          <Text className={classes.stepTitle}>{steps[active].stepTitle}</Text>
+          {steps.map(
+            (Step, index) =>
+              index === active && (
+                <Step.Component key={`apply-step-${index + 1}`} />
+              )
+          )}
+          {active > 0 && (
+            <Button
+              radius="sm"
+              variant="outline"
+              onClick={() => setActive((prev) => prev - 1)}
+              mr="sm"
+            >
+              Previous
+            </Button>
+          )}
+          <Button type="submit" loading={mutation.isLoading}>
+            {active < steps.length - 1 ? 'Continue' : 'Apply'}
           </Button>
-        )}
-        <Button type="submit" loading={mutation.isLoading}>
-          {active < steps.length - 1 ? 'Continue' : 'Apply'}
-        </Button>
-      </form>
+        </form>
+      ) : (
+        <div
+          style={{
+            textAlign: 'center',
+          }}
+        >
+          <ThemeIcon
+            color="green"
+            size={60}
+            variant="light"
+            radius="xl"
+            mb="xl"
+          >
+            <CircleCheck size={40} />
+          </ThemeIcon>
+          <Title order={3}>Great</Title>
+          <div>You have successfully applied to this job</div>
+        </div>
+      )}
     </FormProvider>
   )
 }

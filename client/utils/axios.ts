@@ -3,7 +3,7 @@ import axios from 'axios'
 export const version = 'v1'
 export const baseURL =
   process.env.NODE_ENV === 'production'
-    ? 'http://lockas-001-site1.dtempurl.com/api'
+    ? 'https://localhost:7112/api' //'http://lockas-001-site1.dtempurl.com/api'
     : 'https://localhost:7112/api'
 
 const axiosInstance = axios.create({

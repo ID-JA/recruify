@@ -1,5 +1,5 @@
 import { Offer } from '@/hooks/use-offer'
-import { Alert, Container, Tabs, Text, Title } from '@mantine/core'
+import { Alert, createStyles, Tabs, Text, Title } from '@mantine/core'
 import AppLyForm from './apply-form/ApplyFrom'
 
 const formatEmploymentType = (type: string) => {
@@ -18,20 +18,49 @@ const formatEmploymentType = (type: string) => {
       return 'Unknown'
   }
 }
+const useStyles = createStyles((theme) => ({
+  wrapper: {
+    paddingTop: theme.spacing.xl,
+    paddingBottom: theme.spacing.xl,
+    '@media (min-width: 768px)': {
+      display: 'grid',
+      gridTemplateColumns: '.4fr 1fr',
+    },
+  },
+  left: {
+    marginTop: 16,
+    padding: 16,
+    boxShadow: '0 0 0 1px #e1e1e1',
+    '@media (min-width: 768px)': {
+      marginTop: 60,
+      paddingTop: 24,
+      paddingBottom: 24,
+      boxShadow: 'none',
+    },
+  },
+  right: {
+    marginTop: 30,
+    '@media (min-width: 768px)': {},
+  },
+  navigation: {
+    boxShadow: '0 0 0 1px #e1e1e1',
+    '@media (min-width: 768px)': {
+      boxShadow: 'none',
+    },
+  },
+}))
 
 function JobPreview({ offer }: { offer: Offer }) {
+  const { classes } = useStyles()
   return (
-    <Container>
+    <>
       <Title order={2}>{offer?.title}</Title>
-      <div style={{ display: 'grid', gridTemplateColumns: '.4fr 1fr' }}>
-        <div
-          style={{
-            marginTop: '60px',
-          }}
-        >
+      <div className={classes.wrapper}>
+        <div className={classes.left}>
           <div
             style={{
-              padding: '16px 0px',
+              paddingBottom: '16px',
+              borderBottom: '1px solid #e1e1e1',
             }}
           >
             <Title order={2} size={12} color="gray" mb={6}>
@@ -39,9 +68,11 @@ function JobPreview({ offer }: { offer: Offer }) {
             </Title>
             <Text color="gray.8">{offer?.companyName}</Text>
           </div>
+
           <div
             style={{
               padding: '16px 0px',
+              borderBottom: '1px solid #e1e1e1',
             }}
           >
             <Title order={2} size={12} color="gray" mb={6}>
@@ -51,7 +82,7 @@ function JobPreview({ offer }: { offer: Offer }) {
           </div>
           <div
             style={{
-              padding: '16px 0px',
+              paddingTop: '16px',
             }}
           >
             <Title order={2} size={12} color="gray" mb={6}>
@@ -62,7 +93,14 @@ function JobPreview({ offer }: { offer: Offer }) {
             </Text>
           </div>
         </div>
-        <Tabs defaultValue="overview" mt="lg">
+        <Tabs
+          defaultValue="overview"
+          mt="lg"
+          className={classes.right}
+          classNames={{
+            tabsList: classes.navigation,
+          }}
+        >
           <Tabs.List>
             <Tabs.Tab value="overview">Overview</Tabs.Tab>
             <Tabs.Tab value="application">Application</Tabs.Tab>
@@ -77,7 +115,7 @@ function JobPreview({ offer }: { offer: Offer }) {
           </Tabs.Panel>
         </Tabs>
       </div>
-    </Container>
+    </>
   )
 }
 
