@@ -26,7 +26,7 @@ See the [open issues](https://github.com/ID-JA/fast-recruiter/issues) for a list
 - [ ] job offers management
   - [ ] create new offers
   - [ ] update offers detail
-  - [ ] delete offer / delete bulck
+  - [ ] delete offer / delete bulk
   - [ ] 
 - [ ] apply for offers
 - [ ] applications management
