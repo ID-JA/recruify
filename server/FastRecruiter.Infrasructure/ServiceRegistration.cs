@@ -1,13 +1,12 @@
-﻿using FastRecruiter.Infrasructure.Auth;
+﻿using Asp.Versioning;
+using FastRecruiter.Infrasructure.Auth;
 using FastRecruiter.Infrasructure.Common;
 using FastRecruiter.Infrasructure.Cors;
 using FastRecruiter.Infrasructure.Mailing;
 using FastRecruiter.Infrasructure.Middleware;
 using FastRecruiter.Infrasructure.OpenApi;
 using FastRecruiter.Infrasructure.Persistence;
-using MediatR;
 using Microsoft.AspNetCore.Builder;
-using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Routing;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
@@ -20,12 +19,15 @@ namespace FastRecruiter.Infrasructure
         public static IServiceCollection AddInfrasructure(this IServiceCollection services, IConfiguration configuration)
         {
             services
-               .AddApiVersioning()
+                .AddApiVersioning()
                 .AddAuth(configuration)
                 .AddCorsPolicy(configuration)
                 .AddExceptionMiddleware()
                 .AddMailing(configuration)
-                .AddMediatR(Assembly.GetExecutingAssembly())
+                .AddMediatR(opt =>
+                {
+                    opt.RegisterServicesFromAssembly(Assembly.GetExecutingAssembly());
+                })
                 .AddOpenApiDocumentation(configuration)
                 .AddPersistence(configuration)
                 .AddRouting(options => options.LowercaseUrls = true)
@@ -34,13 +36,25 @@ namespace FastRecruiter.Infrasructure
             return services;
         }
 
-        private static IServiceCollection AddApiVersioning(this IServiceCollection services) =>
-       services.AddApiVersioning(config =>
-       {
-           config.DefaultApiVersion = new ApiVersion(1, 0);
-           config.AssumeDefaultVersionWhenUnspecified = true;
-           config.ReportApiVersions = true;
-       });
+        private static IServiceCollection AddApiVersioning(this IServiceCollection services)
+        {
+            services.AddApiVersioning(options =>
+             {
+                 options.DefaultApiVersion = new ApiVersion(1);
+                 options.ReportApiVersions = true;
+                 options.AssumeDefaultVersionWhenUnspecified = true;
+                 options.ApiVersionReader = ApiVersionReader.Combine(
+                     new UrlSegmentApiVersionReader(),
+                     new HeaderApiVersionReader("X-Api-Version"));
+             }).AddApiExplorer(options =>
+             {
+                 options.GroupNameFormat = "'v'V";
+                 options.SubstituteApiVersionInUrl = true;
+             });
+
+            return services;
+        }
+
 
         public static IApplicationBuilder UseInfrastructure(this IApplicationBuilder builder, IConfiguration config) =>
        builder

@@ -12,7 +12,10 @@ namespace FastRecruiter.Application
             var assembly = Assembly.GetExecutingAssembly();
             return services
                 .AddValidatorsFromAssembly(assembly)
-                .AddMediatR(assembly);
+                .AddMediatR(opt =>
+                {
+                    opt.RegisterServicesFromAssemblies(assembly);
+                });
         }
     }
 }

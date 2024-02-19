@@ -1,36 +1,36 @@
 <Project Sdk="Microsoft.NET.Sdk">
 
-  <PropertyGroup>
-    <TargetFramework>net6.0</TargetFramework>
-    <ImplicitUsings>enable</ImplicitUsings>
-    <Nullable>enable</Nullable>
-  </PropertyGroup>
+	<PropertyGroup>
+		<TargetFramework>net8.0</TargetFramework>
+		<ImplicitUsings>enable</ImplicitUsings>
+		<Nullable>enable</Nullable>
+	</PropertyGroup>
 
-  <ItemGroup>
-    <None Remove="Repository\ApplicationDbRepository.cs~RF1afabeb5.TMP" />
-  </ItemGroup>
+	<ItemGroup>
+		<None Remove="Repository\ApplicationDbRepository.cs~RF1afabeb5.TMP" />
+	</ItemGroup>
 
-  <ItemGroup>
-    <PackageReference Include="Ardalis.Specification.EntityFrameworkCore" Version="6.1.0" />
-    <PackageReference Include="MailKit" Version="3.4.1" />
-    <PackageReference Include="Microsoft.AspNetCore.Authentication.JwtBearer" Version="6.0.9" />
-    <PackageReference Include="Microsoft.AspNetCore.Identity.EntityFrameworkCore" Version="6.0.9" />
-    <PackageReference Include="Microsoft.AspNetCore.Mvc.Versioning" Version="5.0.0" />
-    <PackageReference Include="Microsoft.AspNetCore.Mvc.Versioning.ApiExplorer" Version="5.0.0" />
-    <PackageReference Include="Microsoft.EntityFrameworkCore" Version="6.0.9" />
-    <PackageReference Include="Microsoft.EntityFrameworkCore.SqlServer" Version="6.0.9" />
-    <PackageReference Include="Microsoft.EntityFrameworkCore.Tools" Version="6.0.9">
-      <PrivateAssets>all</PrivateAssets>
-      <IncludeAssets>runtime; build; native; contentfiles; analyzers; buildtransitive</IncludeAssets>
-    </PackageReference>
-    <PackageReference Include="MimeKit" Version="3.4.1" />
-    <PackageReference Include="NSwag.AspNetCore" Version="13.17.0" />
-    <PackageReference Include="RazorEngineCore" Version="2022.8.1" />
-  </ItemGroup>
+	<ItemGroup>
+		<PackageReference Include="Ardalis.Specification.EntityFrameworkCore" Version="8.0.0" />
+		<PackageReference Include="Asp.Versioning.Mvc" Version="8.0.0" />
+		<PackageReference Include="Asp.Versioning.Mvc.ApiExplorer" Version="8.0.0" />
+		<PackageReference Include="MailKit" Version="4.3.0" />
+		<PackageReference Include="Microsoft.AspNetCore.Authentication.JwtBearer" Version="8.0.2" />
+		<PackageReference Include="Microsoft.AspNetCore.Identity.EntityFrameworkCore" Version="8.0.2" />
+		<PackageReference Include="Microsoft.EntityFrameworkCore" Version="8.0.2" />
+		<PackageReference Include="Microsoft.EntityFrameworkCore.SqlServer" Version="8.0.2" />
+		<PackageReference Include="Microsoft.EntityFrameworkCore.Tools" Version="8.0.2">
+			<PrivateAssets>all</PrivateAssets>
+			<IncludeAssets>runtime; build; native; contentfiles; analyzers; buildtransitive</IncludeAssets>
+		</PackageReference>
+		<PackageReference Include="MimeKit" Version="4.3.0" />
+		<PackageReference Include="NSwag.AspNetCore" Version="14.0.3" />
+		<PackageReference Include="RazorEngineCore" Version="2023.11.2" />
+	</ItemGroup>
 
-  <ItemGroup>
-    <ProjectReference Include="..\FastRecruiter.Application\FastRecruiter.Application.csproj" />
-    <ProjectReference Include="..\FastRecruiter.Domain\FastRecruiter.Domain.csproj" />
-  </ItemGroup>
+	<ItemGroup>
+		<ProjectReference Include="..\FastRecruiter.Application\FastRecruiter.Application.csproj" />
+		<ProjectReference Include="..\FastRecruiter.Domain\FastRecruiter.Domain.csproj" />
+	</ItemGroup>
 
 </Project>
