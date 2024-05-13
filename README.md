@@ -1,43 +1,21 @@
-# fast-recruiter
-FastRecruiter is a recruitment management platform that assists talent acquisition teams and hiring managers with candidate sourcing and assessments
+# FastRecruiter
+a platform that helps talent acquisition teams and hiring managers in the process of finding and hiring new employees.
 
-## Tech stack
-- [React js](https://reactjs.org/)
-- [Next js](https://nextjs.org/)
-- [Mantine UI](https://mantine.dev/)
+## 🗺 Roadmap - v1
 
-## 🚧 Roadmap
+> [!NOTE]
+> 🚧 : Planned <br/>
+> 🛠️ : Under Development <br/>
+> ✔ : Done <br/>
+> ❌ : Not Implemented (Planned for Next Version) <br/>
 
-See the [open issues](https://github.com/ID-JA/fast-recruiter/issues) for a list of proposed features (and known issues).
+| Feature | Status |
+| :--- | :---: |
+| Support OAuth 2.0 (Linkedin & Google) |🚧|
+| Sign in using magic links |🚧|
+| publish job offers by HR managers |✔|
+| fully customized screaning quetions |🚧|
+| candidates can apply for job offers |✔|
+| Dockerize the application  |🚧|
 
-
-## Features v1
-- [x] authentication & authorization
-  - [x] register and log in (Recruiter)
-  - [ ] register and log in (Candidate)
-  - [ ] reset and forget password
-  - [x]  account confirmation
-  - [ ]  2FA
-- [ ] profile management
-  - [ ] update personal information like full name, image, boi... (candidates & recruiter)
-  - [ ] Security (change password, 2FA)
-  - [ ] Delete account
-- [ ] third-party authentication (Google, Linkedin)
-- [ ] job offers management
-  - [ ] create new offers
-  - [ ] update offers detail
-  - [ ] delete offer / delete bulk
-  - [ ] 
-- [ ] apply for offers
-- [ ] applications management
-- [ ] candidates management
-- [ ] application dashboard
-- [ ] jobs board
-- [ ] chat with candidates
-- [ ] interview scheduling
-- [ ] team management
-- [ ] hiring for multiple companies
-- [ ] AI integration
-- [ ] ranking System
-- [ ] jobs recommendation
- and more .....
+> I'll continue to update the content while progressing with the project's development.
