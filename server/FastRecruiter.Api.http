@@ -1,0 +1,6 @@
+@FastRecruiter.Api_HostAddress = http://localhost:5171
+
+GET {{FastRecruiter.Api_HostAddress}}/weatherforecast/
+Accept: application/json
+
+###

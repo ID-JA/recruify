@@ -1,0 +1,8 @@
+﻿namespace FastRecruiter.Api.Identity;
+
+public class JwtOptions
+{
+    public string Key { get; set; }
+    public int TokenExpirationInMinutes { get; set; }
+    public int RefreshTokenExpirationInDays { get; set; }
+}

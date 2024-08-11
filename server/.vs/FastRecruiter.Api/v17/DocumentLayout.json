@@ -1,0 +1,245 @@
+{
+  "Version": 1,
+  "WorkspaceRootPath": "C:\\Users\\idais\\OneDrive\\\u0633\u0637\u062D \u0627\u0644\u0645\u0643\u062A\u0628\\FastRecruiter.Api\\",
+  "Documents": [
+    {
+      "AbsoluteMoniker": "D:0:0:{FA1E74F2-BC95-4900-B253-F0C2EEBA5C2B}|FastRecruiter.Api.csproj|c:\\users\\idais\\onedrive\\\u0633\u0637\u062D \u0627\u0644\u0645\u0643\u062A\u0628\\fastrecruiter.api\\identity\\extensions.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
+      "RelativeMoniker": "D:0:0:{FA1E74F2-BC95-4900-B253-F0C2EEBA5C2B}|FastRecruiter.Api.csproj|solutionrelative:identity\\extensions.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
+    },
+    {
+      "AbsoluteMoniker": "D:0:0:{FA1E74F2-BC95-4900-B253-F0C2EEBA5C2B}|FastRecruiter.Api.csproj|c:\\users\\idais\\onedrive\\\u0633\u0637\u062D \u0627\u0644\u0645\u0643\u062A\u0628\\fastrecruiter.api\\auth\\apppermissions.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
+      "RelativeMoniker": "D:0:0:{FA1E74F2-BC95-4900-B253-F0C2EEBA5C2B}|FastRecruiter.Api.csproj|solutionrelative:auth\\apppermissions.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
+    },
+    {
+      "AbsoluteMoniker": "D:0:0:{FA1E74F2-BC95-4900-B253-F0C2EEBA5C2B}|FastRecruiter.Api.csproj|c:\\users\\idais\\onedrive\\\u0633\u0637\u062D \u0627\u0644\u0645\u0643\u062A\u0628\\fastrecruiter.api\\controllers\\authcontroller.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
+      "RelativeMoniker": "D:0:0:{FA1E74F2-BC95-4900-B253-F0C2EEBA5C2B}|FastRecruiter.Api.csproj|solutionrelative:controllers\\authcontroller.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
+    },
+    {
+      "AbsoluteMoniker": "D:0:0:{FA1E74F2-BC95-4900-B253-F0C2EEBA5C2B}|FastRecruiter.Api.csproj|c:\\users\\idais\\onedrive\\\u0633\u0637\u062D \u0627\u0644\u0645\u0643\u062A\u0628\\fastrecruiter.api\\auth\\extensions.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
+      "RelativeMoniker": "D:0:0:{FA1E74F2-BC95-4900-B253-F0C2EEBA5C2B}|FastRecruiter.Api.csproj|solutionrelative:auth\\extensions.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
+    },
+    {
+      "AbsoluteMoniker": "D:0:0:{FA1E74F2-BC95-4900-B253-F0C2EEBA5C2B}|FastRecruiter.Api.csproj|c:\\users\\idais\\onedrive\\\u0633\u0637\u062D \u0627\u0644\u0645\u0643\u062A\u0628\\fastrecruiter.api\\auth\\haspermissionauthorizationhandler.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
+      "RelativeMoniker": "D:0:0:{FA1E74F2-BC95-4900-B253-F0C2EEBA5C2B}|FastRecruiter.Api.csproj|solutionrelative:auth\\haspermissionauthorizationhandler.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
+    },
+    {
+      "AbsoluteMoniker": "D:0:0:{FA1E74F2-BC95-4900-B253-F0C2EEBA5C2B}|FastRecruiter.Api.csproj|c:\\users\\idais\\onedrive\\\u0633\u0637\u062D \u0627\u0644\u0645\u0643\u062A\u0628\\fastrecruiter.api\\identity\\itokenservice.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
+      "RelativeMoniker": "D:0:0:{FA1E74F2-BC95-4900-B253-F0C2EEBA5C2B}|FastRecruiter.Api.csproj|solutionrelative:identity\\itokenservice.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
+    },
+    {
+      "AbsoluteMoniker": "D:0:0:{FA1E74F2-BC95-4900-B253-F0C2EEBA5C2B}|FastRecruiter.Api.csproj|c:\\users\\idais\\onedrive\\\u0633\u0637\u062D \u0627\u0644\u0645\u0643\u062A\u0628\\fastrecruiter.api\\services\\users\\iuserservice.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
+      "RelativeMoniker": "D:0:0:{FA1E74F2-BC95-4900-B253-F0C2EEBA5C2B}|FastRecruiter.Api.csproj|solutionrelative:services\\users\\iuserservice.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
+    },
+    {
+      "AbsoluteMoniker": "D:0:0:{FA1E74F2-BC95-4900-B253-F0C2EEBA5C2B}|FastRecruiter.Api.csproj|c:\\users\\idais\\onedrive\\\u0633\u0637\u062D \u0627\u0644\u0645\u0643\u062A\u0628\\fastrecruiter.api\\data\\context\\idbcontext.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
+      "RelativeMoniker": "D:0:0:{FA1E74F2-BC95-4900-B253-F0C2EEBA5C2B}|FastRecruiter.Api.csproj|solutionrelative:data\\context\\idbcontext.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
+    },
+    {
+      "AbsoluteMoniker": "D:0:0:{FA1E74F2-BC95-4900-B253-F0C2EEBA5C2B}|FastRecruiter.Api.csproj|c:\\users\\idais\\onedrive\\\u0633\u0637\u062D \u0627\u0644\u0645\u0643\u062A\u0628\\fastrecruiter.api\\data\\context\\applicationdbcontext.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
+      "RelativeMoniker": "D:0:0:{FA1E74F2-BC95-4900-B253-F0C2EEBA5C2B}|FastRecruiter.Api.csproj|solutionrelative:data\\context\\applicationdbcontext.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
+    },
+    {
+      "AbsoluteMoniker": "D:0:0:{FA1E74F2-BC95-4900-B253-F0C2EEBA5C2B}|FastRecruiter.Api.csproj|c:\\users\\idais\\onedrive\\\u0633\u0637\u062D \u0627\u0644\u0645\u0643\u062A\u0628\\fastrecruiter.api\\models\\role.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
+      "RelativeMoniker": "D:0:0:{FA1E74F2-BC95-4900-B253-F0C2EEBA5C2B}|FastRecruiter.Api.csproj|solutionrelative:models\\role.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
+    },
+    {
+      "AbsoluteMoniker": "D:0:0:{FA1E74F2-BC95-4900-B253-F0C2EEBA5C2B}|FastRecruiter.Api.csproj|c:\\users\\idais\\onedrive\\\u0633\u0637\u062D \u0627\u0644\u0645\u0643\u062A\u0628\\fastrecruiter.api\\models\\usercompany.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
+      "RelativeMoniker": "D:0:0:{FA1E74F2-BC95-4900-B253-F0C2EEBA5C2B}|FastRecruiter.Api.csproj|solutionrelative:models\\usercompany.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
+    },
+    {
+      "AbsoluteMoniker": "D:0:0:{FA1E74F2-BC95-4900-B253-F0C2EEBA5C2B}|FastRecruiter.Api.csproj|c:\\users\\idais\\onedrive\\\u0633\u0637\u062D \u0627\u0644\u0645\u0643\u062A\u0628\\fastrecruiter.api\\services\\users\\features\\onboarding\\onbordinguserrequest.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
+      "RelativeMoniker": "D:0:0:{FA1E74F2-BC95-4900-B253-F0C2EEBA5C2B}|FastRecruiter.Api.csproj|solutionrelative:services\\users\\features\\onboarding\\onbordinguserrequest.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
+    },
+    {
+      "AbsoluteMoniker": "D:0:0:{FA1E74F2-BC95-4900-B253-F0C2EEBA5C2B}|FastRecruiter.Api.csproj|c:\\users\\idais\\onedrive\\\u0633\u0637\u062D \u0627\u0644\u0645\u0643\u062A\u0628\\fastrecruiter.api\\services\\users\\features\\registeruser\\registeruserresponse.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
+      "RelativeMoniker": "D:0:0:{FA1E74F2-BC95-4900-B253-F0C2EEBA5C2B}|FastRecruiter.Api.csproj|solutionrelative:services\\users\\features\\registeruser\\registeruserresponse.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
+    }
+  ],
+  "DocumentGroupContainers": [
+    {
+      "Orientation": 0,
+      "VerticalTabListWidth": 256,
+      "DocumentGroups": [
+        {
+          "DockedWidth": 283,
+          "SelectedChildIndex": 2,
+          "Children": [
+            {
+              "$type": "Document",
+              "DocumentIndex": 1,
+              "Title": "AppPermissions.cs",
+              "DocumentMoniker": "C:\\Users\\idais\\OneDrive\\\u0633\u0637\u062D \u0627\u0644\u0645\u0643\u062A\u0628\\FastRecruiter.Api\\Auth\\AppPermissions.cs",
+              "RelativeDocumentMoniker": "Auth\\AppPermissions.cs",
+              "ToolTip": "C:\\Users\\idais\\OneDrive\\\u0633\u0637\u062D \u0627\u0644\u0645\u0643\u062A\u0628\\FastRecruiter.Api\\Auth\\AppPermissions.cs",
+              "RelativeToolTip": "Auth\\AppPermissions.cs",
+              "ViewState": "AQIAABIAAAAAAAAAAAAkwCwAAAAAAAAA",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
+              "WhenOpened": "2024-08-11T17:53:57.353Z",
+              "EditorCaption": ""
+            },
+            {
+              "$type": "Bookmark",
+              "Name": "ST:0:0:{1c4feeaa-4718-4aa9-859d-94ce25d182ba}"
+            },
+            {
+              "$type": "Document",
+              "DocumentIndex": 0,
+              "Title": "Extensions.cs",
+              "DocumentMoniker": "C:\\Users\\idais\\OneDrive\\\u0633\u0637\u062D \u0627\u0644\u0645\u0643\u062A\u0628\\FastRecruiter.Api\\Identity\\Extensions.cs",
+              "RelativeDocumentMoniker": "Identity\\Extensions.cs",
+              "ToolTip": "C:\\Users\\idais\\OneDrive\\\u0633\u0637\u062D \u0627\u0644\u0645\u0643\u062A\u0628\\FastRecruiter.Api\\Identity\\Extensions.cs",
+              "RelativeToolTip": "Identity\\Extensions.cs",
+              "ViewState": "AQIAAB4AAAAAAAAAAAAcwCsAAAANAAAA",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
+              "WhenOpened": "2024-08-11T17:48:02.12Z",
+              "EditorCaption": ""
+            },
+            {
+              "$type": "Document",
+              "DocumentIndex": 3,
+              "Title": "Extensions.cs",
+              "DocumentMoniker": "C:\\Users\\idais\\OneDrive\\\u0633\u0637\u062D \u0627\u0644\u0645\u0643\u062A\u0628\\FastRecruiter.Api\\Auth\\Extensions.cs",
+              "RelativeDocumentMoniker": "Auth\\Extensions.cs",
+              "ToolTip": "C:\\Users\\idais\\OneDrive\\\u0633\u0637\u062D \u0627\u0644\u0645\u0643\u062A\u0628\\FastRecruiter.Api\\Auth\\Extensions.cs",
+              "RelativeToolTip": "Auth\\Extensions.cs",
+              "ViewState": "AQIAABMAAAAAAAAAAAAowBsAAAAEAAAA",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
+              "WhenOpened": "2024-08-11T17:45:03.82Z",
+              "EditorCaption": ""
+            },
+            {
+              "$type": "Document",
+              "DocumentIndex": 4,
+              "Title": "HasPermissionAuthorizationHandler.cs",
+              "DocumentMoniker": "C:\\Users\\idais\\OneDrive\\\u0633\u0637\u062D \u0627\u0644\u0645\u0643\u062A\u0628\\FastRecruiter.Api\\Auth\\HasPermissionAuthorizationHandler.cs",
+              "RelativeDocumentMoniker": "Auth\\HasPermissionAuthorizationHandler.cs",
+              "ToolTip": "C:\\Users\\idais\\OneDrive\\\u0633\u0637\u062D \u0627\u0644\u0645\u0643\u062A\u0628\\FastRecruiter.Api\\Auth\\HasPermissionAuthorizationHandler.cs",
+              "RelativeToolTip": "Auth\\HasPermissionAuthorizationHandler.cs",
+              "ViewState": "AQIAABIAAAAAAAAAAAAgwAYAAAANAAAA",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
+              "WhenOpened": "2024-08-11T17:43:20.855Z",
+              "EditorCaption": ""
+            },
+            {
+              "$type": "Document",
+              "DocumentIndex": 7,
+              "Title": "IDbContext.cs",
+              "DocumentMoniker": "C:\\Users\\idais\\OneDrive\\\u0633\u0637\u062D \u0627\u0644\u0645\u0643\u062A\u0628\\FastRecruiter.Api\\Data\\Context\\IDbContext.cs",
+              "RelativeDocumentMoniker": "Data\\Context\\IDbContext.cs",
+              "ToolTip": "C:\\Users\\idais\\OneDrive\\\u0633\u0637\u062D \u0627\u0644\u0645\u0643\u062A\u0628\\FastRecruiter.Api\\Data\\Context\\IDbContext.cs",
+              "RelativeToolTip": "Data\\Context\\IDbContext.cs",
+              "ViewState": "AQIAAAAAAAAAAAAAAAAAAAcAAAAnAAAA",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
+              "WhenOpened": "2024-08-11T17:36:04.392Z",
+              "EditorCaption": ""
+            },
+            {
+              "$type": "Document",
+              "DocumentIndex": 8,
+              "Title": "ApplicationDbContext.cs",
+              "DocumentMoniker": "C:\\Users\\idais\\OneDrive\\\u0633\u0637\u062D \u0627\u0644\u0645\u0643\u062A\u0628\\FastRecruiter.Api\\Data\\Context\\ApplicationDbContext.cs",
+              "RelativeDocumentMoniker": "Data\\Context\\ApplicationDbContext.cs",
+              "ToolTip": "C:\\Users\\idais\\OneDrive\\\u0633\u0637\u062D \u0627\u0644\u0645\u0643\u062A\u0628\\FastRecruiter.Api\\Data\\Context\\ApplicationDbContext.cs",
+              "RelativeToolTip": "Data\\Context\\ApplicationDbContext.cs",
+              "ViewState": "AQIAAAAAAAAAAAAAAAAuwAoAAABLAAAA",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
+              "WhenOpened": "2024-08-11T17:35:06.679Z",
+              "EditorCaption": ""
+            },
+            {
+              "$type": "Document",
+              "DocumentIndex": 9,
+              "Title": "Role.cs",
+              "DocumentMoniker": "C:\\Users\\idais\\OneDrive\\\u0633\u0637\u062D \u0627\u0644\u0645\u0643\u062A\u0628\\FastRecruiter.Api\\Models\\Role.cs",
+              "RelativeDocumentMoniker": "Models\\Role.cs",
+              "ToolTip": "C:\\Users\\idais\\OneDrive\\\u0633\u0637\u062D \u0627\u0644\u0645\u0643\u062A\u0628\\FastRecruiter.Api\\Models\\Role.cs",
+              "RelativeToolTip": "Models\\Role.cs",
+              "ViewState": "AQIAAAAAAAAAAAAAAAAAAAwAAAAAAAAA",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
+              "WhenOpened": "2024-08-11T17:32:07.42Z",
+              "EditorCaption": ""
+            },
+            {
+              "$type": "Document",
+              "DocumentIndex": 10,
+              "Title": "UserCompany.cs",
+              "DocumentMoniker": "C:\\Users\\idais\\OneDrive\\\u0633\u0637\u062D \u0627\u0644\u0645\u0643\u062A\u0628\\FastRecruiter.Api\\Models\\UserCompany.cs",
+              "RelativeDocumentMoniker": "Models\\UserCompany.cs",
+              "ToolTip": "C:\\Users\\idais\\OneDrive\\\u0633\u0637\u062D \u0627\u0644\u0645\u0643\u062A\u0628\\FastRecruiter.Api\\Models\\UserCompany.cs",
+              "RelativeToolTip": "Models\\UserCompany.cs",
+              "ViewState": "AQIAAAAAAAAAAAAAAAAAAAgAAAAAAAAA",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
+              "WhenOpened": "2024-08-11T17:19:35.496Z",
+              "EditorCaption": ""
+            },
+            {
+              "$type": "Document",
+              "DocumentIndex": 11,
+              "Title": "OnbordingUserRequest.cs",
+              "DocumentMoniker": "C:\\Users\\idais\\OneDrive\\\u0633\u0637\u062D \u0627\u0644\u0645\u0643\u062A\u0628\\FastRecruiter.Api\\Services\\Users\\Features\\Onboarding\\OnbordingUserRequest.cs",
+              "RelativeDocumentMoniker": "Services\\Users\\Features\\Onboarding\\OnbordingUserRequest.cs",
+              "ToolTip": "C:\\Users\\idais\\OneDrive\\\u0633\u0637\u062D \u0627\u0644\u0645\u0643\u062A\u0628\\FastRecruiter.Api\\Services\\Users\\Features\\Onboarding\\OnbordingUserRequest.cs",
+              "RelativeToolTip": "Services\\Users\\Features\\Onboarding\\OnbordingUserRequest.cs",
+              "ViewState": "AQIAAAAAAAAAAAAAAAAAAAQAAAAAAAAA",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
+              "WhenOpened": "2024-08-11T16:55:51.299Z",
+              "EditorCaption": ""
+            },
+            {
+              "$type": "Document",
+              "DocumentIndex": 5,
+              "Title": "ITokenService.cs",
+              "DocumentMoniker": "C:\\Users\\idais\\OneDrive\\\u0633\u0637\u062D \u0627\u0644\u0645\u0643\u062A\u0628\\FastRecruiter.Api\\Identity\\ITokenService.cs",
+              "RelativeDocumentMoniker": "Identity\\ITokenService.cs",
+              "ToolTip": "C:\\Users\\idais\\OneDrive\\\u0633\u0637\u062D \u0627\u0644\u0645\u0643\u062A\u0628\\FastRecruiter.Api\\Identity\\ITokenService.cs",
+              "RelativeToolTip": "Identity\\ITokenService.cs",
+              "ViewState": "AQIAABcAAAAAAAAAAAA/wCQAAAAIAAAA",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
+              "WhenOpened": "2024-08-11T16:47:36.976Z",
+              "EditorCaption": ""
+            },
+            {
+              "$type": "Document",
+              "DocumentIndex": 6,
+              "Title": "IUserService.cs",
+              "DocumentMoniker": "C:\\Users\\idais\\OneDrive\\\u0633\u0637\u062D \u0627\u0644\u0645\u0643\u062A\u0628\\FastRecruiter.Api\\Services\\Users\\IUserService.cs",
+              "RelativeDocumentMoniker": "Services\\Users\\IUserService.cs",
+              "ToolTip": "C:\\Users\\idais\\OneDrive\\\u0633\u0637\u062D \u0627\u0644\u0645\u0643\u062A\u0628\\FastRecruiter.Api\\Services\\Users\\IUserService.cs",
+              "RelativeToolTip": "Services\\Users\\IUserService.cs",
+              "ViewState": "AQIAAGoAAAAAAAAAAAAWwHkAAAAPAAAA",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
+              "WhenOpened": "2024-08-11T16:44:52.747Z",
+              "EditorCaption": ""
+            },
+            {
+              "$type": "Document",
+              "DocumentIndex": 12,
+              "Title": "RegisterUserResponse.cs",
+              "DocumentMoniker": "C:\\Users\\idais\\OneDrive\\\u0633\u0637\u062D \u0627\u0644\u0645\u0643\u062A\u0628\\FastRecruiter.Api\\Services\\Users\\Features\\RegisterUser\\RegisterUserResponse.cs",
+              "RelativeDocumentMoniker": "Services\\Users\\Features\\RegisterUser\\RegisterUserResponse.cs",
+              "ToolTip": "C:\\Users\\idais\\OneDrive\\\u0633\u0637\u062D \u0627\u0644\u0645\u0643\u062A\u0628\\FastRecruiter.Api\\Services\\Users\\Features\\RegisterUser\\RegisterUserResponse.cs",
+              "RelativeToolTip": "Services\\Users\\Features\\RegisterUser\\RegisterUserResponse.cs",
+              "ViewState": "AQIAAAAAAAAAAAAAAAAuwAQAAABEAAAA",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
+              "WhenOpened": "2024-08-11T16:43:22.267Z",
+              "EditorCaption": ""
+            },
+            {
+              "$type": "Document",
+              "DocumentIndex": 2,
+              "Title": "AuthController.cs",
+              "DocumentMoniker": "C:\\Users\\idais\\OneDrive\\\u0633\u0637\u062D \u0627\u0644\u0645\u0643\u062A\u0628\\FastRecruiter.Api\\Controllers\\AuthController.cs",
+              "RelativeDocumentMoniker": "Controllers\\AuthController.cs",
+              "ToolTip": "C:\\Users\\idais\\OneDrive\\\u0633\u0637\u062D \u0627\u0644\u0645\u0643\u062A\u0628\\FastRecruiter.Api\\Controllers\\AuthController.cs",
+              "RelativeToolTip": "Controllers\\AuthController.cs",
+              "ViewState": "AQIAACEAAAAAAAAAAAAAwC8AAABDAAAA",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
+              "WhenOpened": "2024-08-11T16:42:38.529Z",
+              "EditorCaption": ""
+            }
+          ]
+        }
+      ]
+    }
+  ]
+}
