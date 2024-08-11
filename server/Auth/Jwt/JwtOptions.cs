@@ -1,4 +1,4 @@
-﻿namespace FastRecruiter.Api.Identity;
+﻿namespace FastRecruiter.Api.Auth.Jwt;
 
 public class JwtOptions
 {

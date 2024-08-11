@@ -1,4 +1,4 @@
-﻿using FastRecruiter.Api.Services.Users;
+﻿using FastRecruiter.Api.Identity.Users;
 
 namespace FastRecruiter.Api.Auth;
 

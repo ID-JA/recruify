@@ -1,21 +1,14 @@
-﻿using FastRecruiter.Api.Identity;
-using System.Security.Claims;
+﻿using System.Security.Claims;
 
-namespace FastRecruiter.Api.Services.Users;
+namespace FastRecruiter.Api.Identity.Users;
 
 public interface ICurrentUser
 {
     string? Name { get; }
-
     Guid GetUserId();
-
     string? GetUserEmail();
-
-
     bool IsAuthenticated();
-
     bool IsInRole(string role);
-
     IEnumerable<Claim>? GetUserClaims();
 }
 
@@ -25,7 +18,7 @@ public interface ICurrentUserInitializer
     public void SetCurrentUser(ClaimsPrincipal user);
 }
 
-public class CurrentUser : ICurrentUser,ICurrentUserInitializer
+public class CurrentUser : ICurrentUser, ICurrentUserInitializer
 {
     private ClaimsPrincipal? _user;
     private Guid _userId = Guid.Empty;

@@ -1,14 +1,13 @@
 ﻿using FastRecruiter.Api.Data.Context;
-using FastRecruiter.Api.Identity;
+using FastRecruiter.Api.Identity.Users.Features.Onboarding;
 using FastRecruiter.Api.Models;
-using FastRecruiter.Api.Services.Users.Features.Onboarding;
-using FastRecruiter.Api.Services.Users.Features.RegisterUser;
+using FastRecruiter.Api.Identity.Users.Features.RegisterUser;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
-using Microsoft.EntityFrameworkCore;
 using System.Security.Claims;
+using FastRecruiter.Api.Identity.Tokens;
 
-namespace FastRecruiter.Api.Services.Users;
+namespace FastRecruiter.Api.Identity.Users;
 
 public interface IUserService
 {
@@ -16,12 +15,16 @@ public interface IUserService
     Task<User?> HandleGoogleCallbackAsync();
     ChallengeResult HandleGoogleLogin(string redirectUrl);
     Task<bool> HasPermissionAsync(string userId, string permission, CancellationToken cancellationToken = default);
-    Task<Guid> OnboardingAsync(OnbordingUserRequest request, CancellationToken cancellationToken);
+    Task<Guid> OnboardingAsync(OnboardingUserRequest request, CancellationToken cancellationToken);
 
 }
 
 
-public class UserService(UserManager<User> _userManager, SignInManager<User> _signInManager, RoleManager<Role> _roleManager, ApplicationDbContext _dbContext,ICurrentUser _currentUser,ITokenService _tokenService) : IUserService
+public class UserService(UserManager<User> _userManager,
+                         SignInManager<User> _signInManager,
+                         ApplicationDbContext _dbContext,
+                         ICurrentUser _currentUser,
+                         ITokenService _tokenService) : IUserService
 {
     public ChallengeResult HandleGoogleLogin(string redirectUrl)
     {
@@ -78,7 +81,7 @@ public class UserService(UserManager<User> _userManager, SignInManager<User> _si
             EmailConfirmed = true,
         };
 
-        var result = await _userManager.CreateAsync(user,request.Password);
+        var result = await _userManager.CreateAsync(user, request.Password);
 
         if (!result.Succeeded)
         {
@@ -86,7 +89,7 @@ public class UserService(UserManager<User> _userManager, SignInManager<User> _si
             throw new Exception("error while registering a new user");
         }
 
-        await _userManager.AddToRoleAsync(user, "Admin"); // TODO: seed application roles and permissions / claims
+        await _userManager.AddToRoleAsync(user, "Admin"); // TODO: Assign user to role when the company is being created
 
         if (!string.IsNullOrEmpty(user.Email))
         {
@@ -103,24 +106,9 @@ public class UserService(UserManager<User> _userManager, SignInManager<User> _si
         return new RegisterUserResponse(user.Id, tokens);
     }
 
+    // TODO: FIX THIS
     public async Task<bool> HasPermissionAsync(string userId, string permission, CancellationToken cancellationToken = default)
     {
-        //var user = await _userManager.FindByIdAsync(userId);
-
-        //_ = user ?? throw new UnauthorizedAccessException();
-
-        //var userRoles = await _userManager.GetRolesAsync(user);
-        //var permissions = new List<string>();
-
-        //foreach (var role in await _roleManager.Roles
-        //    .Where(r => userRoles.Contains(r.Name!))
-        //    .ToListAsync(cancellationToken))
-        //{
-        //    permissions.AddRange(await _dbContext.RoleClaims
-        //        .Where(rc => rc.RoleId == role.Id && rc.ClaimType == "permission")
-        //        .Select(rc => rc.ClaimValue!)
-        //        .ToListAsync(cancellationToken));
-        //}
         var user = await _userManager.FindByIdAsync(userId);
 
         _ = user ?? throw new UnauthorizedAccessException();
@@ -129,7 +117,7 @@ public class UserService(UserManager<User> _userManager, SignInManager<User> _si
         return userClaims.Any(c => c.Type == permission && c.Value == "enabled");
     }
 
-    public async Task<Guid> OnboardingAsync(OnbordingUserRequest request, CancellationToken cancellationToken)
+    public async Task<Guid> OnboardingAsync(OnboardingUserRequest request, CancellationToken cancellationToken)
     {
         var company = new Company
         {

@@ -4547,11 +4547,11 @@
   "project": {
     "version": "1.0.0",
     "restore": {
-      "projectUniqueName": "C:\\Users\\idais\\OneDrive\\سطح المكتب\\FastRecruiter.Api\\FastRecruiter.Api.csproj",
+      "projectUniqueName": "C:\\Users\\idais\\OneDrive\\سطح المكتب\\projects\\fast-recruiter\\server\\FastRecruiter.Api.csproj",
       "projectName": "FastRecruiter.Api",
-      "projectPath": "C:\\Users\\idais\\OneDrive\\سطح المكتب\\FastRecruiter.Api\\FastRecruiter.Api.csproj",
+      "projectPath": "C:\\Users\\idais\\OneDrive\\سطح المكتب\\projects\\fast-recruiter\\server\\FastRecruiter.Api.csproj",
       "packagesPath": "C:\\Users\\idais\\.nuget\\packages\\",
-      "outputPath": "C:\\Users\\idais\\OneDrive\\سطح المكتب\\FastRecruiter.Api\\obj\\",
+      "outputPath": "C:\\Users\\idais\\OneDrive\\سطح المكتب\\projects\\fast-recruiter\\server\\obj\\",
       "projectStyle": "PackageReference",
       "configFilePaths": [
         "C:\\Users\\idais\\AppData\\Roaming\\NuGet\\NuGet.Config",

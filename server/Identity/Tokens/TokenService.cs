@@ -1,4 +1,5 @@
-﻿using FastRecruiter.Api.Models;
+﻿using FastRecruiter.Api.Auth.Jwt;
+using FastRecruiter.Api.Models;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.Extensions.Options;
 using Microsoft.IdentityModel.Tokens;
@@ -7,7 +8,7 @@ using System.Security.Claims;
 using System.Security.Cryptography;
 using System.Text;
 
-namespace FastRecruiter.Api.Identity;
+namespace FastRecruiter.Api.Identity.Tokens;
 
 public record TokenResponse(string Token, string RefreshToken, DateTime RefreshTokenExpiryTime);
 

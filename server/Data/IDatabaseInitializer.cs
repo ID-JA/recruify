@@ -1,11 +1,8 @@
-﻿using FastRecruiter.Api.Auth;
+﻿using FastRecruiter.Api.Auth.Policy;
 using FastRecruiter.Api.Data.Context;
 using FastRecruiter.Api.Models;
 using Microsoft.AspNetCore.Identity;
-using Microsoft.AspNetCore.Identity.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore;
-using Microsoft.Extensions.Logging;
-using System;
 using System.Data;
 
 namespace FastRecruiter.Api.Data;
@@ -40,7 +37,7 @@ public class DatabaseInitializer(ApplicationDbContext dbContext, RoleManager<Rol
             // Assign permissions
             if (roleName == "Admin")
             {
-                await AssignPermissionsToRoleAsync( AppPermissions.Admin, role);
+                await AssignPermissionsToRoleAsync(AppPermissions.Admin, role);
             }
             else if (roleName == "Member")
             {

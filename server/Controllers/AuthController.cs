@@ -1,9 +1,8 @@
-﻿using FastRecruiter.Api.Auth;
-using FastRecruiter.Api.Identity;
-using FastRecruiter.Api.Services.Users;
-using FastRecruiter.Api.Services.Users.Features.Onboarding;
-using FastRecruiter.Api.Services.Users.Features.RegisterUser;
-using Microsoft.AspNetCore.Authorization;
+﻿using FastRecruiter.Api.Auth.Policy;
+using FastRecruiter.Api.Identity.Tokens;
+using FastRecruiter.Api.Identity.Users;
+using FastRecruiter.Api.Identity.Users.Features.Onboarding;
+using FastRecruiter.Api.Identity.Users.Features.RegisterUser;
 using Microsoft.AspNetCore.Mvc;
 
 namespace FastRecruiter.Api.Controllers;
@@ -15,7 +14,7 @@ public class AuthController(IUserService _userService, ITokenService _tokenServi
     [HttpGet("google-login")]
     public IActionResult GoogleLogin()
     {
-        var redirectUrl = Url.Action(nameof(GoogleCallback), "Auth"); 
+        var redirectUrl = Url.Action(nameof(GoogleCallback), "Auth");
         var challengeResult = _userService.HandleGoogleLogin(redirectUrl);
         return challengeResult;
     }
@@ -45,7 +44,7 @@ public class AuthController(IUserService _userService, ITokenService _tokenServi
 
     [HttpPost("onboarding")]
     [HasPermission("Permissions.Company.Update")]
-    public async Task<IActionResult> Onboarding([FromBody] OnbordingUserRequest request, CancellationToken cancellationToken)
+    public async Task<IActionResult> Onboarding([FromBody] OnboardingUserRequest request, CancellationToken cancellationToken)
     {
         return Ok(await _userService.OnboardingAsync(request, cancellationToken));
     }

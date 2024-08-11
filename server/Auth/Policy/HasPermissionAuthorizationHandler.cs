@@ -1,5 +1,4 @@
-﻿using FastRecruiter.Api.Identity;
-using FastRecruiter.Api.Services.Users;
+﻿using FastRecruiter.Api.Identity.Users;
 using Microsoft.AspNetCore.Authorization;
 
 namespace FastRecruiter.Api.Auth.Policy;

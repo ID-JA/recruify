@@ -1,9 +1,6 @@
 ﻿using Microsoft.AspNetCore.Identity.EntityFrameworkCore;
-using Microsoft.AspNetCore.Identity;
 using Microsoft.EntityFrameworkCore;
 using FastRecruiter.Api.Models;
-using System.Reflection.Emit;
-using FastRecruiter.Api.Data.Configurations;
 using System.Reflection;
 
 namespace FastRecruiter.Api.Data.Context;
@@ -24,7 +21,7 @@ public class ApplicationDbContext : IdentityDbContext<User, Role, Guid>, IDbCont
 
     protected override void OnModelCreating(ModelBuilder builder)
     {
-        builder.ApplyConfigurationsFromAssembly(Assembly.GetExecutingAssembly());
         base.OnModelCreating(builder);
+        builder.ApplyConfigurationsFromAssembly(Assembly.GetExecutingAssembly());
     }
 }

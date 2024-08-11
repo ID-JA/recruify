@@ -1,8 +1,8 @@
 {
   "version": 2,
-  "dgSpecHash": "EzoVm+2QElE=",
+  "dgSpecHash": "Mf3UYjzj86w=",
   "success": true,
-  "projectFilePath": "C:\\Users\\idais\\OneDrive\\سطح المكتب\\FastRecruiter.Api\\FastRecruiter.Api.csproj",
+  "projectFilePath": "C:\\Users\\idais\\OneDrive\\سطح المكتب\\projects\\fast-recruiter\\server\\FastRecruiter.Api.csproj",
   "expectedPackageFiles": [
     "C:\\Users\\idais\\.nuget\\packages\\azure.core\\1.35.0\\azure.core.1.35.0.nupkg.sha512",
     "C:\\Users\\idais\\.nuget\\packages\\azure.identity\\1.10.3\\azure.identity.1.10.3.nupkg.sha512",

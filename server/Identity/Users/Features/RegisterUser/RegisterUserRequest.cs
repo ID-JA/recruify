@@ -1,6 +1,6 @@
 ﻿using MediatR;
 
-namespace FastRecruiter.Api.Services.Users.Features.RegisterUser;
+namespace FastRecruiter.Api.Identity.Users.Features.RegisterUser;
 
 public class RegisterUserRequest : IRequest<RegisterUserResponse>
 {

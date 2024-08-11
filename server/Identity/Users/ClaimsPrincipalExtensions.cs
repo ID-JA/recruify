@@ -1,6 +1,6 @@
 ﻿using System.Security.Claims;
 
-namespace FastRecruiter.Api.Identity;
+namespace FastRecruiter.Api.Identity.Users;
 
 public static class ClaimsPrincipalExtensions
 {
