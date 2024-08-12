@@ -30,8 +30,9 @@ public static class Extensions
         services.AddAuthorizationBuilder().AddRequiredPermissionPolicy();
         services.AddAuthorization(options =>
         {
-            options.FallbackPolicy = options.GetPolicy("RequiredPermission");
+            options.FallbackPolicy = options.GetPolicy(RequiredPermissionDefaults.PolicyName);
         });
+
         return services;
     }
 }

@@ -114,7 +114,7 @@ public class UserService(UserManager<User> _userManager,
         _ = user ?? throw new UnauthorizedAccessException();
 
         var userClaims = await _userManager.GetClaimsAsync(user);
-        return userClaims.Any(c => c.Type == permission && c.Value == "enabled");
+        return userClaims.Any(c => c.Type == "Permission" && c.Value == permission);
     }
 
     public async Task<Guid> OnboardingAsync(OnboardingUserRequest request, CancellationToken cancellationToken)

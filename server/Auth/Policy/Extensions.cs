@@ -4,6 +4,12 @@ using Microsoft.Extensions.DependencyInjection.Extensions;
 
 namespace FastRecruiter.Api.Auth.Policy;
 
+
+public static class RequiredPermissionDefaults
+{
+    public const string PolicyName = "RequiredPermission";
+}
+
 public static class Extensions
 {
     public static AuthorizationPolicyBuilder RequireRequiredPermissions(this AuthorizationPolicyBuilder builder)
@@ -13,19 +19,15 @@ public static class Extensions
 
     public static AuthorizationBuilder AddRequiredPermissionPolicy(this AuthorizationBuilder builder)
     {
-        builder.AddPolicy("RequiredPermission", policy =>
+        builder.AddPolicy(RequiredPermissionDefaults.PolicyName, policy =>
         {
             policy.RequireAuthenticatedUser();
             policy.AddAuthenticationSchemes(JwtBearerDefaults.AuthenticationScheme);
             policy.RequireRequiredPermissions();
         });
 
-        builder.Services.TryAddEnumerable(ServiceDescriptor.Scoped<IAuthorizationHandler, HasPermissionAuthorizationHandler>());
+        builder.Services.TryAddEnumerable(ServiceDescriptor.Scoped<IAuthorizationHandler, RequiredPermissionAuthorizationHandler>());
 
         return builder;
     }
-
-
-
-
 }

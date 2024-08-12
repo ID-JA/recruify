@@ -3,6 +3,7 @@ using FastRecruiter.Api.Identity.Tokens;
 using FastRecruiter.Api.Identity.Users;
 using FastRecruiter.Api.Identity.Users.Features.Onboarding;
 using FastRecruiter.Api.Identity.Users.Features.RegisterUser;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 
 namespace FastRecruiter.Api.Controllers;
@@ -36,6 +37,7 @@ public class AuthController(IUserService _userService, ITokenService _tokenServi
 
 
     [HttpPost("register")]
+    [AllowAnonymous]
     public async Task<IActionResult> Register([FromBody] RegisterUserRequest request, CancellationToken cancellationToken)
     {
         var result = await _userService.RegisterAsync(request, cancellationToken);
@@ -43,7 +45,7 @@ public class AuthController(IUserService _userService, ITokenService _tokenServi
     }
 
     [HttpPost("onboarding")]
-    [HasPermission("Permissions.Company.Update")]
+    [RequiredPermission("Permissions.Company.Update")]
     public async Task<IActionResult> Onboarding([FromBody] OnboardingUserRequest request, CancellationToken cancellationToken)
     {
         return Ok(await _userService.OnboardingAsync(request, cancellationToken));
