@@ -25,6 +25,11 @@ public static class Extensions
             {
                 options.ClientId = configuration["Authentication:Google:ClientId"]!;
                 options.ClientSecret = configuration["Authentication:Google:ClientSecret"]!;
+            })
+            .AddMicrosoftAccount(microsoftOptions =>
+            {
+                microsoftOptions.ClientId = configuration["Authentication:Microsoft:ClientId"]!;
+                microsoftOptions.ClientSecret = configuration["Authentication:Microsoft:ClientSecret"]!;
             });
 
         services.AddAuthorizationBuilder().AddRequiredPermissionPolicy();

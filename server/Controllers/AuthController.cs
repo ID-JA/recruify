@@ -13,23 +13,33 @@ namespace FastRecruiter.Api.Controllers;
 public class AuthController(IUserService _userService, ITokenService _tokenService) : ControllerBase
 {
     [HttpGet("google-login")]
+    [AllowAnonymous]
     public IActionResult GoogleLogin()
     {
-        var redirectUrl = Url.Action(nameof(GoogleCallback), "Auth");
-        var challengeResult = _userService.HandleGoogleLogin(redirectUrl);
-        return challengeResult;
+        var redirectUrl = Url.Action(nameof(OAuthCallback), "Auth");
+        return _userService.SetupExternalAuthentication("Google",redirectUrl!);
     }
 
-    [HttpGet("google-callback")]
-    public async Task<IActionResult> GoogleCallback()
+    [HttpGet("microsoft-login")]
+    [AllowAnonymous]
+    public IActionResult MicrosftLogin()
     {
-        var user = await _userService.HandleGoogleCallbackAsync();
+        var redirectUrl = Url.Action(nameof(OAuthCallback), "Auth");
+        return _userService.SetupExternalAuthentication("Microsoft", redirectUrl!);
+    }
+
+    [HttpGet("oauth-callback")]
+    [AllowAnonymous]
+    public async Task<IActionResult> OAuthCallback()
+    {
+        var user = await _userService.HandleExternalAuthenticationCallbackAsync();
         var token = await _tokenService.GenerateTokenAsync(new TokenGenerationCommand(user.Email!, string.Empty, true), CancellationToken.None);
         return Ok(new { Tokens = token, RequiresOnboarding = true });
     }
 
 
     [HttpPost("login")]
+    [AllowAnonymous]
     public async Task<IActionResult> Login([FromBody] TokenGenerationCommand request, CancellationToken cancellationToken)
     {
         return Ok(await _tokenService.GenerateTokenAsync(request, cancellationToken));

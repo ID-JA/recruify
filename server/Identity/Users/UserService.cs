@@ -12,8 +12,8 @@ namespace FastRecruiter.Api.Identity.Users;
 public interface IUserService
 {
     Task<RegisterUserResponse> RegisterAsync(RegisterUserRequest request, CancellationToken cancellationToken);
-    Task<User?> HandleGoogleCallbackAsync();
-    ChallengeResult HandleGoogleLogin(string redirectUrl);
+    ChallengeResult SetupExternalAuthentication(string provider, string redirectUrl);
+    Task<User?> HandleExternalAuthenticationCallbackAsync();
     Task<bool> HasPermissionAsync(string userId, string permission, CancellationToken cancellationToken = default);
     Task<Guid> OnboardingAsync(OnboardingUserRequest request, CancellationToken cancellationToken);
 
@@ -26,13 +26,13 @@ public class UserService(UserManager<User> _userManager,
                          ICurrentUser _currentUser,
                          ITokenService _tokenService) : IUserService
 {
-    public ChallengeResult HandleGoogleLogin(string redirectUrl)
+    public ChallengeResult SetupExternalAuthentication(string provider, string redirectUrl)
     {
-        var properties = _signInManager.ConfigureExternalAuthenticationProperties("Google", redirectUrl);
-        return new ChallengeResult("Google", properties);
+        var properties = _signInManager.ConfigureExternalAuthenticationProperties(provider, redirectUrl);
+        return new ChallengeResult(provider, properties);
     }
 
-    public async Task<User?> HandleGoogleCallbackAsync()
+    public async Task<User?> HandleExternalAuthenticationCallbackAsync()
     {
         var info = await _signInManager.GetExternalLoginInfoAsync();
         if (info == null)
@@ -69,6 +69,7 @@ public class UserService(UserManager<User> _userManager,
             return user;
         }
     }
+
 
     public async Task<RegisterUserResponse> RegisterAsync(RegisterUserRequest request, CancellationToken cancellationToken)
     {
