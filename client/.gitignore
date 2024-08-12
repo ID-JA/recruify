@@ -4,8 +4,7 @@
 /node_modules
 /.pnp
 .pnp.js
-
-notes.md
+.yarn/install-state.gz
 
 # testing
 /coverage
@@ -25,18 +24,12 @@ notes.md
 npm-debug.log*
 yarn-debug.log*
 yarn-error.log*
-.pnpm-debug.log*
 
 # local env files
 .env*.local
-.env
-
-/prisma/data.db
-/prisma/data.db-journal
 
 # vercel
 .vercel
-.eslintcache
 
 # typescript
 *.tsbuildinfo
