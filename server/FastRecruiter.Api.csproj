@@ -8,6 +8,8 @@
   </PropertyGroup>
 
   <ItemGroup>
+    <PackageReference Include="Fluid.Core" Version="2.11.1" />
+    <PackageReference Include="MailKit" Version="4.7.1.1" />
     <PackageReference Include="MediatR" Version="12.4.0" />
     <PackageReference Include="Microsoft.AspNetCore.Authentication.Google" Version="8.0.8" />
     <PackageReference Include="Microsoft.AspNetCore.Authentication.JwtBearer" Version="8.0.8" />
@@ -19,6 +21,7 @@
       <IncludeAssets>runtime; build; native; contentfiles; analyzers; buildtransitive</IncludeAssets>
     </PackageReference>
     <PackageReference Include="Microsoft.EntityFrameworkCore.SqlServer" Version="8.0.8" />
+    <PackageReference Include="MimeKit" Version="4.7.1" />
     <PackageReference Include="Swashbuckle.AspNetCore" Version="6.7.0" />
   </ItemGroup>
 
@@ -27,6 +30,7 @@
     <Folder Include="Identity\Users\Features\ForgetPassword\" />
     <Folder Include="Identity\Users\Features\ResetPassword\" />
     <Folder Include="Identity\Users\Features\UpdateUser\" />
+    <Folder Include="Mail\EmailTemplates\" />
     <Folder Include="Services\Jobs\" />
     <Folder Include="Services\Companies\" />
     <Folder Include="Services\Candidates\" />

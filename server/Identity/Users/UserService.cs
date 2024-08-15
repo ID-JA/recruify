@@ -1,26 +1,30 @@
-﻿using FastRecruiter.Api.Data.Context;
+﻿using FastRecruiter.Api.Auth.Policy;
+using FastRecruiter.Api.Data.Context;
+using FastRecruiter.Api.Exceptions;
+using FastRecruiter.Api.Identity.Tokens;
 using FastRecruiter.Api.Identity.Users.Features.Onboarding;
-using FastRecruiter.Api.Models;
 using FastRecruiter.Api.Identity.Users.Features.RegisterUser;
+using FastRecruiter.Api.Mail;
+using FastRecruiter.Api.Models;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
-using System.Security.Claims;
-using FastRecruiter.Api.Identity.Tokens;
-using FastRecruiter.Api.Exceptions;
+using Microsoft.AspNetCore.WebUtilities;
 using Microsoft.EntityFrameworkCore;
-using FastRecruiter.Api.Auth.Policy;
-using System.Security;
+using System.Net;
+using System.Security.Claims;
+using System.Text;
 
 namespace FastRecruiter.Api.Identity.Users;
 
 public interface IUserService
 {
     Task AssignPermissionsToUserAsync(IReadOnlyList<AppPermission> permissions, User user);
-    Task<RegisterUserResponse> RegisterAsync(RegisterUserRequest request, CancellationToken cancellationToken);
+    Task<RegisterUserResponse> RegisterAsync(RegisterUserRequest request, string serverUrl, CancellationToken cancellationToken);
     ChallengeResult SetupExternalAuthentication(string provider, string redirectUrl);
     Task<User> HandleExternalAuthenticationCallbackAsync();
     Task<bool> HasPermissionAsync(string userId, string permission, CancellationToken cancellationToken = default);
     Task<Guid> OnboardingAsync(OnboardingUserRequest request, CancellationToken cancellationToken);
+    Task<bool> ConfirmEmailAsync(string userId, string confirmationToken, CancellationToken cancellationToken);
 
 }
 
@@ -29,7 +33,8 @@ public class UserService(UserManager<User> _userManager,
                          SignInManager<User> _signInManager,
                          ApplicationDbContext _dbContext,
                          ICurrentUser _currentUser,
-                         ITokenService _tokenService) : IUserService
+                         ITokenService _tokenService,
+                         IMailService _mailService) : IUserService
 {
 
     public async Task AssignPermissionsToUserAsync(IReadOnlyList<AppPermission> permissions, User user)
@@ -67,7 +72,7 @@ public class UserService(UserManager<User> _userManager,
         var info = await _signInManager.GetExternalLoginInfoAsync();
         if (info == null)
             throw new ValidationException("External login information not available.");
-        
+
         var result = await _signInManager.ExternalLoginSignInAsync(info.LoginProvider, info.ProviderKey, isPersistent: false);
 
         if (result.Succeeded)
@@ -88,7 +93,7 @@ public class UserService(UserManager<User> _userManager,
                 FirstName = firstName!,
                 LastName = lastName!,
                 EmailConfirmed = true,
-                ImageUrl = picture ?? $"https://api.dicebear.com/9.x/initials/svg?seed={firstName}{lastName}",
+                ImageUrl = picture ?? $"https://api.dicebear.com/9.x/initials/svg?seed={firstName}+{lastName}",
                 Role = "Owner",
             };
 
@@ -102,8 +107,7 @@ public class UserService(UserManager<User> _userManager,
         }
     }
 
-    
-    public async Task<RegisterUserResponse> RegisterAsync(RegisterUserRequest request, CancellationToken cancellationToken)
+    public async Task<RegisterUserResponse> RegisterAsync(RegisterUserRequest request, string serverUrl, CancellationToken cancellationToken)
     {
         var user = new User
         {
@@ -111,7 +115,8 @@ public class UserService(UserManager<User> _userManager,
             LastName = request.LastName,
             Email = request.Email,
             UserName = request.Email.Split('@')[0],
-            EmailConfirmed = true,
+            Role = "Owner",
+            ImageUrl =  $"https://api.dicebear.com/9.x/initials/svg?seed={request.FirstName}+{request.LastName}",
         };
 
         var result = await _userManager.CreateAsync(user, request.Password);
@@ -119,19 +124,17 @@ public class UserService(UserManager<User> _userManager,
         if (!result.Succeeded)
         {
             var errors = result.Errors.Select(error => error.Description).ToList();
-            throw new Exception("error while registering a new user");
+            throw new ValidationException("one or more validation errors occurred while registering a the user", errors);
         }
 
         await _userManager.AddToRoleAsync(user, "Owner");
 
         if (!string.IsNullOrEmpty(user.Email))
         {
-            //string emailVerificationUri = await GetEmailVerificationUriAsync(user, origin);
-            //var mailRequest = new MailRequest(
-            //    new Collection<string> { user.Email },
-            //    "Confirm Registration",
-            //    emailVerificationUri);
-            //jobService.Enqueue("email", () => mailService.SendAsync(mailRequest, CancellationToken.None));
+            string emailVerificationUri = await GetEmailVerificationUriAsync(user, serverUrl);
+            var emailBody = await _mailService.RenderMailTemplateAsync("email-confirmation", new { FullName = user.FirstName, ConfirmationLink = emailVerificationUri });
+            var mailRequest = new MailRequest([user.Email], "Confirm Registration", emailBody);
+            await _mailService.SendAsync(mailRequest, CancellationToken.None);
         }
 
         var tokens = await _tokenService.GenerateTokenAsync(new TokenGenerationCommand(user.Email, request.Password, false), cancellationToken);
@@ -148,7 +151,6 @@ public class UserService(UserManager<User> _userManager,
             .AnyAsync(up => up.UserId == user.Id && up.Permission == permission && up.IsAllowed, cancellationToken);
     }
 
-
     public async Task<Guid> OnboardingAsync(OnboardingUserRequest request, CancellationToken cancellationToken)
     {
         var company = new Company
@@ -161,7 +163,7 @@ public class UserService(UserManager<User> _userManager,
 
         var user = await _userManager.FindByIdAsync(_currentUser.GetUserId().ToString());
 
-        if(user is not null)
+        if (user is not null)
         {
             user.CompanyId = company.Id;
             user.Role = "Owner";
@@ -171,6 +173,31 @@ public class UserService(UserManager<User> _userManager,
 
         return company.Id;
     }
+
+    public async Task<bool> ConfirmEmailAsync(string userId, string confirmationToken, CancellationToken cancellationToken)
+    {
+        var user = await _userManager.FindByIdAsync(userId) ?? throw new NotFoundException("User not found.");
+
+        var result = await _userManager.ConfirmEmailAsync(user, confirmationToken);
+
+        if (!result.Succeeded)
+        {
+            throw new ValidationException("Account Confirmation Failed", result.Errors.Select(e => e.Description));
+        }
+
+        return true;
+    }
+
+    private async Task<string> GetEmailVerificationUriAsync(User user, string serverUrl)
+    {
+        string toekn = await _userManager.GenerateEmailConfirmationTokenAsync(user);
+        const string route = "api/auth/confirm-email";
+        var endpointUri = new Uri(string.Concat($"{serverUrl}/", route));
+        string verificationUri = QueryHelpers.AddQueryString(endpointUri.ToString(), "userId", user.Id.ToString());
+        verificationUri = QueryHelpers.AddQueryString(verificationUri, "token", toekn);
+        return verificationUri;
+    }
+
 }
 
 

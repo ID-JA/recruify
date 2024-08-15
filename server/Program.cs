@@ -18,6 +18,7 @@ builder.Services.AddSwaggerGen();
 builder.Services.ConfigureDatabase(builder.Configuration);
 builder.Services.ConfigureIdentity();
 builder.Services.ConfigureAuth(builder.Configuration);
+builder.Services.ConfigureMailing();
 
 var app = builder.Build();
 

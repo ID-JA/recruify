@@ -17,7 +17,7 @@ public class AuthController(IUserService _userService, ITokenService _tokenServi
     public IActionResult GoogleLogin()
     {
         var redirectUrl = Url.Action(nameof(OAuthCallback), "Auth");
-        return _userService.SetupExternalAuthentication("Google",redirectUrl!);
+        return _userService.SetupExternalAuthentication("Google", redirectUrl!);
     }
 
     [HttpGet("microsoft-login")]
@@ -47,7 +47,8 @@ public class AuthController(IUserService _userService, ITokenService _tokenServi
     [HttpPost("register")]
     public async Task<IActionResult> Register([FromBody] RegisterUserRequest request, CancellationToken cancellationToken)
     {
-        var result = await _userService.RegisterAsync(request, cancellationToken);
+        var serverUrl = $"{Request.Scheme}://{Request.Host}{Request.PathBase}";
+        var result = await _userService.RegisterAsync(request, serverUrl, cancellationToken);
         return Ok(result);
     }
 
@@ -56,5 +57,13 @@ public class AuthController(IUserService _userService, ITokenService _tokenServi
     public async Task<IActionResult> Onboarding([FromBody] OnboardingUserRequest request, CancellationToken cancellationToken)
     {
         return Ok(await _userService.OnboardingAsync(request, cancellationToken));
+    }
+
+    [HttpGet("confirm-email")]
+    public async Task<IActionResult> ConfirmEmail([FromQuery] string userId, [FromQuery] string token, CancellationToken cancellationToken)
+    {
+        var result = await _userService.ConfirmEmailAsync(userId, token, cancellationToken);
+        // TODO : Redirect to Success Confirmation page 
+        return result ? Redirect("https://google.com") : BadRequest("Account Confirmation Failed");
     }
 }
