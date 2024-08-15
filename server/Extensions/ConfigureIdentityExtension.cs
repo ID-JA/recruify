@@ -1,13 +1,13 @@
-﻿using Microsoft.AspNetCore.Identity;
-using FastRecruiter.Api.Models;
+﻿using FastRecruiter.Api.Auth;
 using FastRecruiter.Api.Data.Context;
-using FastRecruiter.Api.Auth;
-using FastRecruiter.Api.Identity.Users;
 using FastRecruiter.Api.Identity.Tokens;
+using FastRecruiter.Api.Identity.Users;
+using FastRecruiter.Api.Models;
+using Microsoft.AspNetCore.Identity;
 
-namespace FastRecruiter.Api.Identity;
+namespace FastRecruiter.Api.Extensions;
 
-public static class Extensions
+public static class ConfigureIdentityExtension
 {
     public static IServiceCollection ConfigureIdentity(this IServiceCollection services)
     {

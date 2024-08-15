@@ -1,5 +1,6 @@
 ﻿using FastRecruiter.Api.Auth.Policy;
 using FastRecruiter.Api.Data.Context;
+using FastRecruiter.Api.Identity.Users;
 using FastRecruiter.Api.Models;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.EntityFrameworkCore;
@@ -13,93 +14,31 @@ public interface IDatabaseInitializer
 }
 
 
-public class DatabaseInitializer(ApplicationDbContext dbContext, RoleManager<Role> _roleManager, UserManager<User> _userManager) : IDatabaseInitializer
+public class DatabaseInitializer(RoleManager<Role> _roleManager,
+                                 UserManager<User> _userManager,
+                                 IUserService _userService) : IDatabaseInitializer
 {
     public async Task SeedAsync(CancellationToken cancellationToken)
     {
         await SeedRolesAsync();
-        await SeedAdminUserAsync();
+        await SeedDetaulOwnerUserAsync();
     }
 
     private async Task SeedRolesAsync()
     {
-        string[] defaultRoles = ["Admin", "Member"];
+        string[] defaultRoles = ["Owner", "Member"];
         foreach (string roleName in defaultRoles)
         {
             if (await _roleManager.Roles.SingleOrDefaultAsync(r => r.Name == roleName)
                 is not Role role)
             {
-                // create role
                 role = new Role(roleName);
                 await _roleManager.CreateAsync(role);
             }
-
-            // Assign permissions
-            if (roleName == "Admin")
-            {
-                await AssignPermissionsToRoleAsync(AppPermissions.Admin, role);
-            }
-            else if (roleName == "Member")
-            {
-                await AssignPermissionsToRoleAsync(AppPermissions.Member, role);
-            }
-
         }
     }
 
-    private async Task AssignPermissionsToRoleAsync(IReadOnlyList<AppPermission> permissions, Role role)
-    {
-        var currentClaims = await _roleManager.GetClaimsAsync(role);
-        var newClaims = permissions
-            .Where(permission => !currentClaims.Any(c => c.Type == "permission" && c.Value == permission.Name))
-            .Select(permission => new RoleClaim
-            {
-                RoleId = role.Id,
-                ClaimType = "permission",
-                ClaimValue = permission.Name,
-            })
-
-        .ToList();
-
-        foreach (var claim in newClaims)
-        {
-            await dbContext.RoleClaims.AddAsync(claim);
-        }
-
-        if (newClaims.Count != 0)
-        {
-            await dbContext.SaveChangesAsync();
-        }
-
-    }
-
-    private async Task AssignPermissionsToUserAsync(IReadOnlyList<AppPermission> permissions, User user)
-    {
-        var currentClaims = await _userManager.GetClaimsAsync(user);
-        var newClaims = permissions
-            .Where(permission => !currentClaims.Any(c => c.Value == permission.Name))
-            .Select(permission => new UserClaim
-            {
-                UserId = user.Id,
-                ClaimType = "Permission",
-                ClaimValue = permission.Name,
-            })
-
-        .ToList();
-
-        foreach (var claim in newClaims)
-        {
-            await dbContext.UserClaims.AddAsync(claim);
-        }
-
-        if (newClaims.Count != 0)
-        {
-            await dbContext.SaveChangesAsync();
-        }
-
-    }
-
-    private async Task SeedAdminUserAsync()
+    private async Task SeedDetaulOwnerUserAsync()
     {
         if (await _userManager.Users.FirstOrDefaultAsync(u => u.Email == "default.owner@gmail.com") is not User adminUser)
         {
@@ -107,24 +46,25 @@ public class DatabaseInitializer(ApplicationDbContext dbContext, RoleManager<Rol
             adminUser = new User
             {
                 FirstName = "Default",
-                LastName = "Admin",
+                LastName = "Owner",
                 Email = "default.owner@gmail.com",
                 UserName = adminUserName,
                 EmailConfirmed = true,
                 PhoneNumberConfirmed = true,
+                Role = "Owner",
                 NormalizedEmail = "default.owner@gmail.com",
                 NormalizedUserName = adminUserName.ToUpperInvariant(),
             };
 
             var password = new PasswordHasher<User>();
-            adminUser.PasswordHash = password.HashPassword(adminUser, "Admin123@");
+            adminUser.PasswordHash = password.HashPassword(adminUser, "Owner123@");
             await _userManager.CreateAsync(adminUser);
         }
 
-        if (!await _userManager.IsInRoleAsync(adminUser, "Admin"))
+        if (!await _userManager.IsInRoleAsync(adminUser, "Owner"))
         {
-            await _userManager.AddToRoleAsync(adminUser, "Admin");
-            await AssignPermissionsToUserAsync(AppPermissions.Admin, adminUser);
+            await _userManager.AddToRoleAsync(adminUser, "Owner");
+            await _userService.AssignPermissionsToUserAsync(AppPermissions.Owner, adminUser);
         }
     }
 }

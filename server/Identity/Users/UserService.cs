@@ -6,14 +6,19 @@ using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
 using System.Security.Claims;
 using FastRecruiter.Api.Identity.Tokens;
+using FastRecruiter.Api.Exceptions;
+using Microsoft.EntityFrameworkCore;
+using FastRecruiter.Api.Auth.Policy;
+using System.Security;
 
 namespace FastRecruiter.Api.Identity.Users;
 
 public interface IUserService
 {
+    Task AssignPermissionsToUserAsync(IReadOnlyList<AppPermission> permissions, User user);
     Task<RegisterUserResponse> RegisterAsync(RegisterUserRequest request, CancellationToken cancellationToken);
     ChallengeResult SetupExternalAuthentication(string provider, string redirectUrl);
-    Task<User?> HandleExternalAuthenticationCallbackAsync();
+    Task<User> HandleExternalAuthenticationCallbackAsync();
     Task<bool> HasPermissionAsync(string userId, string permission, CancellationToken cancellationToken = default);
     Task<Guid> OnboardingAsync(OnboardingUserRequest request, CancellationToken cancellationToken);
 
@@ -26,31 +31,56 @@ public class UserService(UserManager<User> _userManager,
                          ICurrentUser _currentUser,
                          ITokenService _tokenService) : IUserService
 {
+
+    public async Task AssignPermissionsToUserAsync(IReadOnlyList<AppPermission> permissions, User user)
+    {
+        var existingPermissions = await _dbContext.UserPermissions
+            .Where(up => up.UserId == user.Id)
+            .Select(up => up.Permission)
+            .ToListAsync();
+
+        var newUserPermissions = permissions
+            .Where(permission => !existingPermissions.Contains(permission.Name))
+            .Select(permission => new UserPermission
+            {
+                UserId = user.Id,
+                Permission = permission.Name,
+                IsAllowed = true,
+            })
+            .ToList();
+
+        if (newUserPermissions.Count > 0)
+        {
+            await _dbContext.UserPermissions.AddRangeAsync(newUserPermissions);
+            await _dbContext.SaveChangesAsync();
+        }
+    }
+
     public ChallengeResult SetupExternalAuthentication(string provider, string redirectUrl)
     {
         var properties = _signInManager.ConfigureExternalAuthenticationProperties(provider, redirectUrl);
         return new ChallengeResult(provider, properties);
     }
 
-    public async Task<User?> HandleExternalAuthenticationCallbackAsync()
+    public async Task<User> HandleExternalAuthenticationCallbackAsync()
     {
         var info = await _signInManager.GetExternalLoginInfoAsync();
         if (info == null)
-            throw new Exception("External login information not available.");
-
+            throw new ValidationException("External login information not available.");
+        
         var result = await _signInManager.ExternalLoginSignInAsync(info.LoginProvider, info.ProviderKey, isPersistent: false);
 
         if (result.Succeeded)
         {
             var user = await _userManager.FindByEmailAsync(info.Principal.FindFirstValue(ClaimTypes.Email)!);
-            return user;
+            return user is null ? throw new NotFoundException("User not found") : user;
         }
         else
         {
             var email = info.Principal.FindFirstValue(ClaimTypes.Email);
             var firstName = info.Principal.FindFirstValue(ClaimTypes.GivenName);
             var lastName = info.Principal.FindFirstValue(ClaimTypes.Surname);
-
+            var picture = info.Principal.FindFirstValue("picture");
             var user = new User
             {
                 UserName = email,
@@ -58,11 +88,13 @@ public class UserService(UserManager<User> _userManager,
                 FirstName = firstName!,
                 LastName = lastName!,
                 EmailConfirmed = true,
+                ImageUrl = picture ?? $"https://api.dicebear.com/9.x/initials/svg?seed={firstName}{lastName}",
+                Role = "Owner",
             };
 
             var identityResult = await _userManager.CreateAsync(user);
             if (!identityResult.Succeeded)
-                throw new Exception(string.Join(", ", identityResult.Errors.Select(e => e.Description)));
+                throw new ValidationException("one or more validation errors occurred while creating user account", identityResult.Errors.Select(e => e.Description));
 
             await _userManager.AddLoginAsync(user, info);
 
@@ -70,7 +102,7 @@ public class UserService(UserManager<User> _userManager,
         }
     }
 
-
+    
     public async Task<RegisterUserResponse> RegisterAsync(RegisterUserRequest request, CancellationToken cancellationToken)
     {
         var user = new User
@@ -90,7 +122,7 @@ public class UserService(UserManager<User> _userManager,
             throw new Exception("error while registering a new user");
         }
 
-        await _userManager.AddToRoleAsync(user, "Admin"); // TODO: Assign user to role when the company is being created
+        await _userManager.AddToRoleAsync(user, "Owner");
 
         if (!string.IsNullOrEmpty(user.Email))
         {
@@ -107,16 +139,15 @@ public class UserService(UserManager<User> _userManager,
         return new RegisterUserResponse(user.Id, tokens);
     }
 
-    // TODO: FIX THIS
     public async Task<bool> HasPermissionAsync(string userId, string permission, CancellationToken cancellationToken = default)
     {
-        var user = await _userManager.FindByIdAsync(userId);
+        var user = await _userManager.FindByIdAsync(userId)
+                   ?? throw new UnauthorizedAccessException();
 
-        _ = user ?? throw new UnauthorizedAccessException();
-
-        var userClaims = await _userManager.GetClaimsAsync(user);
-        return userClaims.Any(c => c.Type == "Permission" && c.Value == permission);
+        return await _dbContext.UserPermissions
+            .AnyAsync(up => up.UserId == user.Id && up.Permission == permission && up.IsAllowed, cancellationToken);
     }
+
 
     public async Task<Guid> OnboardingAsync(OnboardingUserRequest request, CancellationToken cancellationToken)
     {
@@ -128,18 +159,15 @@ public class UserService(UserManager<User> _userManager,
         _dbContext.Companies.Add(company);
         await _dbContext.SaveChangesAsync(cancellationToken);
 
-        var userId = _currentUser.GetUserId();
+        var user = await _userManager.FindByIdAsync(_currentUser.GetUserId().ToString());
 
-        var assignUserToCompany = new UserCompany
+        if(user is not null)
         {
-            CompanyId = company.Id,
-            AssignedAt = DateTime.UtcNow,
-            IsOwner = true,
-            UserId = userId
-        };
-
-        _dbContext.UserCompanies.Add(assignUserToCompany);
-        await _dbContext.SaveChangesAsync(cancellationToken);
+            user.CompanyId = company.Id;
+            user.Role = "Owner";
+            _dbContext.Users.Update(user);
+            await _dbContext.SaveChangesAsync(cancellationToken);
+        }
 
         return company.Id;
     }

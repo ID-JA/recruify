@@ -25,6 +25,8 @@ public class CurrentUser : ICurrentUser, ICurrentUserInitializer
 
     public string? Name => _user?.Identity?.Name;
 
+   
+
     public IEnumerable<Claim>? GetUserClaims()
     {
         return _user?.Claims;

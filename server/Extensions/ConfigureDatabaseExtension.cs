@@ -1,7 +1,18 @@
-﻿namespace FastRecruiter.Api.Data;
+﻿using FastRecruiter.Api.Data;
+using FastRecruiter.Api.Data.Context;
+using Microsoft.EntityFrameworkCore;
 
-public static class Extensions
+namespace FastRecruiter.Api.Extensions;
+
+public static class ConfigureDatabaseExtension
 {
+    public static IServiceCollection ConfigureDatabase(this IServiceCollection services, IConfiguration configuration)
+    {
+        services.AddDbContext<ApplicationDbContext>(options => options.UseSqlServer(configuration["ConnectionStrings:DefaultConnection"]));
+        services.AddScoped<IDatabaseInitializer, DatabaseInitializer>();
+
+        return services;
+    }
     private static IApplicationBuilder SetupDatabases(this IApplicationBuilder app)
     {
         using var scope = app.ApplicationServices.CreateScope();

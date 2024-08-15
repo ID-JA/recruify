@@ -20,8 +20,7 @@ public static class AppPermissions
         new("Update Company", AppAction.Update, AppResource.Company),
     };
 
-    public static IReadOnlyList<AppPermission> Admin { get; } = new ReadOnlyCollection<AppPermission>(allPermissions);
-    public static IReadOnlyList<AppPermission> Member { get; } = new ReadOnlyCollection<AppPermission>(allPermissions.Where(p => p.IsBasic).ToArray());
+    public static IReadOnlyList<AppPermission> Owner { get; } = new ReadOnlyCollection<AppPermission>(allPermissions);
 }
 
 public record AppPermission(string Description, string Action, string Resource, bool IsBasic = false, bool IsRoot = false)

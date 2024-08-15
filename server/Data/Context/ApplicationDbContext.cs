@@ -15,7 +15,8 @@ public class ApplicationDbContext : IdentityDbContext<User, Role, Guid>, IDbCont
     public DbSet<User> ApplicationUsers => Set<User>();
     public DbSet<Company> Companies => Set<Company>();
     public DbSet<Location> Locations => Set<Location>();
-    public DbSet<UserCompany> UserCompanies => Set<UserCompany>();
+    public DbSet<CompanyInvite> CompanyInvites => Set<CompanyInvite>();
+    public DbSet<UserPermission> UserPermissions => Set<UserPermission>();
 
 
 

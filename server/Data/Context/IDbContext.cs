@@ -7,6 +7,7 @@ public interface IDbContext
 {
     public DbSet<User> ApplicationUsers { get; }
     public DbSet<Company> Companies { get; }
-    public DbSet<UserCompany> UserCompanies { get; }
+    public DbSet<CompanyInvite> CompanyInvites { get; }
     public DbSet<Location> Locations { get; }
+    public DbSet<UserPermission> UserPermissions { get; }
 }

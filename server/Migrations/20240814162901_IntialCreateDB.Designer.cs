@@ -12,7 +12,7 @@ using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 namespace FastRecruiter.Api.Migrations
 {
     [DbContext(typeof(ApplicationDbContext))]
-    [Migration("20240811173943_IntialCreateDB")]
+    [Migration("20240814162901_IntialCreateDB")]
     partial class IntialCreateDB
     {
         /// <inheritdoc />
@@ -20,7 +20,7 @@ namespace FastRecruiter.Api.Migrations
         {
 #pragma warning disable 612, 618
             modelBuilder
-                .HasAnnotation("ProductVersion", "8.0.7")
+                .HasAnnotation("ProductVersion", "8.0.8")
                 .HasAnnotation("Relational:MaxIdentifierLength", 128);
 
             SqlServerModelBuilderExtensions.UseIdentityColumns(modelBuilder);
@@ -38,6 +38,35 @@ namespace FastRecruiter.Api.Migrations
                     b.HasKey("Id");
 
                     b.ToTable("Companies");
+                });
+
+            modelBuilder.Entity("FastRecruiter.Api.Models.CompanyInvite", b =>
+                {
+                    b.Property<Guid>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("uniqueidentifier");
+
+                    b.Property<Guid>("CompanyId")
+                        .HasColumnType("uniqueidentifier");
+
+                    b.Property<DateTime>("CreatedAt")
+                        .HasColumnType("datetime2");
+
+                    b.Property<string>("Email")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(450)");
+
+                    b.Property<DateTime>("ExpireAt")
+                        .HasColumnType("datetime2");
+
+                    b.HasKey("Id");
+
+                    b.HasIndex("CompanyId");
+
+                    b.HasIndex("Email")
+                        .IsUnique();
+
+                    b.ToTable("CompanyInvites");
                 });
 
             modelBuilder.Entity("FastRecruiter.Api.Models.Location", b =>
@@ -123,6 +152,9 @@ namespace FastRecruiter.Api.Migrations
                     b.Property<int>("AccessFailedCount")
                         .HasColumnType("int");
 
+                    b.Property<Guid?>("CompanyId")
+                        .HasColumnType("uniqueidentifier");
+
                     b.Property<string>("ConcurrencyStamp")
                         .IsConcurrencyToken()
                         .HasColumnType("nvarchar(max)");
@@ -174,6 +206,10 @@ namespace FastRecruiter.Api.Migrations
                     b.Property<DateTime>("RefreshTokenExpiryTime")
                         .HasColumnType("datetime2");
 
+                    b.Property<string>("Role")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(max)");
+
                     b.Property<string>("SecurityStamp")
                         .HasColumnType("nvarchar(max)");
 
@@ -186,6 +222,8 @@ namespace FastRecruiter.Api.Migrations
 
                     b.HasKey("Id");
 
+                    b.HasIndex("CompanyId");
+
                     b.HasIndex("NormalizedEmail")
                         .HasDatabaseName("EmailIndex");
 
@@ -197,25 +235,27 @@ namespace FastRecruiter.Api.Migrations
                     b.ToTable("AspNetUsers", (string)null);
                 });
 
-            modelBuilder.Entity("FastRecruiter.Api.Models.UserCompany", b =>
+            modelBuilder.Entity("FastRecruiter.Api.Models.UserPermission", b =>
                 {
+                    b.Property<Guid>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("uniqueidentifier");
+
+                    b.Property<bool>("IsAllowed")
+                        .HasColumnType("bit");
+
+                    b.Property<string>("Permission")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(max)");
+
                     b.Property<Guid>("UserId")
                         .HasColumnType("uniqueidentifier");
 
-                    b.Property<Guid>("CompanyId")
-                        .HasColumnType("uniqueidentifier");
+                    b.HasKey("Id");
 
-                    b.Property<DateTime>("AssignedAt")
-                        .HasColumnType("datetime2");
+                    b.HasIndex("UserId");
 
-                    b.Property<bool>("IsOwner")
-                        .HasColumnType("bit");
-
-                    b.HasKey("UserId", "CompanyId");
-
-                    b.HasIndex("CompanyId");
-
-                    b.ToTable("UserCompanies");
+                    b.ToTable("UserPermissions");
                 });
 
             modelBuilder.Entity("Microsoft.AspNetCore.Identity.IdentityRoleClaim<System.Guid>", b =>
@@ -321,6 +361,17 @@ namespace FastRecruiter.Api.Migrations
                     b.ToTable("AspNetUserTokens", (string)null);
                 });
 
+            modelBuilder.Entity("FastRecruiter.Api.Models.CompanyInvite", b =>
+                {
+                    b.HasOne("FastRecruiter.Api.Models.Company", "Company")
+                        .WithMany("CompanyInvites")
+                        .HasForeignKey("CompanyId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.Navigation("Company");
+                });
+
             modelBuilder.Entity("FastRecruiter.Api.Models.Location", b =>
                 {
                     b.HasOne("FastRecruiter.Api.Models.Company", "Company")
@@ -332,21 +383,22 @@ namespace FastRecruiter.Api.Migrations
                     b.Navigation("Company");
                 });
 
-            modelBuilder.Entity("FastRecruiter.Api.Models.UserCompany", b =>
+            modelBuilder.Entity("FastRecruiter.Api.Models.User", b =>
                 {
                     b.HasOne("FastRecruiter.Api.Models.Company", "Company")
-                        .WithMany("UserCompanyAssignments")
-                        .HasForeignKey("CompanyId")
-                        .OnDelete(DeleteBehavior.Cascade)
-                        .IsRequired();
+                        .WithMany("Users")
+                        .HasForeignKey("CompanyId");
 
+                    b.Navigation("Company");
+                });
+
+            modelBuilder.Entity("FastRecruiter.Api.Models.UserPermission", b =>
+                {
                     b.HasOne("FastRecruiter.Api.Models.User", "User")
-                        .WithMany("UserCompanyAssignments")
+                        .WithMany("UserPermissions")
                         .HasForeignKey("UserId")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
-
-                    b.Navigation("Company");
 
                     b.Navigation("User");
                 });
@@ -404,14 +456,16 @@ namespace FastRecruiter.Api.Migrations
 
             modelBuilder.Entity("FastRecruiter.Api.Models.Company", b =>
                 {
+                    b.Navigation("CompanyInvites");
+
                     b.Navigation("Locations");
 
-                    b.Navigation("UserCompanyAssignments");
+                    b.Navigation("Users");
                 });
 
             modelBuilder.Entity("FastRecruiter.Api.Models.User", b =>
                 {
-                    b.Navigation("UserCompanyAssignments");
+                    b.Navigation("UserPermissions");
                 });
 #pragma warning restore 612, 618
         }
