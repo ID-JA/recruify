@@ -1,7 +1,3 @@
 export default function DashboardPage() {
-  return (
-    <div className="flex h-full w-full items-center justify-center">
-      Dashboard, Welcome
-    </div>
-  )
+  return <div className="flex h-full w-full items-center justify-center"></div>
 }

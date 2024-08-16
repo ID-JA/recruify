@@ -14,6 +14,7 @@ builder.Services.AddProblemDetails(options =>
 builder.Services.AddControllers();
 builder.Services.AddEndpointsApiExplorer();
 builder.Services.AddSwaggerGen();
+builder.Services.AddCorsPolicy(builder.Configuration);
 
 builder.Services.ConfigureDatabase(builder.Configuration);
 builder.Services.ConfigureIdentity();
@@ -24,12 +25,14 @@ var app = builder.Build();
 
 
 
+
 if (app.Environment.IsDevelopment())
 {
     app.UseSwagger();
     app.UseSwaggerUI();
 }
 app.UseExceptionHandler();
+app.UseCorsPolicy();
 app.UseDatabaseSeeder();
 app.UseHttpsRedirection();
 app.UseAuthentication();
