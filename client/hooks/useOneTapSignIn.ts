@@ -20,7 +20,7 @@ const useOneTapSignin = (opt?: OneTapSigninOptions) => {
             setIsLoading(true)
             try {
               const res = await axios.post(
-                `${process.env.NEXT_PUBLIC_FASTRECUITER_BACKEND_URL}/api/auth/google-ontap-signin`,
+                `${process.env.NEXT_PUBLIC_APP_BACKEND_URL}/api/auth/google-ontap-signin`,
                 {
                   credential: response.credential,
                 }

@@ -54,6 +54,7 @@ public class DatabaseInitializer(RoleManager<Role> _roleManager,
                 Role = "Owner",
                 NormalizedEmail = "default.owner@gmail.com",
                 NormalizedUserName = adminUserName.ToUpperInvariant(),
+                CreatedAt = DateTime.UtcNow,
             };
 
             var password = new PasswordHasher<User>();

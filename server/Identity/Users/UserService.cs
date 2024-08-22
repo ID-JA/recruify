@@ -1,18 +1,18 @@
-﻿using FastRecruiter.Api.Auth.Policy;
+﻿using AutoMapper;
+using FastRecruiter.Api.Auth.Policy;
 using FastRecruiter.Api.Data.Context;
 using FastRecruiter.Api.Exceptions;
 using FastRecruiter.Api.Identity.Tokens;
 using FastRecruiter.Api.Identity.Users.Features.Onboarding;
 using FastRecruiter.Api.Identity.Users.Features.RegisterUser;
+using FastRecruiter.Api.Identity.Users.Features.UserInfo;
 using FastRecruiter.Api.Mail;
 using FastRecruiter.Api.Models;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.WebUtilities;
 using Microsoft.EntityFrameworkCore;
-using System.Net;
 using System.Security.Claims;
-using System.Text;
 
 namespace FastRecruiter.Api.Identity.Users;
 
@@ -25,6 +25,8 @@ public interface IUserService
     Task<bool> HasPermissionAsync(string userId, string permission, CancellationToken cancellationToken = default);
     Task<Guid> OnboardingAsync(OnboardingUserRequest request, CancellationToken cancellationToken);
     Task<bool> ConfirmEmailAsync(string userId, string confirmationToken, CancellationToken cancellationToken);
+    Task<UserDto?> GetUserInfo();
+
 
 }
 
@@ -34,6 +36,7 @@ public class UserService(UserManager<User> _userManager,
                          ApplicationDbContext _dbContext,
                          ICurrentUser _currentUser,
                          ITokenService _tokenService,
+                         IMapper _mapper,
                          IMailService _mailService) : IUserService
 {
 
@@ -95,6 +98,7 @@ public class UserService(UserManager<User> _userManager,
                 EmailConfirmed = true,
                 ImageUrl = picture ?? $"https://api.dicebear.com/9.x/initials/svg?seed={firstName}+{lastName}",
                 Role = "Owner",
+                CreatedAt = DateTime.UtcNow,
             };
 
             var identityResult = await _userManager.CreateAsync(user);
@@ -117,6 +121,7 @@ public class UserService(UserManager<User> _userManager,
             UserName = request.Email.Split('@')[0],
             Role = "Owner",
             ImageUrl =  $"https://api.dicebear.com/9.x/initials/svg?seed={request.FirstName}+{request.LastName}",
+            CreatedAt = DateTime.UtcNow,
         };
 
         var result = await _userManager.CreateAsync(user, request.Password);
@@ -198,6 +203,13 @@ public class UserService(UserManager<User> _userManager,
         return verificationUri;
     }
 
+    public async Task<UserDto?> GetUserInfo()
+    {
+        var userId = _currentUser.GetUserId();
+        var userInfo = await _userManager.FindByIdAsync(userId.ToString());
+
+        return _mapper.Map<User,UserDto>(userInfo);
+    }
 }
 
 

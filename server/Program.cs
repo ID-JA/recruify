@@ -1,6 +1,7 @@
 using FastRecruiter.Api.Auth;
 using FastRecruiter.Api.Exceptions;
 using FastRecruiter.Api.Extensions;
+using FastRecruiter.Api.Helpers;
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -20,6 +21,7 @@ builder.Services.ConfigureDatabase(builder.Configuration);
 builder.Services.ConfigureIdentity();
 builder.Services.ConfigureAuth(builder.Configuration);
 builder.Services.ConfigureMailing();
+builder.Services.AddAutoMapper(typeof(MappingProfiles));
 
 var app = builder.Build();
 
@@ -36,11 +38,11 @@ app.UseCorsPolicy();
 app.UseDatabaseSeeder();
 app.UseHttpsRedirection();
 app.UseAuthentication();
+app.UseMiddleware<CurrentUserMiddleware>();
 app.UseAuthorization();
 
 app.MapControllers();
 
-app.UseMiddleware<CurrentUserMiddleware>();
 
 
 app.Run();

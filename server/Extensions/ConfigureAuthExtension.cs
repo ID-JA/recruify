@@ -43,8 +43,6 @@ public static class ConfigureAuthExtension
             {
                 microsoftOptions.ClientId = configuration["Authentication:Microsoft:ClientId"]!;
                 microsoftOptions.ClientSecret = configuration["Authentication:Microsoft:ClientSecret"]!;
-                microsoftOptions.Scope.Add("https://graph.microsoft.com/user.readbasic.all");
-                //microsoftOptions.Scope.Add("https://graph.microsoft.com/.default");
             });
 
         services.AddAuthorizationBuilder().AddRequiredPermissionPolicy();

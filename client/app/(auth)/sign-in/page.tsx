@@ -1,5 +1,10 @@
-import Link from "next/link"
+"use client"
 
+import { useEffect, useState } from "react"
+import Link from "next/link"
+import { signIn } from "next-auth/react"
+
+import { http } from "@/lib/utils"
 import { Button } from "@/components/ui/button"
 import {
   Card,
@@ -25,11 +30,32 @@ function SignInPage() {
         </CardHeader>
         <CardContent className="grid gap-4">
           <div className="space-y-4">
-            <Button className="w-full text-slate-600" variant="outline">
+            <Button
+              className="w-full text-slate-600"
+              variant="outline"
+              onClick={() => {
+                const baseUrl = `${process.env.NEXT_PUBLIC_APP_BACKEND_URL}/api/auth/account/external-login`
+                const params = new URLSearchParams({
+                  provider: "Google",
+                  returnUrl: encodeURIComponent(
+                    "http://localhost:3000/sign-in"
+                  ),
+                })
+
+                window.location.href = `${baseUrl}?${params.toString()}`
+              }}
+            >
               <Icons.google className="mr-2 h-4 w-4" />
               Login with Google
             </Button>
-            <Button className="w-full text-slate-600" variant="outline">
+
+            <Button
+              className="w-full text-slate-600"
+              variant="outline"
+              onClick={async () => {
+                await http.get("/api/users  /protected")
+              }}
+            >
               <Icons.microsoft className="mr-2 h-4 w-4" />
               Login with Microsoft
             </Button>

@@ -1,5 +1,6 @@
 ﻿using FastRecruiter.Api.Identity.Users;
 using Microsoft.AspNetCore.Authorization;
+using Microsoft.AspNetCore.Http;
 
 namespace FastRecruiter.Api.Auth.Policy;
 
@@ -13,6 +14,12 @@ public sealed class RequiredPermissionAuthorizationHandler(IUserService userServ
             Endpoint ep => ep,
             _ => null,
         };
+        var userId = context.User?.GetUserId();
+        if (userId is null)
+        {
+            context.Fail(); 
+            return;
+        }
 
         var requiredPermissions = endpoint?.Metadata.GetMetadata<IRequiredPermissionMetadata>()?.RequiredPermissions;
         if (requiredPermissions == null)
@@ -20,9 +27,14 @@ public sealed class RequiredPermissionAuthorizationHandler(IUserService userServ
             context.Succeed(requirement);
             return;
         }
-        if (context.User?.GetUserId() is { } userId && await userService.HasPermissionAsync(userId, requiredPermissions.First()))
+
+        if (await userService.HasPermissionAsync(userId, requiredPermissions.First()))
         {
             context.Succeed(requirement);
+        }
+        else
+        {
+            context.Fail(); 
         }
     }
 }

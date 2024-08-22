@@ -1,5 +1,6 @@
 using System.Security.Claims;
 using System.Text;
+using FastRecruiter.Api.Exceptions;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.Extensions.Options;
 using Microsoft.IdentityModel.Tokens;
@@ -32,7 +33,7 @@ public class ConfigureJwtBearerOptions : IConfigureNamedOptions<JwtBearerOptions
             ValidIssuer = "http://localhost:3000",
             ValidateIssuer = true,
             ValidateLifetime = true,
-            ValidAudience = "fastrecruiter",
+            ValidAudience = "http://localhost:3000",
             ValidateAudience = true,
             RoleClaimType = ClaimTypes.Role,
             ClockSkew = TimeSpan.Zero
@@ -44,20 +45,18 @@ public class ConfigureJwtBearerOptions : IConfigureNamedOptions<JwtBearerOptions
                 context.HandleResponse();
                 if (!context.Response.HasStarted)
                 {
-                    throw new UnauthorizedAccessException();
+                    throw new UnauthorizedException();
                 }
 
                 return Task.CompletedTask;
             },
-            OnForbidden = _ => throw new UnauthorizedAccessException(),
+            OnForbidden = _ => throw new UnauthorizedException(),
             OnMessageReceived = context =>
             {
-                var accessToken = context.Request.Query["access_token"];
+                    context.Request.Cookies.TryGetValue("access_token", out var accessToken);
 
-                if (!string.IsNullOrEmpty(accessToken) &&
-                    context.HttpContext.Request.Path.StartsWithSegments("/notifications", StringComparison.OrdinalIgnoreCase))
+                if (!string.IsNullOrEmpty(accessToken))
                 {
-                    // Read the token out of the query string
                     context.Token = accessToken;
                 }
 
