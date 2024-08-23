@@ -20,7 +20,7 @@ export const config = {
 }
 
 export async function getTokenPayload(req: NextRequest): Promise<any> {
-  const accessToken = req.cookies.get("access_token")?.value
+  const accessToken = req.cookies.get("access-token")?.value
 
   if (!accessToken) return null
 

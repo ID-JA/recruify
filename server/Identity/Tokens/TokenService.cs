@@ -58,7 +58,7 @@ public class TokenService(UserManager<User> userManager, IOptions<JwtOptions> jw
 
     public void SetTokenInCookie(TokenResponse tokens, HttpContext httpContext)
     {
-        httpContext.Response.Cookies.Append("access_token", tokens.Token, new CookieOptions
+        httpContext.Response.Cookies.Append("access-token", tokens.Token, new CookieOptions
         {
             HttpOnly = true,
             Expires = DateTime.UtcNow.AddMinutes(jwtOptions.TokenExpirationInMinutes),
@@ -67,7 +67,7 @@ public class TokenService(UserManager<User> userManager, IOptions<JwtOptions> jw
             Secure = true,
         });
 
-        httpContext.Response.Cookies.Append("refresh_token", tokens.RefreshToken, new CookieOptions
+        httpContext.Response.Cookies.Append("refresh-token", tokens.RefreshToken, new CookieOptions
         {
             HttpOnly = true,
             Expires = DateTime.UtcNow.AddDays(jwtOptions.RefreshTokenExpirationInDays),

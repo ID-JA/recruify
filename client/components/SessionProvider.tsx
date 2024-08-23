@@ -58,6 +58,18 @@ export interface SessionProviderProps {
   session?: Session | null
 }
 
+export async function signOut({ callbackUrl }: { callbackUrl: string }) {
+  await fetch("/api/auth/signout", {
+    method: "POST",
+    headers: {
+      "Content-Type": "application/json",
+    },
+    credentials: "same-origin",
+  })
+  window.location.href = callbackUrl
+  if (callbackUrl.includes("#")) window.location.reload()
+}
+
 export function SessionProvider(props: SessionProviderProps) {
   const hasInitialSession = props.session !== undefined
 

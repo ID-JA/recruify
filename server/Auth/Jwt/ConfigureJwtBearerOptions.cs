@@ -55,7 +55,7 @@ public class ConfigureJwtBearerOptions : IConfigureNamedOptions<JwtBearerOptions
             OnForbidden = _ => throw new UnauthorizedException(),
             OnMessageReceived = context =>
             {
-                    context.Request.Cookies.TryGetValue("access_token", out var accessToken);
+                    context.Request.Cookies.TryGetValue("access-token", out var accessToken);
 
                 if (!string.IsNullOrEmpty(accessToken))
                 {
