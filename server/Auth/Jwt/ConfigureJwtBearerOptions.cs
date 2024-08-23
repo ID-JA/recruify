@@ -1,3 +1,4 @@
+using System.IdentityModel.Tokens.Jwt;
 using System.Security.Claims;
 using System.Text;
 using FastRecruiter.Api.Exceptions;
@@ -23,9 +24,10 @@ public class ConfigureJwtBearerOptions : IConfigureNamedOptions<JwtBearerOptions
         }
 
         byte[] key = Encoding.ASCII.GetBytes(_jwtOptions.Key);
-
+        
         options.RequireHttpsMetadata = false;
         options.SaveToken = true;
+       
         options.TokenValidationParameters = new TokenValidationParameters
         {
             ValidateIssuerSigningKey = true,
@@ -36,7 +38,7 @@ public class ConfigureJwtBearerOptions : IConfigureNamedOptions<JwtBearerOptions
             ValidAudience = "http://localhost:3000",
             ValidateAudience = true,
             RoleClaimType = ClaimTypes.Role,
-            ClockSkew = TimeSpan.Zero
+            ClockSkew = TimeSpan.Zero,
         };
         options.Events = new JwtBearerEvents
         {

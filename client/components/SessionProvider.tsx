@@ -15,17 +15,17 @@ import React, { useContext, useEffect, useMemo, useState } from "react"
 import { User } from "@/lib/types"
 
 type Session = {
-  user: User
+  user?: User
 }
 
 type SessionContextValue<R extends boolean = false> = R extends true
   ?
-      | { session: Session; status: "authenticated" }
-      | { session: null; status: "loading" }
+      | { data: Session; status: "authenticated" }
+      | { data: null; status: "loading" }
   :
-      | { session: Session; status: "authenticated" }
+      | { data: Session; status: "authenticated" }
       | {
-          session: null
+          data: null
           status: "unauthenticated" | "loading"
         }
 
@@ -45,7 +45,7 @@ export function useSession<R extends boolean>(options?: {
 
   if (requiredAndNotLoading) {
     return {
-      session: value.session,
+      data: value.data,
       status: "loading",
     }
   }
@@ -62,12 +62,13 @@ export function SessionProvider(props: SessionProviderProps) {
   const hasInitialSession = props.session !== undefined
 
   const [loading, setLoading] = useState(!hasInitialSession)
-  const [session, setSession] = React.useState(props.session)
+  const [session, setSession] = useState(props.session)
   useEffect(() => {
     const getSession = async () => {
       try {
         const res = await fetch("/api/auth/session")
         const data = await res.json()
+
         setSession(data)
       } catch (error) {
         console.log(error)
@@ -80,7 +81,7 @@ export function SessionProvider(props: SessionProviderProps) {
 
   const value: any = useMemo(
     () => ({
-      session,
+      data: session,
       status: loading
         ? "loading"
         : session

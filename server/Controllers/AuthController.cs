@@ -103,12 +103,6 @@ public class AuthController(IUserService _userService, ITokenService _tokenServi
         return result ? Redirect("https://google.com") : BadRequest("Account Confirmation Failed");
     }
 
-    [HttpGet("session")]
-    [AllowAnonymous]
-    public IActionResult GetAuthenticatedUserInfo()
-    {
-        return Ok(_tokenService.ValidateToken(HttpContext));
-    }
 }
 
 public class GoogleSignInDto

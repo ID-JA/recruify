@@ -1,7 +1,5 @@
 ﻿using FastRecruiter.Api.Auth.Jwt;
 using FastRecruiter.Api.Exceptions;
-using FastRecruiter.Api.Identity.Users;
-using FastRecruiter.Api.Identity.Users.Features.UserInfo;
 using FastRecruiter.Api.Models;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.Extensions.Options;
@@ -24,8 +22,6 @@ public interface ITokenService
     Task<TokenResponse> GenerateTokenAsync(TokenGenerationCommand request, CancellationToken cancellationToken);
     Task<TokenResponse> RefreshTokenAsync(RefreshTokenCommand request, CancellationToken cancellationToken);
     void SetTokenInCookie(TokenResponse tokens, HttpContext httpContext);
-    public UserDto? ValidateToken(HttpContext httpContext);
-
 }
 
 public class TokenService(UserManager<User> userManager, IOptions<JwtOptions> jwtOptions) : ITokenService
@@ -81,32 +77,6 @@ public class TokenService(UserManager<User> userManager, IOptions<JwtOptions> jw
         });
     }
 
-    public UserDto? ValidateToken(HttpContext httpContext)
-    {
-        httpContext.Request.Cookies.TryGetValue("access_token", out var accessToken);
-        if (accessToken == null)
-            return null;
-
-        var userPrincipal = GetPrincipalFromToken(accessToken);
-
-
-        var companyId = userPrincipal.FindFirstValue("companyId");
-        var user = new UserDto
-        {
-            Id = Guid.Parse(userPrincipal.FindFirstValue(ClaimTypes.NameIdentifier)!),
-            Email = userPrincipal.FindFirstValue(ClaimTypes.Email)!,
-            FirstName = userPrincipal.FindFirstValue(ClaimTypes.Name)!,
-            LastName = userPrincipal.FindFirstValue(ClaimTypes.Surname)!,
-            Role = userPrincipal.FindFirstValue(ClaimTypes.Role)!,
-            ImageUrl = userPrincipal.FindFirstValue("imageUrl"),
-            CompanyId = string.IsNullOrEmpty(companyId) ? null : Guid.Parse(companyId),
-            RefreshToken = userPrincipal.FindFirstValue("refreshToken"),
-            CreatedAt = DateTime.Parse(userPrincipal.FindFirstValue("createdAt")!)
-        };
-
-        return user;
-    }
-
     private async Task<TokenResponse> GenerateTokensAndUpdateUser(User user)
     {
         byte[] secret = Encoding.UTF8.GetBytes(jwtOptions.Key);
@@ -120,7 +90,7 @@ public class TokenService(UserManager<User> userManager, IOptions<JwtOptions> jw
         {
             new(ClaimTypes.NameIdentifier, user.Id.ToString()),
             new(ClaimTypes.Email, user.Email!),
-            new(ClaimTypes.Name, user.FirstName),
+            new(ClaimTypes.GivenName, user.FirstName),
             new(ClaimTypes.Surname, user.LastName),
             new(ClaimTypes.Role, user.Role),
             new("imageUrl", user.ImageUrl ?? string.Empty),
@@ -129,15 +99,18 @@ public class TokenService(UserManager<User> userManager, IOptions<JwtOptions> jw
             new("createdAt", user.CreatedAt.ToString()),
         };
 
-        var token = new JwtSecurityToken(
-           claims: claims,
-           expires: DateTime.UtcNow.AddMinutes(jwtOptions.TokenExpirationInMinutes),
-           signingCredentials: signingCredentials,
-           issuer: "http://localhost:3000",
-           audience: "http://localhost:3000"
-        );
+        var tokenDescriptor = new SecurityTokenDescriptor
+        {
+            Issuer = jwtOptions.Issuer,
+            Audience = jwtOptions.Audience,
+            Expires = DateTime.UtcNow.AddMinutes(jwtOptions.TokenExpirationInMinutes),
+            SigningCredentials = signingCredentials,
+            Subject = new ClaimsIdentity(claims)
+        };
 
         var tokenHandler = new JwtSecurityTokenHandler();
+
+        var token = tokenHandler.CreateToken(tokenDescriptor);
 
         string tokenValue = tokenHandler.WriteToken(token);
 

@@ -1,3 +1,4 @@
+import { NextRequest } from "next/server"
 import axios from "axios"
 import { clsx, type ClassValue } from "clsx"
 import { twMerge } from "tailwind-merge"
@@ -11,19 +12,17 @@ export const http = axios.create({
   withCredentials: true,
 })
 
-// http.defaults.maxRedirects = 0 // Set to 0 to prevent automatic redirects
-// http.interceptors.response.use(
-//   (response) => {
-//     console.log({ response })
-//     return response
-//   },
-//   (error) => {
-//     console.log({ error })
-//     if (error.response && [301, 302].includes(error.response.status)) {
-//       const redirectUrl = error.response.headers.location
-//       console.log({ redirectUrl })
-//       return http.get(redirectUrl)
-//     }
-//     return Promise.reject(error)
-//   }
-// )
+export const parse = (req: NextRequest) => {
+  let domain = req.headers.get("host") as string
+  domain = domain.replace("www.", "").toLowerCase()
+
+  let path = req.nextUrl.pathname
+
+  const searchParams = req.nextUrl.searchParams.toString()
+  const searchParamsString = searchParams.length > 0 ? `?${searchParams}` : ""
+  const fullPath = `${path}${searchParamsString}`
+
+  const key = decodeURIComponent(path.split("/")[1])
+  const fullKey = decodeURIComponent(path.slice(1))
+  return { domain, path, fullPath, key, fullKey, searchParamsString }
+}

@@ -24,7 +24,5 @@ namespace FastRecruiter.Api.Controllers
         {
             return Ok("protected");
         }
-
-       
     }
 }
