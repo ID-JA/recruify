@@ -62,10 +62,6 @@ public class DatabaseInitializer(RoleManager<Role> _roleManager,
             await _userManager.CreateAsync(adminUser);
         }
 
-        if (!await _userManager.IsInRoleAsync(adminUser, "Owner"))
-        {
-            await _userManager.AddToRoleAsync(adminUser, "Owner");
-            await _userService.AssignPermissionsToUserAsync(AppPermissions.Owner, adminUser);
-        }
+            await _userService.AssignRoleAndPermissionsToUserAsync("Owner", AppPermissions.Owner, adminUser);
     }
 }

@@ -8,7 +8,7 @@ namespace FastRecruiter.Api.Mail;
 
 public interface IMailService
 {
-    Task SendAsync(MailRequest request, CancellationToken cancellationToken);
+    Task SendAsync(MailRequest request, CancellationToken cancellationToken = default);
     Task<string> RenderMailTemplateAsync(string tempalteName, object model);
 }
 

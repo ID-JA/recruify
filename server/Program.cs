@@ -2,6 +2,9 @@ using FastRecruiter.Api.Auth;
 using FastRecruiter.Api.Exceptions;
 using FastRecruiter.Api.Extensions;
 using FastRecruiter.Api.Helpers;
+using FastRecruiter.Api.Jobs;
+using FastRecruiter.Api.Services.Companies;
+using Quartz;
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -22,6 +25,17 @@ builder.Services.ConfigureIdentity();
 builder.Services.ConfigureAuth(builder.Configuration);
 builder.Services.ConfigureMailing();
 builder.Services.AddAutoMapper(typeof(MappingProfiles));
+
+// Add Quartz services
+builder.Services.AddQuartz(q =>
+{
+    q.UseInMemoryStore();
+});
+
+builder.Services.AddQuartzHostedService(q => q.WaitForJobsToComplete = true);
+
+builder.Services.AddSingleton<IJobSchedulerService, JobSchedulerService>();
+builder.Services.AddScoped<ICompanyService, CompanyService>();
 
 var app = builder.Build();
 

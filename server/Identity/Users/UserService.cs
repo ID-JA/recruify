@@ -6,6 +6,7 @@ using FastRecruiter.Api.Identity.Tokens;
 using FastRecruiter.Api.Identity.Users.Features.Onboarding;
 using FastRecruiter.Api.Identity.Users.Features.RegisterUser;
 using FastRecruiter.Api.Identity.Users.Features.UserInfo;
+using FastRecruiter.Api.Jobs;
 using FastRecruiter.Api.Mail;
 using FastRecruiter.Api.Models;
 using Microsoft.AspNetCore.Identity;
@@ -18,16 +19,14 @@ namespace FastRecruiter.Api.Identity.Users;
 
 public interface IUserService
 {
-    Task AssignPermissionsToUserAsync(IReadOnlyList<AppPermission> permissions, User user);
-    Task<RegisterUserResponse> RegisterAsync(RegisterUserRequest request, string serverUrl, CancellationToken cancellationToken);
+    Task AssignRoleAndPermissionsToUserAsync(string role, IReadOnlyList<AppPermission> permissions, User user); Task<RegisterUserResponse> RegisterAsync(RegisterUserRequest request, string serverUrl, CancellationToken cancellationToken);
     ChallengeResult SetupExternalAuthentication(string provider, string redirectUrl);
     Task<User> HandleExternalAuthenticationCallbackAsync();
     Task<bool> HasPermissionAsync(string userId, string permission, CancellationToken cancellationToken = default);
-    Task<Guid> OnboardingAsync(OnboardingUserRequest request, CancellationToken cancellationToken);
     Task<bool> ConfirmEmailAsync(string userId, string confirmationToken, CancellationToken cancellationToken);
     Task<UserDto?> GetUserInfo();
-
-
+    Task<bool> InvitationToCompanyHandler(string email, string token, CancellationToken cancellationToken = default);
+    Task AssignUserToCompanyAsync(Guid userId, Guid companyId, string role, CancellationToken cancellationToken);
 }
 
 
@@ -40,29 +39,34 @@ public class UserService(UserManager<User> _userManager,
                          IMailService _mailService) : IUserService
 {
 
-    public async Task AssignPermissionsToUserAsync(IReadOnlyList<AppPermission> permissions, User user)
+    public async Task AssignRoleAndPermissionsToUserAsync(string role, IReadOnlyList<AppPermission> permissions, User user)
     {
-        var existingPermissions = await _dbContext.UserPermissions
+        if (!await _userManager.IsInRoleAsync(user, role))
+        {
+            await _userManager.AddToRoleAsync(user, role);
+            var existingPermissions = await _dbContext.UserPermissions
             .Where(up => up.UserId == user.Id)
             .Select(up => up.Permission)
             .ToListAsync();
 
-        var newUserPermissions = permissions
-            .Where(permission => !existingPermissions.Contains(permission.Name))
-            .Select(permission => new UserPermission
-            {
-                UserId = user.Id,
-                Permission = permission.Name,
-                IsAllowed = true,
-            })
-            .ToList();
+            var newUserPermissions = permissions
+                .Where(permission => !existingPermissions.Contains(permission.Name))
+                .Select(permission => new UserPermission
+                {
+                    UserId = user.Id,
+                    Permission = permission.Name,
+                    IsAllowed = true,
+                })
+                .ToList();
 
-        if (newUserPermissions.Count > 0)
-        {
-            await _dbContext.UserPermissions.AddRangeAsync(newUserPermissions);
-            await _dbContext.SaveChangesAsync();
+            if (newUserPermissions.Count != 0)
+            {
+                await _dbContext.UserPermissions.AddRangeAsync(newUserPermissions);
+                await _dbContext.SaveChangesAsync();
+            }
         }
     }
+
 
     public ChallengeResult SetupExternalAuthentication(string provider, string redirectUrl)
     {
@@ -120,7 +124,7 @@ public class UserService(UserManager<User> _userManager,
             Email = request.Email,
             UserName = request.Email.Split('@')[0],
             Role = "Owner",
-            ImageUrl =  $"https://api.dicebear.com/9.x/initials/svg?seed={request.FirstName}+{request.LastName}",
+            ImageUrl = $"https://api.dicebear.com/9.x/initials/svg?seed={request.FirstName}+{request.LastName}",
             CreatedAt = DateTime.UtcNow,
         };
 
@@ -132,8 +136,9 @@ public class UserService(UserManager<User> _userManager,
             throw new ValidationException("one or more validation errors occurred while registering a the user", errors);
         }
 
-        await _userManager.AddToRoleAsync(user, "Owner");
+        await AssignRoleAndPermissionsToUserAsync("Owner", AppPermissions.Owner, user);
 
+        // TODO: move sending confirmation email to background job
         if (!string.IsNullOrEmpty(user.Email))
         {
             string emailVerificationUri = await GetEmailVerificationUriAsync(user, serverUrl);
@@ -156,28 +161,6 @@ public class UserService(UserManager<User> _userManager,
             .AnyAsync(up => up.UserId == user.Id && up.Permission == permission && up.IsAllowed, cancellationToken);
     }
 
-    public async Task<Guid> OnboardingAsync(OnboardingUserRequest request, CancellationToken cancellationToken)
-    {
-        var company = new Company
-        {
-            Name = request.companyName,
-        };
-
-        _dbContext.Companies.Add(company);
-        await _dbContext.SaveChangesAsync(cancellationToken);
-
-        var user = await _userManager.FindByIdAsync(_currentUser.GetUserId().ToString());
-
-        if (user is not null)
-        {
-            user.CompanyId = company.Id;
-            user.Role = "Owner";
-            _dbContext.Users.Update(user);
-            await _dbContext.SaveChangesAsync(cancellationToken);
-        }
-
-        return company.Id;
-    }
 
     public async Task<bool> ConfirmEmailAsync(string userId, string confirmationToken, CancellationToken cancellationToken)
     {
@@ -206,9 +189,50 @@ public class UserService(UserManager<User> _userManager,
     public async Task<UserDto?> GetUserInfo()
     {
         var userId = _currentUser.GetUserId();
-        var userInfo = await _userManager.FindByIdAsync(userId.ToString());
 
-        return _mapper.Map<User,UserDto>(userInfo);
+        var userInfo = (await _userManager.FindByIdAsync(userId.ToString()))!;
+
+        return _mapper.Map<User, UserDto>(userInfo);
+    }
+
+    public async Task<bool> InvitationToCompanyHandler(string email, string token, CancellationToken cancellationToken = default)
+    {
+
+        var userAlreadyExists = await _userManager.FindByEmailAsync(email);
+
+        if (userAlreadyExists is null)
+        {
+            var user = new User
+            {
+                Email = email,
+                Role = "Member",
+                FirstName = string.Empty,
+                LastName = string.Empty,
+            };
+
+            // Check what could happen if email is already exists
+            // maybe catch  then throw confilict exception
+            var result = await _userManager.CreateAsync(user);
+            if (result.Succeeded)
+            {
+                return true;
+            }
+            return false;
+        }
+        return true;
+    }
+
+    public async Task AssignUserToCompanyAsync(Guid userId, Guid companyId, string role, CancellationToken cancellationToken)
+    {
+        var user = await _userManager.FindByIdAsync(userId.ToString());
+        if(user is null)
+        {
+            throw new Exception("User not found");
+        }
+        user.CompanyId = companyId;
+        user.Role = role;
+        _dbContext.Users.Update(user);
+        await _dbContext.SaveChangesAsync(cancellationToken);
     }
 }
 

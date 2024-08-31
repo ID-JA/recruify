@@ -12,13 +12,7 @@ namespace FastRecruiter.Api.Controllers
     [ApiController]
     public class UsersController(IUserService _userService) : ControllerBase
     {
-        [HttpPost("onboarding")]
-        [RequiredPermission("Permissions.Company.Update")]
-        public async Task<IActionResult> Onboarding([FromBody] OnboardingUserRequest request, CancellationToken cancellationToken)
-        {
-            return Ok(await _userService.OnboardingAsync(request, cancellationToken));
-        }
-
+        
         [HttpGet("protected")]
         public IActionResult GetDummy()
         {
