@@ -21,14 +21,33 @@ public class CompaniesController(ITokenService _tokenService, ICompanyService _c
         return Ok(await _companyService.RegisterCompanyAsync(request, cancellationToken));
     }
 
-    [HttpGet("invite")]
     [AllowAnonymous]
-    public async Task<IActionResult> ProcessCompanyInvitationAsync([FromQuery] string email, [FromQuery] string token, string? returnUrl, CancellationToken cancellationToken)
+    [HttpGet("invite/validate")]
+    public async Task<IActionResult> ValidateInvite([FromQuery] string email, [FromQuery] Guid token)
     {
-        await _companyService.ProcessCompanyInvitationAsync(email, token, cancellationToken);
-        var tokens = await _tokenService.GenerateTokenAsync(new TokenGenerationCommand(email, string.Empty, true), CancellationToken.None);
-        _tokenService.SetTokenInCookie(tokens, HttpContext);
+        var (IsValid, CompanyName, ErrorMessage) = await _companyService.ValidateInviteAsync(email, token);
 
-        return Redirect(WebUtility.UrlDecode(returnUrl) ?? "/");
+        if (!IsValid)
+        {
+            return BadRequest(ErrorMessage);
+        }
+
+        return Ok(new
+        {
+            isValid = IsValid,
+            companyName = CompanyName,
+        });
+    }
+
+    [AllowAnonymous]
+    [HttpPost("invite/accept")]
+    public async Task<IActionResult> AcceptCompanyInvitateAsync([FromBody] AcceptCompanyInviteRequest request, CancellationToken cancellationToken)
+    {
+        await _companyService.AcceptCompanyInvitateAsync(request, cancellationToken);
+
+      var tokens =   await _tokenService.GenerateTokenAsync(new TokenGenerationCommand(request.Email, request.Password,false),cancellationToken);
+
+        _tokenService.SetTokenInCookie(tokens, HttpContext);
+        return Ok("Success");
     }
 }

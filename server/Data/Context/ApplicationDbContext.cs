@@ -17,14 +17,10 @@ public class ApplicationDbContext : IdentityDbContext<User, Role, Guid>, IDbCont
     public DbSet<Location> Locations => Set<Location>();
     public DbSet<CompanyInvite> CompanyInvites => Set<CompanyInvite>();
     public DbSet<UserPermission> UserPermissions => Set<UserPermission>();
-    public DbSet<VerificationToken> VerificationTokens => Set<VerificationToken>();
 
     protected override void OnModelCreating(ModelBuilder builder)
     {
         base.OnModelCreating(builder);
-
-        builder.Entity<VerificationToken>().HasNoKey().HasIndex(vt => new { vt.Token, vt.Id}).IsUnique(true);
-
         builder.ApplyConfigurationsFromAssembly(Assembly.GetExecutingAssembly());
     }
 }

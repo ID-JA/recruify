@@ -10,5 +10,4 @@ public interface IDbContext
     public DbSet<CompanyInvite> CompanyInvites { get; }
     public DbSet<Location> Locations { get; }
     public DbSet<UserPermission> UserPermissions { get; }
-    public DbSet<VerificationToken> VerificationTokens { get; }
 }

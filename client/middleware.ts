@@ -33,6 +33,9 @@ async function AppMiddleware(req: NextRequest) {
   const userClaims = await getTokenPayload(req)
 
   // If there's no user and the path isn't /sign-in, /sign-up, or the root path, redirect to /sign-in
+  if (path === "/invite") {
+    return NextResponse.rewrite(req.url)
+  }
   if (
     !userClaims &&
     path !== "/" &&

@@ -1,4 +1,5 @@
 ﻿using FastRecruiter.Api.Data.Context;
+using FastRecruiter.Api.Exceptions;
 using FastRecruiter.Api.Identity.Users;
 using FastRecruiter.Api.Jobs;
 using FastRecruiter.Api.Models;
@@ -12,7 +13,9 @@ namespace FastRecruiter.Api.Services.Companies;
 public interface ICompanyService
 {
     Task<Guid> RegisterCompanyAsync(RegisterCompanyRequest request, CancellationToken cancellationToken = default);
-    Task ProcessCompanyInvitationAsync(string email, string invitationToken, CancellationToken cancellationToken = default);
+    Task AcceptCompanyInvitateAsync(AcceptCompanyInviteRequest request, CancellationToken cancellationToken = default);
+
+    Task<(bool IsValid, string? CompanyName, string? ErrorMessage)> ValidateInviteAsync(string email, Guid token);
 }
 
 public class CompanyService(ApplicationDbContext _dbContext,
@@ -34,8 +37,7 @@ public class CompanyService(ApplicationDbContext _dbContext,
 
             if (request.Invitees.Count > 0)
             {
-                await CreateAndStoreInvitesAsync(companyId, request.Invitees, cancellationToken);
-                await _jobScheduler.SendInvitationEmailsAsync(request.CompanyName, request.Invitees, cancellationToken);
+                await _jobScheduler.SendInvitationEmailsAsync(request.CompanyName,companyId, request.Invitees, cancellationToken);
             }
 
             await transaction.CommitAsync(cancellationToken);
@@ -49,51 +51,60 @@ public class CompanyService(ApplicationDbContext _dbContext,
         }
     }
 
-    public async Task ProcessCompanyInvitationAsync(string email, string invitationToken, CancellationToken cancellationToken = default)
+    public async Task AcceptCompanyInvitateAsync(AcceptCompanyInviteRequest request, CancellationToken cancellationToken = default)
     {
-        var verificationToken = await _dbContext.VerificationTokens
-            .SingleOrDefaultAsync(t => t.Token == invitationToken, cancellationToken);
-
-        if (verificationToken == null || verificationToken.ExpireAt < DateTime.UtcNow)
-        {
-            throw new InvalidOperationException("Invalid or expired invitation token.");
-        }
-
         var companyInvite = await _dbContext.CompanyInvites
-            .SingleOrDefaultAsync(i => i.Email == email, cancellationToken);
+            .SingleOrDefaultAsync(i => i.Email == request.Email && i.Token == request.Token, cancellationToken) ?? throw new NotFoundException("Invalid invite.");
 
-        if (companyInvite == null || companyInvite.ExpireAt < DateTime.UtcNow)
+        if (companyInvite.ExpireAt < DateTime.UtcNow)
         {
-            throw new InvalidOperationException("No valid invitation found for this email.");
+            throw new ValidationException("Invite expired.");
         }
 
-        var user = await _userManager.FindByEmailAsync(email);
-        if (user == null)
+        var user = new User
         {
-            user = new User
-            {
-                UserName = email,
-                Email = email,
-                EmailConfirmed = true
-            };
+            UserName = request.Email,
+            Email = companyInvite.Email,
+            EmailConfirmed = true,
+            FirstName = request.FirstName,
+            LastName = request.LastName,
+            Role = "Member",
+            CompanyId = companyInvite.CompanyId
+        };
 
-            var result = await _userManager.CreateAsync(user);
-            if (!result.Succeeded)
-            {
-                throw new InvalidOperationException("Failed to create the user.");
-            }
-        }
-
-        user.CompanyId = companyInvite.CompanyId;
-        user.Role = "Member";
-
-        _dbContext.Users.Update(user);
+        var result = await _userManager.CreateAsync(user, request.Password);
         await _dbContext.SaveChangesAsync(cancellationToken);
+
+        if (!result.Succeeded)
+        {
+            throw new InvalidOperationException("Failed to create the user.");
+        }
 
         _dbContext.CompanyInvites.Remove(companyInvite);
-        _dbContext.VerificationTokens.Remove(verificationToken);
         await _dbContext.SaveChangesAsync(cancellationToken);
     }
+
+
+
+    public async Task<(bool IsValid, string? CompanyName, string? ErrorMessage)> ValidateInviteAsync(string email, Guid token)
+    {
+        var invite = await _dbContext.CompanyInvites
+            .Include(i=>i.Company)
+            .FirstOrDefaultAsync(i => i.Email == email && i.Token == token);
+
+        if (invite == null)
+        {
+            return (false,null, "Invitation not found or invalid.");
+        }
+
+        if (invite.ExpireAt < DateTime.UtcNow)
+        {
+            return (false, null,"This invitation has expired.");
+        }
+
+        return (true, invite.Company.Name,null);
+    }
+
 
     private async Task<Guid> CreateCompanyAsync(string name, string size, string industry, CancellationToken cancellationToken)
     {
@@ -111,12 +122,14 @@ public class CompanyService(ApplicationDbContext _dbContext,
             CompanyId = companyId,
             Email = email,
             ExpireAt = expireAt,
+            Token = Guid.NewGuid(),
             CreatedAt = DateTime.UtcNow,
         }).ToList();
 
         _dbContext.CompanyInvites.AddRange(invites);
         await _dbContext.SaveChangesAsync(cancellationToken);
     }
-
-
 }
+
+
+public record AcceptCompanyInviteRequest(string FirstName, string LastName, string Email, string Password, Guid Token);

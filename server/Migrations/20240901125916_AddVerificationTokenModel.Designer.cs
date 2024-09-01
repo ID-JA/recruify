@@ -12,7 +12,7 @@ using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 namespace FastRecruiter.Api.Migrations
 {
     [DbContext(typeof(ApplicationDbContext))]
-    [Migration("20240830155252_AddVerificationTokenModel")]
+    [Migration("20240901125916_AddVerificationTokenModel")]
     partial class AddVerificationTokenModel
     {
         /// <inheritdoc />
@@ -266,10 +266,15 @@ namespace FastRecruiter.Api.Migrations
 
             modelBuilder.Entity("FastRecruiter.Api.Models.VerificationToken", b =>
                 {
+                    b.Property<Guid>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("uniqueidentifier");
+
                     b.Property<DateTime>("ExpireAt")
                         .HasColumnType("datetime2");
 
-                    b.Property<string>("Id")
+                    b.Property<string>("Identifier")
+                        .IsRequired()
                         .HasColumnType("nvarchar(450)");
 
                     b.Property<string>("Token")
@@ -279,9 +284,10 @@ namespace FastRecruiter.Api.Migrations
                     b.Property<bool>("Used")
                         .HasColumnType("bit");
 
-                    b.HasIndex("Token", "Id")
-                        .IsUnique()
-                        .HasFilter("[Id] IS NOT NULL");
+                    b.HasKey("Id");
+
+                    b.HasIndex("Token", "Identifier")
+                        .IsUnique();
 
                     b.ToTable("VerificationTokens");
                 });

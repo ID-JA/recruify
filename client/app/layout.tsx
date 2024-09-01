@@ -2,6 +2,7 @@ import "@/styles/globals.css"
 
 import { Metadata, Viewport } from "next"
 import Script from "next/script"
+import { Toaster } from "sonner"
 
 import { siteConfig } from "@/config/site"
 import { fontSans } from "@/lib/fonts"
@@ -45,10 +46,11 @@ export default function RootLayout({ children }: RootLayoutProps) {
         </head>
         <body
           className={cn(
-            "min-h-screen bg-background font-sans antialiased text-black",
+            "min-h-screen bg-background font-sans text-black antialiased",
             fontSans.variable
           )}
         >
+          <Toaster />
           <div className="relative flex min-h-screen flex-col">
             <div className="flex-1">
               <Providers>{children}</Providers>

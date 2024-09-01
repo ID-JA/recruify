@@ -4,51 +4,45 @@ using FastRecruiter.Api.Models;
 using Microsoft.EntityFrameworkCore;
 using Quartz;
 using System.Collections.ObjectModel;
-using System.Threading;
 
 namespace FastRecruiter.Api.Jobs;
 
-public class SendInvitationEmailJob(ILogger<SendInvitationEmailJob> _logger, IMailService _mailService, ApplicationDbContext _dbContext) : IJob
+public class SendInvitationEmailJob(ILogger<SendInvitationEmailJob> logger, IMailService mailService, ApplicationDbContext dbContext) : IJob
 {
     public static readonly JobKey Key = new("sendEmail-job", "group1");
 
     public async Task Execute(IJobExecutionContext context)
     {
         var companyName = context.MergedJobDataMap.GetString("companyName");
+        var companyId = context.MergedJobDataMap.GetGuid("companyId");
         var invitees = (Collection<string>)context.MergedJobDataMap["invitees"];
 
-        foreach(var email in invitees)
+        var expireAt = DateTime.UtcNow.AddDays(15);
+        var invites = invitees.Select(email => new CompanyInvite
         {
-            var verificationToken = new VerificationToken
-            {
-                Id = email,
-                Token = Guid.NewGuid().ToString(),
-                ExpireAt = DateTime.UtcNow.AddDays(15),
-                Used = false
-            };
+            CompanyId = companyId,
+            Email = email,
+            ExpireAt = expireAt,
+            Token = Guid.NewGuid(),
+            CreatedAt = DateTime.UtcNow,
+        }).ToList();
 
-            _dbContext.VerificationTokens.Add(verificationToken);
-            await _dbContext.SaveChangesAsync();
+        await dbContext.CompanyInvites.AddRangeAsync(invites);
+        await dbContext.SaveChangesAsync();
 
-
-            var invitationLink = $"http://localhost:5171/api/company/invite?email={email}&token={verificationToken}";
-
-            var emailBody = await _mailService.RenderMailTemplateAsync("invite-to-company", new
+        foreach (var invite in invites)
+        {
+            var invitationLink = $"http://localhost:3000/invite?email={invite.Email}&token={invite.Token}";
+            var emailBody = await mailService.RenderMailTemplateAsync("invite-to-company", new
             {
                 companyName,
                 invitationLink,
             });
 
-            var mailRequest = new MailRequest(invitees, $"You have been invited to join {companyName} on FastRecruiter", emailBody);
-
-            await _mailService.SendAsync(mailRequest);
+            var mailRequest = new MailRequest([invite.Email], $"You have been invited to join {companyName} on FastRecruiter", emailBody);
+            await mailService.SendAsync(mailRequest);
         }
 
-
-        
-       
-
-           
-
+        logger.LogInformation("Sent {Count} invitations for company {CompanyName}", invitees.Count, companyName);
     }
 }
