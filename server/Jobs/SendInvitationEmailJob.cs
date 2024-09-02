@@ -32,7 +32,7 @@ public class SendInvitationEmailJob(ILogger<SendInvitationEmailJob> logger, IMai
 
         foreach (var invite in invites)
         {
-            var invitationLink = $"http://localhost:3000/invite?email={invite.Email}&token={invite.Token}";
+            var invitationLink = $"http://localhost:3000/invite?token={invite.Token}";
             var emailBody = await mailService.RenderMailTemplateAsync("invite-to-company", new
             {
                 companyName,

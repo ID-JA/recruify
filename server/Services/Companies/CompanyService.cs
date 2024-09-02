@@ -15,7 +15,7 @@ public interface ICompanyService
     Task<Guid> RegisterCompanyAsync(RegisterCompanyRequest request, CancellationToken cancellationToken = default);
     Task AcceptCompanyInvitateAsync(AcceptCompanyInviteRequest request, CancellationToken cancellationToken = default);
 
-    Task<(bool IsValid, string? CompanyName, string? ErrorMessage)> ValidateInviteAsync(string email, Guid token);
+    Task<(bool IsValid, string? CompanyName, string? ErrorMessage)> ValidateInviteAsync(Guid token);
 }
 
 public class CompanyService(ApplicationDbContext _dbContext,
@@ -37,7 +37,7 @@ public class CompanyService(ApplicationDbContext _dbContext,
 
             if (request.Invitees.Count > 0)
             {
-                await _jobScheduler.SendInvitationEmailsAsync(request.CompanyName,companyId, request.Invitees, cancellationToken);
+                await _jobScheduler.SendInvitationEmailsAsync(request.CompanyName, companyId, request.Invitees, cancellationToken);
             }
 
             await transaction.CommitAsync(cancellationToken);
@@ -54,8 +54,16 @@ public class CompanyService(ApplicationDbContext _dbContext,
     public async Task AcceptCompanyInvitateAsync(AcceptCompanyInviteRequest request, CancellationToken cancellationToken = default)
     {
         var companyInvite = await _dbContext.CompanyInvites
-            .SingleOrDefaultAsync(i => i.Email == request.Email && i.Token == request.Token, cancellationToken) ?? throw new NotFoundException("Invalid invite.");
+            .SingleOrDefaultAsync(i => i.Token == request.Token, cancellationToken)
+            ?? throw new NotFoundException("Invalid invite.");
 
+        // Check if the provided email matches the invite email
+        if (companyInvite.Email != request.Email)
+        {
+            throw new ConflictException("Email provided does not match the invite email.");
+        }
+
+        // Check if the invite has expired
         if (companyInvite.ExpireAt < DateTime.UtcNow)
         {
             throw new ValidationException("Invite expired.");
@@ -72,37 +80,44 @@ public class CompanyService(ApplicationDbContext _dbContext,
             CompanyId = companyInvite.CompanyId
         };
 
+        // Create the user
         var result = await _userManager.CreateAsync(user, request.Password);
-        await _dbContext.SaveChangesAsync(cancellationToken);
 
-        if (!result.Succeeded)
+        // Remove the invite if user creation is successful
+        if (result.Succeeded)
+        {
+            _dbContext.CompanyInvites.Remove(companyInvite);
+            await _dbContext.SaveChangesAsync(cancellationToken);
+        }
+        else
         {
             throw new InvalidOperationException("Failed to create the user.");
         }
 
-        _dbContext.CompanyInvites.Remove(companyInvite);
+        // Save changes to the database
         await _dbContext.SaveChangesAsync(cancellationToken);
     }
 
 
 
-    public async Task<(bool IsValid, string? CompanyName, string? ErrorMessage)> ValidateInviteAsync(string email, Guid token)
+
+    public async Task<(bool IsValid, string? CompanyName, string? ErrorMessage)> ValidateInviteAsync(Guid token)
     {
         var invite = await _dbContext.CompanyInvites
-            .Include(i=>i.Company)
-            .FirstOrDefaultAsync(i => i.Email == email && i.Token == token);
+            .Include(i => i.Company)
+            .FirstOrDefaultAsync(i => i.Token == token);
 
         if (invite == null)
         {
-            return (false,null, "Invitation not found or invalid.");
+            return (false, null, "Invitation not found or invalid.");
         }
 
         if (invite.ExpireAt < DateTime.UtcNow)
         {
-            return (false, null,"This invitation has expired.");
+            return (false, null, "This invitation has expired.");
         }
 
-        return (true, invite.Company.Name,null);
+        return (true, invite.Company.Name, null);
     }
 
 

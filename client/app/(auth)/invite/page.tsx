@@ -23,6 +23,7 @@ import {
 import {
   Form,
   FormControl,
+  FormDescription,
   FormField,
   FormItem,
   FormLabel,
@@ -32,22 +33,14 @@ import { Input } from "@/components/ui/input"
 import { Spinner } from "@/components/ui/spinner"
 import { Icons } from "@/components/icons"
 
-const validateInvite = async ({
-  email,
-  token,
-}: {
-  email: string
-  token: string
-}) => {
-  const res = await http.get(
-    `/api/companies/invite/validate?email=${email}&token=${token}`
-  )
+const validateInvite = async ({ token }: { token: string }) => {
+  const res = await http.get(`/api/companies/invite/validate?token=${token}`)
   return res.data
 }
 
 const schema = z.object({
-  firstName: z.string().min(1),
-  lastName: z.string().min(1),
+  firstName: z.string().min(1, { message: "First name is required" }),
+  lastName: z.string().min(1, { message: "Last name is required" }),
   email: z.string().email(),
   password: z
     .string()
@@ -65,16 +58,15 @@ export default function InvitePage() {
     queryKey: ["validate-invite"],
     queryFn: async () =>
       await validateInvite({
-        email: searchParams.get("email") ?? "",
         token: searchParams.get("token") ?? "",
       }),
     retry: false,
     refetchOnWindowFocus: false,
   })
 
-  const mutation = useMutation({
+  const mutation = useMutation<any, AxiosError, FormValues>({
     mutationKey: ["accept-invite"],
-    mutationFn: async (data: FormValues) => {
+    mutationFn: async (data) => {
       const res = await http.post(`/api/companies/invite/accept`, data)
       return res.data
     },
@@ -82,12 +74,23 @@ export default function InvitePage() {
       toast.success("Invitation accepted!")
       router.replace("/dashboard")
     },
+    onError: (error) => {
+      const errorData = error.response?.data as { detail: string }
+
+      if (error.response?.status === 409) {
+        form.setError("email", {
+          message: errorData.detail,
+        })
+      } else {
+        toast.error(errorData.detail ?? "Something went wrong")
+      }
+    },
   })
 
   const form = useForm<FormValues>({
     defaultValues: {
-      email: searchParams.get("email") ?? "",
       token: searchParams.get("token") ?? "",
+      email: "",
       firstName: "",
       lastName: "",
       password: "",
@@ -95,9 +98,9 @@ export default function InvitePage() {
     resolver: zodResolver(schema),
   })
 
-  const handleSubmit = async (data: FormValues) => {
+  const handleSubmit = (data: FormValues) => {
     console.log({ data })
-    await mutation.mutateAsync(data)
+    mutation.mutate(data)
   }
 
   const description = isLoading
@@ -125,51 +128,66 @@ export default function InvitePage() {
           ) : isSuccess ? (
             <motion.div initial={{ opacity: 0 }} animate={{ opacity: 1 }}>
               <Form {...form}>
-                <form
-                  className="space-y-4"
-                  onSubmit={form.handleSubmit(handleSubmit)}
-                >
-                  <input type="hidden" {...form.register("email")} />
-                  <input type="hidden" {...form.register("token")} />
-                  <FormField
-                    name="firstName"
-                    control={form.control}
-                    render={({ field }) => (
-                      <FormItem>
-                        <FormLabel>First Name</FormLabel>
-                        <FormControl>
-                          <Input {...field} />
-                        </FormControl>
-                        <FormMessage />
-                      </FormItem>
-                    )}
-                  />
-                  <FormField
-                    name="lastName"
-                    control={form.control}
-                    render={({ field }) => (
-                      <FormItem>
-                        <FormLabel>Last Name</FormLabel>
-                        <FormControl>
-                          <Input {...field} />
-                        </FormControl>
-                        <FormMessage />
-                      </FormItem>
-                    )}
-                  />
-                  <FormField
-                    name="password"
-                    control={form.control}
-                    render={({ field }) => (
-                      <FormItem>
-                        <FormLabel>Password</FormLabel>
-                        <FormControl>
-                          <Input {...field} />
-                        </FormControl>
-                        <FormMessage />
-                      </FormItem>
-                    )}
-                  />
+                <form onSubmit={form.handleSubmit(handleSubmit)}>
+                  <div className="space-y-3">
+                    <FormField
+                      name="email"
+                      control={form.control}
+                      render={({ field }) => (
+                        <FormItem>
+                          <FormLabel>Email Address</FormLabel>
+                          <FormDescription>
+                            This is the email address where your invitation was
+                            delivered.
+                          </FormDescription>
+                          <FormControl>
+                            <Input {...field} />
+                          </FormControl>
+                          <FormMessage />
+                        </FormItem>
+                      )}
+                    />
+                    <FormField
+                      name="firstName"
+                      control={form.control}
+                      render={({ field }) => (
+                        <FormItem>
+                          <FormLabel>First Name</FormLabel>
+                          <FormControl>
+                            <Input {...field} />
+                          </FormControl>
+                          <FormMessage />
+                        </FormItem>
+                      )}
+                    />
+                    <FormField
+                      name="lastName"
+                      control={form.control}
+                      render={({ field }) => (
+                        <FormItem>
+                          <FormLabel>Last Name</FormLabel>
+                          <FormControl>
+                            <Input {...field} />
+                          </FormControl>
+                          <FormMessage />
+                        </FormItem>
+                      )}
+                    />
+                    <FormField
+                      name="password"
+                      control={form.control}
+                      render={({ field }) => (
+                        <FormItem>
+                          <FormLabel>Password</FormLabel>
+                          <FormControl>
+                            <Input {...field} />
+                          </FormControl>
+                          <FormMessage />
+                        </FormItem>
+                      )}
+                    />
+                  </div>
+
                   <div className="pt-6">
                     <Button
                       className="w-full"
@@ -183,6 +201,7 @@ export default function InvitePage() {
                       )}
                     </Button>
                   </div>
+                  <input type="hidden" {...form.register("token")} />
                 </form>
               </Form>
             </motion.div>

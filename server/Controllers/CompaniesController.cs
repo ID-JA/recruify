@@ -1,11 +1,9 @@
 ﻿using FastRecruiter.Api.Auth.Policy;
 using FastRecruiter.Api.Identity.Tokens;
-using FastRecruiter.Api.Identity.Users;
 using FastRecruiter.Api.Services.Companies;
 using FastRecruiter.Api.Services.Companies.DTOs;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
-using System.Net;
 
 namespace FastRecruiter.Api.Controllers;
 
@@ -23,9 +21,9 @@ public class CompaniesController(ITokenService _tokenService, ICompanyService _c
 
     [AllowAnonymous]
     [HttpGet("invite/validate")]
-    public async Task<IActionResult> ValidateInvite([FromQuery] string email, [FromQuery] Guid token)
+    public async Task<IActionResult> ValidateInvite([FromQuery] Guid token)
     {
-        var (IsValid, CompanyName, ErrorMessage) = await _companyService.ValidateInviteAsync(email, token);
+        var (IsValid, CompanyName, ErrorMessage) = await _companyService.ValidateInviteAsync(token);
 
         if (!IsValid)
         {
@@ -45,7 +43,7 @@ public class CompaniesController(ITokenService _tokenService, ICompanyService _c
     {
         await _companyService.AcceptCompanyInvitateAsync(request, cancellationToken);
 
-      var tokens =   await _tokenService.GenerateTokenAsync(new TokenGenerationCommand(request.Email, request.Password,false),cancellationToken);
+        var tokens = await _tokenService.GenerateTokenAsync(new TokenGenerationCommand(request.Email, request.Password, false), cancellationToken);
 
         _tokenService.SetTokenInCookie(tokens, HttpContext);
         return Ok("Success");
