@@ -32,40 +32,35 @@ async function AppMiddleware(req: NextRequest) {
   const { path, fullPath } = parse(req)
   const userClaims = await getTokenPayload(req)
 
-  // If there's no user and the path isn't /sign-in, /sign-up, or the root path, redirect to /sign-in
-  if (path === "/invite") {
-    return NextResponse.rewrite(req.url)
-  }
-  if (
-    !userClaims &&
-    path !== "/" &&
-    path !== "/sign-in" &&
-    path !== "/sign-up"
-  ) {
-    return NextResponse.redirect(
-      new URL(
-        `/sign-in${path === "/" ? "" : `?returnUrl=${encodeURIComponent(fullPath)}`}`,
-        req.url
-      )
-    )
-  } else if (userClaims) {
-    if (path === "/") {
-      return NextResponse.next()
-    }
+  // paths that don't require authentication
+  const publicPaths = ["/", "/sign-in", "/sign-up", "/invite"]
 
-    // Redirect to onboarding if the user is an Owner without a company and isn't on the onboarding page
+  // Redirect unauthenticated users
+  if (!userClaims && !publicPaths.includes(path)) {
+    const returnUrl =
+      path === "/" ? "" : `?returnUrl=${encodeURIComponent(fullPath)}`
+    return NextResponse.redirect(new URL(`/sign-in${returnUrl}`, req.url))
+  }
+
+  // If user is authenticated
+  if (userClaims) {
+    // Redirect to onboarding for Owners without a company
     if (
       userClaims.role === "Owner" &&
       !userClaims.companyId &&
       path !== "/onboarding"
     ) {
       return NextResponse.redirect(new URL("/onboarding", req.url))
-    } else if (["/sign-in", "/sign-up"].includes(path)) {
+    }
+
+    // Redirect to dashboard for certain paths
+    const restrictedPaths = ["/sign-in", "/sign-up", "/onboarding", "/invite"]
+    if (restrictedPaths.includes(path)) {
       return NextResponse.redirect(new URL("/dashboard", req.url))
     }
   }
 
-  // otherwise, rewrite the path to /app
+  // Default behavior: rewrite the path to /app
   return NextResponse.rewrite(req.url)
 }
 

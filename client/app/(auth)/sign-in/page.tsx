@@ -1,8 +1,11 @@
 "use client"
 
-import { useEffect, useState } from "react"
+import { useState } from "react"
 import Link from "next/link"
-import { signIn } from "next-auth/react"
+import { useRouter } from "next/navigation"
+import { useMutation } from "@tanstack/react-query"
+import { AxiosError } from "axios"
+import { toast } from "sonner"
 
 import { http } from "@/lib/utils"
 import { Button } from "@/components/ui/button"
@@ -17,11 +20,35 @@ import { Input } from "@/components/ui/input"
 import { Label } from "@/components/ui/label"
 import { Icons } from "@/components/icons"
 
+type FormValues = {
+  email: string
+  password: string
+}
+
 function SignInPage() {
+  const router = useRouter()
+  const [email, setEmail] = useState("")
+  const [password, setPassword] = useState("")
+
+  const mutation = useMutation<any, AxiosError, FormValues>({
+    mutationKey: ["login"],
+    mutationFn: async (data) => {
+      const res = await http.post(`/api/auth/login`, data)
+      return res.data
+    },
+    onSuccess: () => {
+      router.replace("/dashboard")
+    },
+    onError: (error) => {
+      const errorData = error.response?.data as { detail: string }
+      toast.error(errorData.detail ?? "Something went wrong")
+    },
+  })
+
   return (
-    <div className="h-screen w-full flex items-center justify-center">
+    <div className="flex h-screen w-full items-center justify-center">
       <Card className="relative w-full max-w-[400px]">
-        <Icons.logo className="mr-2 h-20 w-20 absolute -top-10 left-1/2 -translate-x-1/2" />
+        <Icons.logo className="absolute -top-10 left-1/2 mr-2 h-20 w-20 -translate-x-1/2" />
         <CardHeader className="space-y-1">
           <CardTitle className="text-2xl">Login</CardTitle>
           <CardDescription>
@@ -48,7 +75,6 @@ function SignInPage() {
               <Icons.google className="mr-2 h-4 w-4" />
               Login with Google
             </Button>
-
             <Button
               className="w-full text-slate-600"
               variant="outline"
@@ -70,26 +96,49 @@ function SignInPage() {
               </span>
             </div>
           </div>
-          <div className="grid gap-2">
-            <Label htmlFor="email">Email</Label>
-            <Input id="email" type="email" />
-          </div>
-          <div className="grid gap-2">
-            <div className="flex items-center">
-              <Label htmlFor="password">Password</Label>
-              <Link href="#" className="ml-auto inline-block text-sm underline">
-                Forgot your password?
-              </Link>{" "}
+          <form
+            className="space-y-3"
+            onSubmit={(e) => {
+              e.preventDefault()
+              mutation.mutate({ email, password })
+            }}
+          >
+            <div className="grid gap-2">
+              <Label htmlFor="email">Email</Label>
+              <Input
+                id="email"
+                type="email"
+                required
+                value={email}
+                onChange={(e) => setEmail(e.target.value)}
+              />
             </div>
-            <Input id="password" type="password" />
-          </div>
-          <Button className="w-full">Sign in</Button>
-          <div className="text-center text-sm">
-            Don&apos;t have an account?{" "}
-            <Link href="/sign-up" className="underline">
-              Sign up
-            </Link>
-          </div>
+            <div className="grid gap-2">
+              <div className="flex items-center">
+                <Label htmlFor="password">Password</Label>
+                <Link
+                  href="#"
+                  className="ml-auto inline-block text-sm underline"
+                >
+                  Forgot your password?
+                </Link>
+              </div>
+              <Input
+                id="password"
+                type="password"
+                required
+                value={password}
+                onChange={(e) => setPassword(e.target.value)}
+              />
+            </div>
+            <Button className="w-full">Sign in</Button>
+            <div className="text-center text-sm">
+              Don&apos;t have an account?{" "}
+              <Link href="/sign-up" className="underline">
+                Sign up
+              </Link>
+            </div>
+          </form>
         </CardContent>
       </Card>
     </div>
