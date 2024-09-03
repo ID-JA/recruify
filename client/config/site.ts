@@ -1,7 +1,7 @@
 export type SiteConfig = typeof siteConfig
 
 export const siteConfig = {
-  name: "fast recruiter",
+  name: "Cooking",
   description:
     " the fastest and most effective way to hire and attract top talent",
   mainNav: [

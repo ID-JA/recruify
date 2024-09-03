@@ -60,7 +60,6 @@ async function AppMiddleware(req: NextRequest) {
     }
   }
 
-  // Default behavior: rewrite the path to /app
   return NextResponse.rewrite(req.url)
 }
 
