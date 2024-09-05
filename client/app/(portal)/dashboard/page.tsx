@@ -1,7 +1,102 @@
+import { ContentLayout } from "@/components/layout/content-layout"
+
 export default function DashboardPage() {
   return (
-    <div className="flex h-full w-full items-center justify-center">
-      IAM DASHBOARD
-    </div>
+    <ContentLayout title="Dashboard">
+      <h1>IAM DASHBOARD</h1>
+      <h1>IAM DASHBOARD</h1>
+      <h1>IAM DASHBOARD</h1>
+      <h1>IAM DASHBOARD</h1>
+      <h1>IAM DASHBOARD</h1>
+      <h1>IAM DASHBOARD</h1>
+      <h1>IAM DASHBOARD</h1>
+      <h1>IAM DASHBOARD</h1>
+      <h1>IAM DASHBOARD</h1>
+      <h1>IAM DASHBOARD</h1>
+      <h1>IAM DASHBOARD</h1>
+      <h1>IAM DASHBOARD</h1>
+      <h1>IAM DASHBOARD</h1>
+      <h1>IAM DASHBOARD</h1>
+      <h1>IAM DASHBOARD</h1>
+      <h1>IAM DASHBOARD</h1>
+      <h1>IAM DASHBOARD</h1>
+      <h1>IAM DASHBOARD</h1>
+      <h1>IAM DASHBOARD</h1>
+      <h1>IAM DASHBOARD</h1>
+      <h1>IAM DASHBOARD</h1>
+      <h1>IAM DASHBOARD</h1>
+      <h1>IAM DASHBOARD</h1>
+      <h1>IAM DASHBOARD</h1>
+      <h1>IAM DASHBOARD</h1>
+      <h1>IAM DASHBOARD</h1>
+      <h1>IAM DASHBOARD</h1>
+      <h1>IAM DASHBOARD</h1> <h1>IAM DASHBOARD</h1>
+      <h1>IAM DASHBOARD</h1>
+      <h1>IAM DASHBOARD</h1>
+      <h1>IAM DASHBOARD</h1>
+      <h1>IAM DASHBOARD</h1>
+      <h1>IAM DASHBOARD</h1>
+      <h1>IAM DASHBOARD</h1> <h1>IAM DASHBOARD</h1>
+      <h1>IAM DASHBOARD</h1>
+      <h1>IAM DASHBOARD</h1>
+      <h1>IAM DASHBOARD</h1>
+      <h1>IAM DASHBOARD</h1>
+      <h1>IAM DASHBOARD</h1>
+      <h1>IAM DASHBOARD</h1> <h1>IAM DASHBOARD</h1>
+      <h1>IAM DASHBOARD</h1>
+      <h1>IAM DASHBOARD</h1>
+      <h1>IAM DASHBOARD</h1>
+      <h1>IAM DASHBOARD</h1>
+      <h1>IAM DASHBOARD</h1>
+      <h1>IAM DASHBOARD</h1> <h1>IAM DASHBOARD</h1>
+      <h1>IAM DASHBOARD</h1>
+      <h1>IAM DASHBOARD</h1>
+      <h1>IAM DASHBOARD</h1>
+      <h1>IAM DASHBOARD</h1>
+      <h1>IAM DASHBOARD</h1>
+      <h1>IAM DASHBOARD</h1> <h1>IAM DASHBOARD</h1>
+      <h1>IAM DASHBOARD</h1>
+      <h1>IAM DASHBOARD</h1>
+      <h1>IAM DASHBOARD</h1>
+      <h1>IAM DASHBOARD</h1>
+      <h1>IAM DASHBOARD</h1>
+      <h1>IAM DASHBOARD</h1> <h1>IAM DASHBOARD</h1>
+      <h1>IAM DASHBOARD</h1>
+      <h1>IAM DASHBOARD</h1>
+      <h1>IAM DASHBOARD</h1>
+      <h1>IAM DASHBOARD</h1>
+      <h1>IAM DASHBOARD</h1>
+      <h1>IAM DASHBOARD</h1> <h1>IAM DASHBOARD</h1>
+      <h1>IAM DASHBOARD</h1>
+      <h1>IAM DASHBOARD</h1>
+      <h1>IAM DASHBOARD</h1>
+      <h1>IAM DASHBOARD</h1>
+      <h1>IAM DASHBOARD</h1>
+      <h1>IAM DASHBOARD</h1> <h1>IAM DASHBOARD</h1>
+      <h1>IAM DASHBOARD</h1>
+      <h1>IAM DASHBOARD</h1>
+      <h1>IAM DASHBOARD</h1>
+      <h1>IAM DASHBOARD</h1>
+      <h1>IAM DASHBOARD</h1>
+      <h1>IAM DASHBOARD</h1> <h1>IAM DASHBOARD</h1>
+      <h1>IAM DASHBOARD</h1>
+      <h1>IAM DASHBOARD</h1>
+      <h1>IAM DASHBOARD</h1>
+      <h1>IAM DASHBOARD</h1>
+      <h1>IAM DASHBOARD</h1>
+      <h1>IAM DASHBOARD</h1> <h1>IAM DASHBOARD</h1>
+      <h1>IAM DASHBOARD</h1>
+      <h1>IAM DASHBOARD</h1>
+      <h1>IAM DASHBOARD</h1>
+      <h1>IAM DASHBOARD</h1>
+      <h1>IAM DASHBOARD</h1>
+      <h1>IAM DASHBOARD</h1> <h1>IAM DASHBOARD</h1>
+      <h1>IAM DASHBOARD</h1>
+      <h1>IAM DASHBOARD</h1>
+      <h1>IAM DASHBOARD</h1>
+      <h1>IAM DASHBOARD</h1>
+      <h1>IAM DASHBOARD</h1>
+      <h1>IAM DASHBOARD</h1>
+    </ContentLayout>
   )
 }
