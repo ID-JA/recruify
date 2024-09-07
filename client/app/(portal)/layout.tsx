@@ -1,5 +1,3 @@
-"use client"
-
 import { ReactNode } from "react"
 
 import AdminPanelLayout from "@/components/layout/admin-panel-layout"

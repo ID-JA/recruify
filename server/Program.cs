@@ -15,6 +15,10 @@ builder.Services.AddProblemDetails(options =>
             ctx.ProblemDetails.Extensions.Add("trace-id", ctx.HttpContext.TraceIdentifier);
             ctx.ProblemDetails.Extensions.Add("instance", $"{ctx.HttpContext.Request.Method} {ctx.HttpContext.Request.Path}");
         });
+builder.Services.AddMediatR(options =>
+{
+    options.RegisterServicesFromAssemblies(typeof(Program).Assembly);
+});
 builder.Services.AddControllers();
 builder.Services.AddEndpointsApiExplorer();
 builder.Services.AddSwaggerGen();

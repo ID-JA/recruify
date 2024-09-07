@@ -1,13 +1,13 @@
 import Link from "next/link"
+import { PanelsTopLeft } from "lucide-react"
 
 import { cn } from "@/lib/utils"
 import { useSidebarToggle } from "@/hooks/use-sidebar-toggle"
 import { useStore } from "@/hooks/use-store"
 import { Button } from "@/components/ui/button"
-import { Menu } from "@/components/layout/menu"
-import { SidebarToggle } from "@/components/layout/sidebar-toggle"
 
-import { Icons } from "../icons"
+import { Menu } from "./menu"
+import { SidebarToggle } from "./sidebar-toggle"
 
 export function Sidebar() {
   const sidebar = useStore(useSidebarToggle, (state) => state)
@@ -32,7 +32,7 @@ export function Sidebar() {
           asChild
         >
           <Link href="/dashboard" className="flex items-center gap-2">
-            <Icons.logo className="mr-1 h-9 w-9" />
+            <PanelsTopLeft className="mr-1 h-6 w-6" />
             <h1
               className={cn(
                 "whitespace-nowrap text-lg font-bold transition-[transform,opacity,display] duration-300 ease-in-out",
@@ -41,7 +41,7 @@ export function Sidebar() {
                   : "translate-x-0 opacity-100"
               )}
             >
-              FastRecruiter
+              Brand
             </h1>
           </Link>
         </Button>

@@ -18,6 +18,9 @@ public class ConfigureJwtBearerOptions : IConfigureNamedOptions<JwtBearerOptions
     }
     public void Configure(string? name, JwtBearerOptions options)
     {
+        JwtSecurityTokenHandler.DefaultInboundClaimTypeMap.Add("firstName", ClaimTypes.GivenName);
+        JwtSecurityTokenHandler.DefaultInboundClaimTypeMap.Add("lastName", ClaimTypes.Surname);
+
         if (name != JwtBearerDefaults.AuthenticationScheme)
         {
             return;

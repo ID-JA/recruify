@@ -1,4 +1,5 @@
-﻿using FastRecruiter.Api.Data.Context;
+﻿using FastRecruiter.Api.Auth.Policy;
+using FastRecruiter.Api.Data.Context;
 using FastRecruiter.Api.Exceptions;
 using FastRecruiter.Api.Identity.Users;
 using FastRecruiter.Api.Jobs;
@@ -86,6 +87,7 @@ public class CompanyService(ApplicationDbContext _dbContext,
         // Remove the invite if user creation is successful
         if (result.Succeeded)
         {
+            await _userService.AssignUserToCompanyAsync(user.Id, companyInvite.Id, "Member", cancellationToken);
             _dbContext.CompanyInvites.Remove(companyInvite);
             await _dbContext.SaveChangesAsync(cancellationToken);
         }

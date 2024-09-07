@@ -1,4 +1,5 @@
-﻿using FastRecruiter.Api.Models;
+﻿using FastRecruiter.Api.Identity.Users.DTOs;
+using FastRecruiter.Api.Models;
 
 namespace FastRecruiter.Api.Identity.Users.Features.UserInfo;
 
@@ -14,5 +15,7 @@ public class UserDto
     public string Role { get; set; }
     public DateTime CreatedAt { get; set; }
     public Guid? CompanyId { get; set; }
+    public List<UserPermissionDto> UserPermissions { get; set; }
+
 
 }

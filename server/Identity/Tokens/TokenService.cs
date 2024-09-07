@@ -90,8 +90,8 @@ public class TokenService(UserManager<User> userManager, IOptions<JwtOptions> jw
         {
             new(ClaimTypes.NameIdentifier, user.Id.ToString()),
             new(ClaimTypes.Email, user.Email!),
-            new(ClaimTypes.GivenName, user.FirstName),
-            new(ClaimTypes.Surname, user.LastName),
+            new("firstName", user.FirstName),
+            new("lastName", user.LastName),
             new(ClaimTypes.Role, user.Role),
             new("imageUrl", user.ImageUrl ?? string.Empty),
             new("companyId", user.CompanyId.ToString() ?? string.Empty),

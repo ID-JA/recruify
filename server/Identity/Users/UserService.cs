@@ -190,7 +190,12 @@ public class UserService(UserManager<User> _userManager,
     {
         var userId = _currentUser.GetUserId();
 
-        var userInfo = (await _userManager.FindByIdAsync(userId.ToString()))!;
+        var userInfo = await _dbContext.Users
+                               .Where(u => u.Id == userId)
+                               .Include(u => u.UserPermissions)
+                               .FirstOrDefaultAsync();
+
+        if (userInfo == null) return null;
 
         return _mapper.Map<User, UserDto>(userInfo);
     }

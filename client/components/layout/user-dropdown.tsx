@@ -46,10 +46,13 @@ export function UserDropdown() {
                     className="relative h-8 w-8 rounded-full"
                   >
                     <Avatar className="h-8 w-8">
-                      <AvatarImage src={data.user.image} alt="Avatar" />
+                      <AvatarImage
+                        src={`https://api.dicebear.com/9.x/initials/svg?seed=${data.user.firstName}+${data.user.lastName}`}
+                        alt="Avatar"
+                      />
                       <AvatarFallback className="bg-transparent">
-                        {data.user.given_name?.charAt(0)}
-                        {data.user.family_name?.charAt(0)}
+                        {data.user.firstName?.charAt(0)}
+                        {data.user.lastName?.charAt(0)}
                       </AvatarFallback>
                     </Avatar>
                   </Button>
@@ -63,7 +66,7 @@ export function UserDropdown() {
             <DropdownMenuLabel className="font-normal">
               <div className="flex flex-col space-y-1">
                 <p className="text-sm font-medium leading-none">
-                  {data.user.given_name} {data.user.family_name}
+                  {data.user.firstName} {data.user.lastName}
                 </p>
                 <p className="text-xs leading-none text-muted-foreground">
                   {data.user.email}
@@ -94,7 +97,7 @@ export function UserDropdown() {
             <DropdownMenuSeparator />
             <DropdownMenuItem
               className="hover:cursor-pointer"
-              onClick={() => signOut({ callbackUrl: "/login" })}
+              onClick={() => signOut({ callbackUrl: "/sign-in" })}
             >
               <LogOut className="mr-3 h-4 w-4 text-muted-foreground" />
               Sign out

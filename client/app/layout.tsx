@@ -38,24 +38,9 @@ export default function RootLayout({ children }: RootLayoutProps) {
   return (
     <>
       <html lang="en" suppressHydrationWarning>
-        <head>
-          <Script
-            src="https://accounts.google.com/gsi/client"
-            strategy="beforeInteractive"
-          />
-        </head>
-        <body
-          className={cn(
-            "min-h-screen bg-background font-sans text-black antialiased",
-            fontSans.variable
-          )}
-        >
+        <body className={cn("font-sans antialiased", fontSans.variable)}>
           <Toaster />
-          <div className="relative flex min-h-screen flex-col">
-            <div className="flex-1">
-              <Providers>{children}</Providers>
-            </div>
-          </div>
+          <Providers>{children}</Providers>
         </body>
       </html>
     </>

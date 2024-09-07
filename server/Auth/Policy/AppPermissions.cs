@@ -5,11 +5,13 @@ namespace FastRecruiter.Api.Auth.Policy;
 public static class AppAction
 {
     public const string Update = nameof(Update);
+    public const string Create = nameof(Create);
 }
 
 public static class AppResource
 {
     public const string Company = nameof(Company);
+    public const string Member = nameof(Member);
 }
 
 public static class AppPermissions
@@ -18,9 +20,12 @@ public static class AppPermissions
     {     
         // Company Settings
         new("Update Company", AppAction.Update, AppResource.Company),
+        new("Invite Member", AppAction.Create, AppResource.Member),
     };
 
     public static IReadOnlyList<AppPermission> Owner { get; } = new ReadOnlyCollection<AppPermission>(allPermissions);
+
+    public static IReadOnlyCollection<AppPermission> Member { get; } = new ReadOnlyCollection<AppPermission>(allPermissions);
 }
 
 public record AppPermission(string Description, string Action, string Resource, bool IsBasic = false, bool IsRoot = false)

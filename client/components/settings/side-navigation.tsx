@@ -63,9 +63,9 @@ function getSideMenuList(pathname: string): Group[] {
           icon: Building,
         },
         {
-          href: "/settings/members",
-          label: "Members",
-          active: pathname === "/settings/members",
+          href: "/settings/people",
+          label: "People",
+          active: pathname === "/settings/people",
           icon: User,
         },
         {
