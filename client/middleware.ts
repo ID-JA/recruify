@@ -53,14 +53,19 @@ async function AppMiddleware(req: NextRequest) {
       return NextResponse.redirect(new URL("/onboarding", req.url))
     }
 
-    // Redirect to dashboard for certain paths
-    const restrictedPaths = ["/sign-in", "/sign-up", "/onboarding", "/invite"]
+    // Redirect to dashboard for certain paths, but only if not already on dashboard
+    const restrictedPaths = ["/sign-in", "/sign-up", "/invite"]
     if (restrictedPaths.includes(path)) {
+      return NextResponse.redirect(new URL("/dashboard", req.url))
+    }
+
+    // Prevent access to onboarding if user has a company
+    if (path === "/onboarding" && userClaims.companyId) {
       return NextResponse.redirect(new URL("/dashboard", req.url))
     }
   }
 
-  return NextResponse.rewrite(req.url)
+  return NextResponse.next()
 }
 
 export default async function middleware(

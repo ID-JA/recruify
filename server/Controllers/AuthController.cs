@@ -103,6 +103,19 @@ public class AuthController(IUserService _userService, ITokenService _tokenServi
         return result ? Redirect("https://google.com") : BadRequest("Account Confirmation Failed");
     }
 
+    [HttpPost]
+    [Route("refresh-token")]
+    public async Task<IActionResult> Refresh(CancellationToken cancellationToken)
+    {
+        HttpContext.Request.Cookies.TryGetValue("access-token", out var accessToken);
+        HttpContext.Request.Cookies.TryGetValue("refresh-token", out var refreshToken);
+
+        var tokens = await _tokenService.RefreshTokenAsync(new RefreshTokenCommand(accessToken, refreshToken), cancellationToken);
+
+        _tokenService.SetTokenInCookie(tokens, HttpContext);
+        return Ok("refreshed");
+    }
+
 }
 
 public class GoogleSignInDto

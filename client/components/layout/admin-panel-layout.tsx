@@ -4,6 +4,7 @@ import { cn } from "@/lib/utils"
 import { useSidebarToggle } from "@/hooks/use-sidebar-toggle"
 import { useStore } from "@/hooks/use-store"
 
+import { useSession } from "../SessionProvider"
 import { ScrollArea } from "../ui/scroll-area"
 import { Sidebar } from "./sidebar"
 
@@ -13,8 +14,9 @@ export default function AdminPanelLayout({
   children: React.ReactNode
 }) {
   const sidebar = useStore(useSidebarToggle, (state) => state)
+  const { data: user } = useSession()
 
-  if (!sidebar) return null
+  if (!user || !sidebar) return null
 
   return (
     <>

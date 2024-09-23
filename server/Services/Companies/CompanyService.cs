@@ -33,12 +33,12 @@ public class CompanyService(ApplicationDbContext _dbContext,
 
         try
         {
-            var companyId = await CreateCompanyAsync(request.CompanyName, request.Size, request.Industry, cancellationToken);
+            var companyId = await CreateCompanyAsync(request.Name, request.Size, request.Industry, cancellationToken);
             await _userService.AssignUserToCompanyAsync(_currentUser.GetUserId(), companyId, "Owner", cancellationToken);
 
             if (request.Invitees.Count > 0)
             {
-                await _jobScheduler.SendInvitationEmailsAsync(request.CompanyName, companyId, request.Invitees, cancellationToken);
+                await _jobScheduler.SendInvitationEmailsAsync(request.Name, companyId, request.Invitees, cancellationToken);
             }
 
             await transaction.CommitAsync(cancellationToken);

@@ -4,10 +4,12 @@ import { useState } from "react"
 import { useRouter } from "next/navigation"
 import { zodResolver } from "@hookform/resolvers/zod"
 import { CheckCircledIcon, ReloadIcon } from "@radix-ui/react-icons"
+import { useMutation } from "@tanstack/react-query"
 import { AnimatePresence, motion } from "framer-motion"
 import { SubmitHandler, useForm } from "react-hook-form"
 import z from "zod"
 
+import { http } from "@/lib/utils"
 import { Button } from "@/components/ui/button"
 import {
   Dialog,
@@ -37,7 +39,7 @@ const steps = [
     title: "Company Information",
     description: "Tell us about your company you are hiring for.",
     component: CompanyInformation,
-    fields: ["name", "industry", "size", "location"],
+    fields: ["name", "industry", "size"],
   },
   {
     id: "invite-members",
@@ -45,7 +47,7 @@ const steps = [
     description:
       "Add your team members to your portal. They will receive an invitation to join and collaborate",
     component: InviteMembers,
-    fields: ["email"],
+    fields: ["invitees"],
   },
 ]
 
@@ -53,8 +55,10 @@ const FormSchema = z.object({
   name: z.string().min(1, "Name is required"),
   industry: z.string().min(1, "Name is required"),
   size: z.string().min(1, "Name is required"),
-  location: z.string().min(1, "Name is required"),
-  emails: z.array(z.string().email()).optional(),
+  invitees: z
+    .array(z.string().email("Invalid email address"))
+    .optional()
+    .default([]),
 })
 
 type Inputs = z.infer<typeof FormSchema>
@@ -64,6 +68,7 @@ export function OnboardingModal() {
   const [currentStep, setCurrentStep] = useState(0)
   const router = useRouter()
   const step = steps[currentStep]
+  const [open, setOpen] = useState(true)
 
   const form = useForm<Inputs>({
     resolver: zodResolver(FormSchema),
@@ -72,46 +77,51 @@ export function OnboardingModal() {
       name: "",
       industry: "",
       size: "",
-      location: "",
-      emails: [],
+      invitees: [],
+    },
+  })
+
+  const mutation = useMutation({
+    mutationFn: (data: Inputs) => {
+      return http.post("/api/companies/register", data)
+    },
+    onSuccess: async () => {
+      try {
+        await http.post("/api/auth/refresh-token")
+      } catch (error) {
+        console.error("Failed to refresh token:", error)
+      }
     },
   })
 
   const processForm: SubmitHandler<Inputs> = (data) => {
-    console.log(data)
+    console.log({ data })
+    mutation.mutate(data)
   }
 
   const next = async () => {
-    if (form.formState.isSubmitSuccessful) {
-      router.replace("/dashboard", { scroll: false })
-    } else {
+    if (currentStep < steps.length - 1) {
       const fields = steps[currentStep].fields as FieldName[]
 
       const isValid = await form.trigger(fields, { shouldFocus: true })
 
       if (!isValid) return
-
-      if (currentStep < steps.length - 1) {
-        setCurrentStep((s) => s + 1)
+      setCurrentStep((s) => s + 1)
+    } else {
+      if (mutation.isSuccess) {
+        router.replace("/dashboard", { scroll: false })
+        setOpen(false)
       } else {
-        await form.handleSubmit(
-          (values) =>
-            new Promise<void>((resolve) => {
-              setTimeout(() => {
-                processForm(values)
-                resolve()
-              }, 5000)
-            })
-        )()
+        await form.handleSubmit((values) => processForm(values))()
         setCurrentStep((s) => s + 1)
       }
     }
   }
 
   return (
-    <Dialog open>
+    <Dialog open={open}>
       <DialogContent
-        className="sm:max-w-[450px]  overflow-hidden"
+        className="overflow-hidden sm:max-w-[450px]"
         hideCloseButton
       >
         {currentStep < steps.length ? (
@@ -177,8 +187,8 @@ export function OnboardingModal() {
             }}
           >
             <div>
-              <CheckCircledIcon className="h-16 w-16 text-blue-500 mx-auto" />
-              <h1 className="text-lg text-center mt-2">Congratulations!</h1>
+              <CheckCircledIcon className="mx-auto h-16 w-16 text-blue-500" />
+              <h1 className="mt-2 text-center text-lg">Congratulations!</h1>
               <p className="text-center text-sm text-gray-500">
                 Your company is all set. Start optimizing your recruitment
                 process now.
@@ -196,10 +206,10 @@ export function OnboardingModal() {
             {form.formState.isSubmitting && (
               <ReloadIcon className="mr-2 h-4 w-4 animate-spin" />
             )}
-            {form.formState.isSubmitSuccessful
-              ? "Go to Dashboard"
+            {mutation.isSuccess
+              ? "Close"
               : currentStep === steps.length - 1
-                ? form.formState.isSubmitting
+                ? mutation.isPending
                   ? "Submitting"
                   : "Submit"
                 : "Next"}

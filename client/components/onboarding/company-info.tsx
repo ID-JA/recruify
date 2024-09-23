@@ -84,19 +84,6 @@ export function CompanyInformation() {
           </FormItem>
         )}
       />
-      <FormField
-        name="location"
-        control={control}
-        render={({ field }) => (
-          <FormItem>
-            <FormLabel>Location</FormLabel>
-            <FormControl>
-              <Input {...field} />
-            </FormControl>
-            <FormMessage />
-          </FormItem>
-        )}
-      />
     </>
   )
 }

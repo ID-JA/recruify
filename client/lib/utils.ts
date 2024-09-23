@@ -37,7 +37,7 @@ export function clientAccessCheck({
 }) {
   const isAllowed = userPermissions?.find(
     (p: any) => p.permission === action
-  ).isAllowed
+  )?.isAllowed
 
   if (isAllowed) {
     return {

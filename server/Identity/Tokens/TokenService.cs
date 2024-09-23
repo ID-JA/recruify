@@ -47,7 +47,7 @@ public class TokenService(UserManager<User> userManager, IOptions<JwtOptions> jw
         var userPrincipal = GetPrincipalFromToken(request.Token);
         var userId = userManager.GetUserId(userPrincipal)!;
         var user = await userManager.FindByIdAsync(userId) ?? throw new UnauthorizedException();
-
+        
         if (user.RefreshToken != request.RefreshToken || user.RefreshTokenExpiryTime <= DateTime.UtcNow)
         {
             throw new UnauthorizedException("Invalid Refresh Token");

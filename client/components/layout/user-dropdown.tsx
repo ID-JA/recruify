@@ -31,11 +31,11 @@ import {
 } from "../ui/tooltip"
 
 export function UserDropdown() {
-  const { data } = useSession()
+  const { data: user } = useSession()
 
   return (
     <>
-      {data?.user ? (
+      {user ? (
         <DropdownMenu>
           <TooltipProvider disableHoverableContent>
             <Tooltip delayDuration={100}>
@@ -47,12 +47,15 @@ export function UserDropdown() {
                   >
                     <Avatar className="h-8 w-8">
                       <AvatarImage
-                        src={`https://api.dicebear.com/9.x/initials/svg?seed=${data.user.firstName}+${data.user.lastName}`}
+                        src={
+                          user.imageUrl ||
+                          `https://api.dicebear.com/9.x/initials/svg?seed=${user.firstName}+${user.lastName}`
+                        }
                         alt="Avatar"
                       />
                       <AvatarFallback className="bg-transparent">
-                        {data.user.firstName?.charAt(0)}
-                        {data.user.lastName?.charAt(0)}
+                        {user.firstName?.charAt(0)}
+                        {user.lastName?.charAt(0)}
                       </AvatarFallback>
                     </Avatar>
                   </Button>
@@ -66,10 +69,10 @@ export function UserDropdown() {
             <DropdownMenuLabel className="font-normal">
               <div className="flex flex-col space-y-1">
                 <p className="text-sm font-medium leading-none">
-                  {data.user.firstName} {data.user.lastName}
+                  {user.firstName} {user.lastName}
                 </p>
                 <p className="text-xs leading-none text-muted-foreground">
-                  {data.user.email}
+                  {user.email}
                 </p>
               </div>
             </DropdownMenuLabel>

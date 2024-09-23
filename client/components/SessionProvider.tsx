@@ -13,17 +13,12 @@
 import React, { useContext, useEffect, useMemo, useState } from "react"
 
 import { User } from "@/lib/types"
-
-type Session = {
-  user?: User
-}
+import { http } from "@/lib/utils"
 
 type SessionContextValue<R extends boolean = false> = R extends true
-  ?
-      | { data: Session; status: "authenticated" }
-      | { data: null; status: "loading" }
+  ? { data: User; status: "authenticated" } | { data: null; status: "loading" }
   :
-      | { data: Session; status: "authenticated" }
+      | { data: User; status: "authenticated" }
       | {
           data: null
           status: "unauthenticated" | "loading"
@@ -42,7 +37,6 @@ export function useSession<R extends boolean>(options?: {
   const { required } = options ?? {}
 
   const requiredAndNotLoading = required && value.status === "unauthenticated"
-
   if (requiredAndNotLoading) {
     return {
       data: value.data,
@@ -55,7 +49,7 @@ export function useSession<R extends boolean>(options?: {
 
 export interface SessionProviderProps {
   children: React.ReactNode
-  session?: Session | null
+  session?: User | null
 }
 
 export async function signOut({ callbackUrl }: { callbackUrl: string }) {
@@ -78,8 +72,8 @@ export function SessionProvider(props: SessionProviderProps) {
   useEffect(() => {
     const getSession = async () => {
       try {
-        const res = await fetch("/api/auth/session")
-        const data = await res.json()
+        const res = await http.get("/api/user/info")
+        const data = res.data
 
         setSession(data)
       } catch (error) {
@@ -90,7 +84,7 @@ export function SessionProvider(props: SessionProviderProps) {
     }
     getSession()
   }, [])
-
+  console.log({ session })
   const value: any = useMemo(
     () => ({
       data: session,

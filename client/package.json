@@ -53,6 +53,7 @@
     "@ianvs/prettier-plugin-sort-imports": "^4.3.1",
     "@tanstack/eslint-plugin-query": "^5.53.0",
     "@types/google-one-tap": "^1.2.6",
+    "@types/ms": "^0.7.34",
     "@types/node": "^22.1.0",
     "@types/react": "^18.3.3",
     "@types/react-dom": "^18.3.0",

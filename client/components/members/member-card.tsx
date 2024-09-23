@@ -1,10 +1,8 @@
 "use client"
 
 import { Ellipsis } from "lucide-react"
-import { useStore } from "zustand"
 
 import { clientAccessCheck, timeAgo } from "@/lib/utils"
-import { useUserInfoStore } from "@/hooks/use-user-info"
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar"
 import { Badge } from "@/components/ui/badge"
 import { Button } from "@/components/ui/button"
@@ -31,8 +29,7 @@ export function MemberCard({
       member: user,
       onSave: () => {},
     })
-  const { data: session } = useSession()
-  const userInfo = useStore(useUserInfoStore, (state) => state.data)
+  const { data: currentUser } = useSession()
 
   const expiredInvite =
     activeTab === "invitations" &&
@@ -40,8 +37,8 @@ export function MemberCard({
     Date.now() - new Date(user.expireAt).getTime() > 1 * 24 * 60 * 60 * 1000
 
   const isNotAllowed = clientAccessCheck({
-    action: "Permission.Members.Write",
-    userPermissions: userInfo?.userPermissions,
+    action: "Permissions.Member.Create",
+    userPermissions: currentUser?.userPermissions,
   }).error
 
   const name = user.firstName
@@ -101,11 +98,9 @@ export function MemberCard({
               )}
               <DropdownMenuItem
                 className="bg-red-50 text-red-500 focus:bg-red-500 focus:text-white data-[disabled]:pointer-events-auto data-[disabled]:cursor-not-allowed"
-                disabled={isNotAllowed && session?.user?.email !== user.email}
+                disabled={isNotAllowed && currentUser?.email !== user.email}
               >
-                {session?.user?.email === user.email
-                  ? "Leave Company"
-                  : "Remove"}
+                {currentUser?.email === user.email ? "Leave Company" : "Remove"}
               </DropdownMenuItem>
             </DropdownMenuContent>
           </DropdownMenu>

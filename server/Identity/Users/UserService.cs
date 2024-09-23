@@ -110,7 +110,7 @@ public class UserService(UserManager<User> _userManager,
                 throw new ValidationException("one or more validation errors occurred while creating user account", identityResult.Errors.Select(e => e.Description));
 
             await _userManager.AddLoginAsync(user, info);
-
+            await AssignRoleAndPermissionsToUserAsync("Owner", AppPermissions.Owner, user); 
             return user;
         }
     }

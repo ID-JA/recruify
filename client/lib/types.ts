@@ -6,6 +6,13 @@ export type User = {
   imageUrl: string
   refreshToken: string
   role: string
-  createdAt: Date
-  companyId: string | null
+  createdAt: string
+  companyId: string
+  userPermissions: UserPermission[]
+}
+
+export type UserPermission = {
+  id: string
+  permission: string
+  isAllowed: boolean
 }

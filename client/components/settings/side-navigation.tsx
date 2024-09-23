@@ -1,20 +1,34 @@
 "use client"
 
+import { useState } from "react"
 import Link from "next/link"
-import { usePathname } from "next/navigation"
+import { usePathname, useSelectedLayoutSegment } from "next/navigation"
 import {
   Bell,
   Building,
+  ChevronDown,
   FileText,
   Home,
   LucideIcon,
   Map,
+  MenuIcon,
   User,
 } from "lucide-react"
 
 import { cn } from "@/lib/utils"
 import { Button } from "@/components/ui/button"
-import { ContentLayout } from "@/components/layout/content-layout"
+import {
+  Popover,
+  PopoverContent,
+  PopoverTrigger,
+} from "@/components/ui/popover"
+import {
+  Select,
+  SelectContent,
+  SelectItem,
+  SelectTrigger,
+  SelectValue,
+} from "@/components/ui/select"
 import { Menu } from "@/components/layout/menu"
 
 type Menu = {
@@ -127,5 +141,78 @@ export function SideNavigation() {
         ))}
       </ul>
     </nav>
+  )
+}
+
+export function SettingsNavMobile() {
+  const pathname = usePathname()
+  const sideMenuList = getSideMenuList(pathname)
+  const [openPopover, setOpenPopover] = useState(false)
+
+  // Find the active menu item
+  const activeMenuItem = sideMenuList
+    .flatMap((group) => group.menus)
+    .find((menu) => menu.active)
+
+  const Icon = activeMenuItem?.icon ?? MenuIcon
+  const label = activeMenuItem?.label ?? "Menu"
+
+  return (
+    <Popover open={openPopover} onOpenChange={setOpenPopover}>
+      <PopoverTrigger asChild>
+        <Button
+          className={cn(
+            "w-full border hover:bg-white sm:w-auto sm:min-w-[200px] [&>div]:w-full",
+            {
+              "bg-white ring-2": openPopover,
+            }
+          )}
+          variant="secondary"
+        >
+          <div className="flex w-full items-center gap-2">
+            <div className="relative shrink-0">
+              <Icon className="h-4 w-4" />
+            </div>
+            <span className="grow text-left">{label}</span>
+            <ChevronDown
+              className={cn("h-4 w-4 text-gray-400 transition-transform", {
+                "rotate-180": openPopover,
+              })}
+            />
+          </div>
+        </Button>
+      </PopoverTrigger>
+      <PopoverContent
+        className="flex w-full flex-col gap-4 px-5 sm:min-w-[200px] sm:px-4 sm:py-3"
+        onClick={(e) => {
+          if (e.target instanceof HTMLElement && e.target.tagName === "A")
+            setOpenPopover(false)
+        }}
+      >
+        {sideMenuList.map(({ menus, groupLabel }, index) => (
+          <div key={index}>
+            {groupLabel && (
+              <span className="pb-1.5 text-sm text-gray-500">{groupLabel}</span>
+            )}
+            {menus.map(({ href, label, icon: Icon }, index) => (
+              <div className="w-full" key={index}>
+                <Button
+                  variant="ghost"
+                  className="mb-1 h-10 w-full justify-start text-gray-500"
+                  asChild
+                >
+                  <Link className="max-w-[200px] truncate" href={href}>
+                    <span className="mr-4">
+                      <Icon size={18} />
+                    </span>
+                    {label}
+                  </Link>
+                </Button>
+              </div>
+            ))}
+          </div>
+        ))}
+      </PopoverContent>
+    </Popover>
   )
 }

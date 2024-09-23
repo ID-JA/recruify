@@ -7,8 +7,6 @@ Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "FastRecruiter.Api", "FastRe
 EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "test", "test", "{79F18F2E-9087-4EFA-BD79-5FFDE7DD20F7}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "FastRecruiter.Test", "..\FastRecruiter.Test\FastRecruiter.Test.csproj", "{AFF7BADB-9041-46D9-8D46-EFE45D741C8B}"
-EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -19,16 +17,9 @@ Global
 		{FA1E74F2-BC95-4900-B253-F0C2EEBA5C2B}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{FA1E74F2-BC95-4900-B253-F0C2EEBA5C2B}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{FA1E74F2-BC95-4900-B253-F0C2EEBA5C2B}.Release|Any CPU.Build.0 = Release|Any CPU
-		{AFF7BADB-9041-46D9-8D46-EFE45D741C8B}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
-		{AFF7BADB-9041-46D9-8D46-EFE45D741C8B}.Debug|Any CPU.Build.0 = Debug|Any CPU
-		{AFF7BADB-9041-46D9-8D46-EFE45D741C8B}.Release|Any CPU.ActiveCfg = Release|Any CPU
-		{AFF7BADB-9041-46D9-8D46-EFE45D741C8B}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
-	EndGlobalSection
-	GlobalSection(NestedProjects) = preSolution
-		{AFF7BADB-9041-46D9-8D46-EFE45D741C8B} = {79F18F2E-9087-4EFA-BD79-5FFDE7DD20F7}
 	EndGlobalSection
 	GlobalSection(ExtensibilityGlobals) = postSolution
 		SolutionGuid = {4BC6DE35-687E-43CA-8C95-03CCAB8FE6E4}
