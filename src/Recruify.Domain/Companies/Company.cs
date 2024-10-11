@@ -2,6 +2,7 @@
 using ErrorOr;
 using Recruify.Domain.Common;
 using Recruify.Domain.Companies.Events;
+using Recruify.Domain.Recruiters;
 
 namespace Recruify.Domain.Companies;
 
@@ -13,9 +14,11 @@ public class Company : EntityBase<Guid>, IAggregateRoot
 
     private readonly List<CompanyInvite> _invites = [];
     private readonly List<CompanyLocation> _locations = [];
+    private readonly List<Recruiter> _recruiters = [];
 
     public IEnumerable<CompanyInvite> Invites => _invites.AsReadOnly();
     public IEnumerable<CompanyLocation> Locations => _locations.AsReadOnly();
+    public IEnumerable<Recruiter> Recruiters => _recruiters.AsReadOnly();
 
     public Company(Guid id, string name, string industry, string size)
     {
@@ -29,8 +32,14 @@ public class Company : EntityBase<Guid>, IAggregateRoot
     {
         if (_invites.Exists(i => i.Email == invite.Email))
         {
-            return Error.Failure("Invite has already been sent to this email.");
+            return Error.Failure(DomainErrorMessages.InviteAlreadySent);
         }
+
+        if (invite.IsExpired())
+        {
+            return Error.Failure(DomainErrorMessages.InviteExpired);
+        }
+
         _invites.Add(invite);
         var newInviteCreated = new NewInviteAddedEvent(this, invite);
         base.RegisterDomainEvent(newInviteCreated);
@@ -43,24 +52,21 @@ public class Company : EntityBase<Guid>, IAggregateRoot
         var invite = _invites.FirstOrDefault(i => i.Id == inviteId);
         if (invite is null)
         {
-            return Error.NotFound("Invite not found.");
+            return Error.NotFound(DomainErrorMessages.InviteNotFound);
         }
 
         _invites.Remove(invite);
-        base.RegisterDomainEvent(new InviteCancelledEvent(this, invite));
-
         return Result.Success;
     }
 
     public ErrorOr<Success> AddLocation(CompanyLocation location)
     {
-        if (location.IsPrimaryLocation && _locations.Exists(l => l.IsPrimaryLocation))
+        if (location.IsPrimaryLocation && _locations.Any(l => l.IsPrimaryLocation))
         {
-            return Error.Failure("A company can only have one primary location");
+            return Error.Failure(DomainErrorMessages.PrimaryLocationAlreadyExists);
         }
 
         _locations.Add(location);
-        base.RegisterDomainEvent(new NewLocationAddedEvent(this, location));
         return Result.Success;
     }
 
@@ -70,17 +76,15 @@ public class Company : EntityBase<Guid>, IAggregateRoot
 
         if (location is null)
         {
-            return Error.NotFound("Location not found.");
+            return Error.NotFound(DomainErrorMessages.LocationNotFound);
         }
 
         if (location.IsPrimaryLocation || _locations.Count == 1)
         {
-            return Error.Conflict("Cannot remove the primary location without first setting another location as primary.");
+            return Error.Conflict(DomainErrorMessages.CannotRemovePrimaryLocation);
         }
 
         _locations.Remove(location);
-        base.RegisterDomainEvent(new LocationRemovedEvent(this, location));
-
         return Result.Success;
     }
 
@@ -98,15 +102,12 @@ public class Company : EntityBase<Guid>, IAggregateRoot
         currentPrimary?.MarkAsNonPrimary();
 
         var newPrimary = _locations.FirstOrDefault(l => l.Id == locationId);
-        if(newPrimary is null)
+        if (newPrimary is null)
         {
-            return Error.NotFound("Location not found.");
+            return Error.NotFound(DomainErrorMessages.LocationNotFound);
         }
         newPrimary.MarkAsPrimary();
-
-        base.RegisterDomainEvent(new PrimaryLocationChangedEvent(this, newPrimary));
-
         return Result.Success;
     }
-
 }
+
