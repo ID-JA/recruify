@@ -7,6 +7,8 @@ using Recruify.Infrastructure.Identity;
 using Microsoft.AspNetCore.Identity;
 using Recruify.Domain.Common;
 using Ardalis.Specification;
+using Recruify.Application.Common.Mailing;
+using Recruify.Infrastructure.Mailing;
 
 namespace Recruify.Infrastructure;
 
@@ -15,6 +17,8 @@ public static class DependencyInjection
     public static IServiceCollection AddInfrastructure(this IServiceCollection services, ConfigurationManager config)
     {
         services.AddDbContext<RecruifyDbContext>(options => options.UseSqlServer(config["ConnectionStrings:DefaultConnection"]));
+
+        services.AddOptions<MailSettings>().BindConfiguration(nameof(MailSettings));
 
         RegisterAuthIdentity(services);
         RegisterEF(services);
@@ -39,5 +43,6 @@ public static class DependencyInjection
     private static void RegisterServices(IServiceCollection services)
     {
         services.AddScoped<IIdentityService, IdentityService>();
+        services.AddTransient<IMailService, EmailSerivce>();
     }
 }

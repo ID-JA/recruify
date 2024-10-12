@@ -125,4 +125,17 @@ public class IdentityService(UserManager<ApplicationUser> userManager, RoleManag
 
         return Error.Failure($"Failed to assign role: {result.Errors.First().Description}");
     }
+
+    public async Task<ErrorOr<string>> GenerateEmailConfirmationTokenAsync(string userId)
+    {
+        var user = await _userManager.FindByIdAsync(userId);
+
+        if (user == null)
+        {
+            return Error.NotFound("User not found.");
+        }
+
+        var token = await _userManager.GenerateEmailConfirmationTokenAsync(user);
+        return token;
+    }
 }

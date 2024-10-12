@@ -12,4 +12,5 @@ public interface IIdentityService
     Task<ErrorOr<string>> GetUserIdAsync(string email);
     Task<ErrorOr<Success>> DeleteUserAsync(string userId);
     Task<ErrorOr<Success>> ConfirmEmail(string userId, string confirmationToken);
+    Task<ErrorOr<string>> GenerateEmailConfirmationTokenAsync(string userId);
 }
