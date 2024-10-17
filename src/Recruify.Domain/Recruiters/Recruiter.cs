@@ -2,15 +2,11 @@
 using ErrorOr;
 using Recruify.Domain.Common;
 using Recruify.Domain.Companies;
+using Recruify.Domain.Enums;
 using Recruify.Domain.Recruiters.Events;
 
 namespace Recruify.Domain.Recruiters;
 
-public enum Role
-{
-    Member,
-    Owner
-}
 
 public class Recruiter : EntityBase<Guid>, IAggregateRoot
 {

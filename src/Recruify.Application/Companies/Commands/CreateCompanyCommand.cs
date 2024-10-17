@@ -24,9 +24,12 @@ public class CreateCompanyCommandHandler : ICommandHandler<CreateCompanyCommand,
         _recruiterRepository = recruiterRepository;
     }
 
-    public Task<ErrorOr<Guid>> Handle(CreateCompanyCommand request, CancellationToken cancellationToken)
+    public async Task<ErrorOr<Guid>> Handle(CreateCompanyCommand request, CancellationToken cancellationToken)
     {
         // TODO: create a company 
+        var newCompany = new Company(request.CompanyName, request.Industry, request.Size);
+        await _companyRepository.AddAsync(newCompany, cancellationToken);
+
         // Assign user to company
         throw new NotImplementedException();
     }

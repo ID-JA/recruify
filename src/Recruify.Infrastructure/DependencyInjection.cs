@@ -9,6 +9,10 @@ using Recruify.Domain.Common;
 using Ardalis.Specification;
 using Recruify.Application.Common.Mailing;
 using Recruify.Infrastructure.Mailing;
+using Recruify.Infrastructure.Auth;
+using Microsoft.AspNetCore.Builder;
+using Microsoft.AspNetCore.Authentication.JwtBearer;
+using Microsoft.Extensions.Options;
 
 namespace Recruify.Infrastructure;
 
@@ -19,6 +23,7 @@ public static class DependencyInjection
         services.AddDbContext<RecruifyDbContext>(options => options.UseSqlServer(config["ConnectionStrings:DefaultConnection"]));
 
         services.AddOptions<MailSettings>().BindConfiguration(nameof(MailSettings));
+        services.AddOptions<JwtOptions>().BindConfiguration(nameof(JwtOptions));
 
         RegisterAuthIdentity(services);
         RegisterEF(services);
@@ -29,6 +34,18 @@ public static class DependencyInjection
 
     private static void RegisterAuthIdentity(IServiceCollection services)
     {
+        services.AddSingleton<IConfigureOptions<JwtBearerOptions>, ConfigureJwtBearerOptions>();
+        services
+            .AddAuthentication(authentication =>
+            {
+                authentication.DefaultAuthenticateScheme = JwtBearerDefaults.AuthenticationScheme;
+                authentication.DefaultChallengeScheme = JwtBearerDefaults.AuthenticationScheme;
+            })
+            .AddJwtBearer(JwtBearerDefaults.AuthenticationScheme, null!);
+
+        services.AddAuthorizationBuilder();
+        services.AddAuthorization();
+
         services.AddIdentity<ApplicationUser, IdentityRole<Guid>>()
             .AddEntityFrameworkStores<RecruifyDbContext>()
             .AddDefaultTokenProviders();
@@ -44,5 +61,18 @@ public static class DependencyInjection
     {
         services.AddScoped<IIdentityService, IdentityService>();
         services.AddTransient<IMailService, EmailSerivce>();
+        services.AddScoped<CurrentUserMiddleware>();
+        services.AddScoped<ICurrentUser, CurrentUser>();
+        services.AddScoped(sp => (ICurrentUserInitializer)sp.GetRequiredService<ICurrentUser>());
+    }
+
+    public static WebApplication UseInfrastructure(this WebApplication app)
+    {
+        app.UseHttpsRedirection();
+        app.UseAuthentication();
+        app.UseAuthorization();
+        app.UseMiddleware<CurrentUserMiddleware>();
+        app.MapControllers();
+        return app;
     }
 }

@@ -20,9 +20,8 @@ public class Company : EntityBase<Guid>, IAggregateRoot
     public IEnumerable<CompanyLocation> Locations => _locations.AsReadOnly();
     public IEnumerable<Recruiter> Recruiters => _recruiters.AsReadOnly();
 
-    public Company(Guid id, string name, string industry, string size)
+    public Company(string name, string industry, string size)
     {
-        Id = id;
         Name = name;
         Industry = industry;
         Size = size;

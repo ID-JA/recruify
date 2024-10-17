@@ -1,9 +1,11 @@
 using ErrorOr;
+using Microsoft.AspNetCore.Http;
 
 namespace Recruify.Application.Common.Interfaces;
 
 public interface IIdentityService
 {
+    Task<ErrorOr<bool>> SignIn(string email, string password, HttpContext httpContext);
     Task<ErrorOr<string>> CreateUserAsync(string firstName, string lastName, string email, string password);
     Task<ErrorOr<Success>> AssignRoleAsync(string userId, string role);
     Task<ErrorOr<string>> GetUserNameAsync(string userId);

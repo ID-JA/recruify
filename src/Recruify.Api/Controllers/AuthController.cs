@@ -1,5 +1,4 @@
 using MediatR;
-using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using Recruify.Application.Identity.Commands;
 using Recruify.Application.Identity.Dtos;
@@ -17,10 +16,23 @@ namespace Recruify.Api.Controllers
                 request.Email,
                 request.Password,
                 request.UserType);
-            
+
             var result = await _mediator.Send(command);
 
             return result.Match(userId => Created(), Problem);
+        }
+
+        [HttpPost("login")]
+        public async Task<IActionResult> LoginUser([FromBody] LoginUserRequest request)
+        {
+            var command = new LoginUserCommand(request.Email, request.Password);
+
+            var result = await _mediator.Send(command);
+
+            return result.Match(
+                success => Ok(success),
+                Problem
+            );
         }
 
         [HttpGet("test")]
