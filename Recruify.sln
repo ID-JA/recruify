@@ -1,0 +1,60 @@
+﻿
+Microsoft Visual Studio Solution File, Format Version 12.00
+# Visual Studio Version 17
+VisualStudioVersion = 17.11.35303.130
+MinimumVisualStudioVersion = 10.0.40219.1
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Recruify.Api", "src\Recruify.Api\Recruify.Api.csproj", "{2A94E586-0AF2-4249-9E72-1230F5F9DBBE}"
+EndProject
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Recruify.Application", "src\Recruify.Application\Recruify.Application.csproj", "{76C2B229-ED9B-472B-A375-F638E1543EFD}"
+EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "src", "src", "{5B58C653-EAA6-4507-A89D-9DBC8AEE9C55}"
+EndProject
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Recruify.Infrastructure", "src\Recruify.Infrastructure\Recruify.Infrastructure.csproj", "{2E93BAA9-0A09-46E0-95ED-1DF1919617C8}"
+EndProject
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Recruify.Domain", "src\Recruify.Domain\Recruify.Domain.csproj", "{59878283-C3A5-4410-9EB9-7606A504307E}"
+EndProject
+Project("{54A90642-561A-4BB1-A94E-469ADEE60C69}") = "Recruify.WebApp", "src\Recruify.WebApp\Recruify.WebApp.esproj", "{BFD08769-17FF-4684-93D1-FA180B385282}"
+EndProject
+Global
+	GlobalSection(SolutionConfigurationPlatforms) = preSolution
+		Debug|Any CPU = Debug|Any CPU
+		Release|Any CPU = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(ProjectConfigurationPlatforms) = postSolution
+		{2A94E586-0AF2-4249-9E72-1230F5F9DBBE}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{2A94E586-0AF2-4249-9E72-1230F5F9DBBE}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{2A94E586-0AF2-4249-9E72-1230F5F9DBBE}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{2A94E586-0AF2-4249-9E72-1230F5F9DBBE}.Release|Any CPU.Build.0 = Release|Any CPU
+		{76C2B229-ED9B-472B-A375-F638E1543EFD}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{76C2B229-ED9B-472B-A375-F638E1543EFD}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{76C2B229-ED9B-472B-A375-F638E1543EFD}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{76C2B229-ED9B-472B-A375-F638E1543EFD}.Release|Any CPU.Build.0 = Release|Any CPU
+		{2E93BAA9-0A09-46E0-95ED-1DF1919617C8}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{2E93BAA9-0A09-46E0-95ED-1DF1919617C8}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{2E93BAA9-0A09-46E0-95ED-1DF1919617C8}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{2E93BAA9-0A09-46E0-95ED-1DF1919617C8}.Release|Any CPU.Build.0 = Release|Any CPU
+		{59878283-C3A5-4410-9EB9-7606A504307E}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{59878283-C3A5-4410-9EB9-7606A504307E}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{59878283-C3A5-4410-9EB9-7606A504307E}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{59878283-C3A5-4410-9EB9-7606A504307E}.Release|Any CPU.Build.0 = Release|Any CPU
+		{BFD08769-17FF-4684-93D1-FA180B385282}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{BFD08769-17FF-4684-93D1-FA180B385282}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{BFD08769-17FF-4684-93D1-FA180B385282}.Debug|Any CPU.Deploy.0 = Debug|Any CPU
+		{BFD08769-17FF-4684-93D1-FA180B385282}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{BFD08769-17FF-4684-93D1-FA180B385282}.Release|Any CPU.Build.0 = Release|Any CPU
+		{BFD08769-17FF-4684-93D1-FA180B385282}.Release|Any CPU.Deploy.0 = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(SolutionProperties) = preSolution
+		HideSolutionNode = FALSE
+	EndGlobalSection
+	GlobalSection(NestedProjects) = preSolution
+		{2A94E586-0AF2-4249-9E72-1230F5F9DBBE} = {5B58C653-EAA6-4507-A89D-9DBC8AEE9C55}
+		{76C2B229-ED9B-472B-A375-F638E1543EFD} = {5B58C653-EAA6-4507-A89D-9DBC8AEE9C55}
+		{2E93BAA9-0A09-46E0-95ED-1DF1919617C8} = {5B58C653-EAA6-4507-A89D-9DBC8AEE9C55}
+		{59878283-C3A5-4410-9EB9-7606A504307E} = {5B58C653-EAA6-4507-A89D-9DBC8AEE9C55}
+		{BFD08769-17FF-4684-93D1-FA180B385282} = {5B58C653-EAA6-4507-A89D-9DBC8AEE9C55}
+	EndGlobalSection
+	GlobalSection(ExtensibilityGlobals) = postSolution
+		SolutionGuid = {000994B9-0756-4473-AA91-D827BFC670FA}
+	EndGlobalSection
+EndGlobal
