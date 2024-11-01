@@ -7,6 +7,7 @@ using Recruify.Infrastructure.Identity;
 using Microsoft.AspNetCore.Identity;
 using Recruify.Domain.Common;
 using Ardalis.Specification;
+using Microsoft.AspNetCore.Authentication;
 using Recruify.Application.Common.Mailing;
 using Recruify.Infrastructure.Mailing;
 using Recruify.Infrastructure.Auth;
@@ -25,14 +26,14 @@ public static class DependencyInjection
         services.AddOptions<MailSettings>().BindConfiguration(nameof(MailSettings));
         services.AddOptions<JwtOptions>().BindConfiguration(nameof(JwtOptions));
 
-        RegisterAuthIdentity(services);
+        RegisterAuthIdentity(services, config);
         RegisterEF(services);
         RegisterServices(services);
 
         return services;
     }
 
-    private static void RegisterAuthIdentity(IServiceCollection services)
+    private static void RegisterAuthIdentity(IServiceCollection services, IConfiguration configuration)
     {
         services.AddSingleton<IConfigureOptions<JwtBearerOptions>, ConfigureJwtBearerOptions>();
         services
@@ -41,8 +42,13 @@ public static class DependencyInjection
                 authentication.DefaultAuthenticateScheme = JwtBearerDefaults.AuthenticationScheme;
                 authentication.DefaultChallengeScheme = JwtBearerDefaults.AuthenticationScheme;
             })
-            .AddJwtBearer(JwtBearerDefaults.AuthenticationScheme, null!);
-
+            .AddJwtBearer(JwtBearerDefaults.AuthenticationScheme, null!)
+            .AddGoogle(options =>
+            {
+                options.ClientId = configuration["Authentication:Google:ClientId"]!;
+                options.ClientSecret = configuration["Authentication:Google:ClientSecret"]!;
+                options.ClaimActions.MapJsonKey("picture", "picture");
+            });
         services.AddAuthorizationBuilder();
         services.AddAuthorization();
 

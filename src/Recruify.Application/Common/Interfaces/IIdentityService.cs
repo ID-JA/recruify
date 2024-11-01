@@ -1,5 +1,6 @@
 using ErrorOr;
 using Microsoft.AspNetCore.Http;
+using Microsoft.AspNetCore.Mvc;
 
 namespace Recruify.Application.Common.Interfaces;
 
@@ -15,4 +16,6 @@ public interface IIdentityService
     Task<ErrorOr<Success>> DeleteUserAsync(string userId);
     Task<ErrorOr<Success>> ConfirmEmail(string userId, string confirmationToken);
     Task<ErrorOr<string>> GenerateEmailConfirmationTokenAsync(string userId);
+    ChallengeResult SetupExternalAuthProvider(string provider, string redirectUrl);
+    Task<ErrorOr<Success>> HandleOAuth(HttpContext httpContext);
 }

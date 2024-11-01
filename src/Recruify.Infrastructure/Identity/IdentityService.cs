@@ -9,6 +9,7 @@ using Recruify.Infrastructure.Auth;
 using System.IdentityModel.Tokens.Jwt;
 using System.Security.Claims;
 using System.Text;
+using Microsoft.AspNetCore.Mvc;
 
 namespace Recruify.Infrastructure.Identity;
 
@@ -16,11 +17,13 @@ public class IdentityService : IIdentityService
 {
     private readonly JwtOptions _jwtOptions;
     private readonly SigningCredentials _signingCredentials;
-    private readonly UserManager<ApplicationUser> userManager;
+    private readonly UserManager<ApplicationUser> _userManager;
+    private readonly SignInManager<ApplicationUser> _signInManager;
 
-    public IdentityService(UserManager<ApplicationUser> _userManager, RoleManager<IdentityRole<Guid>> _roleManager, IOptions<JwtOptions> jwtOptions)
+    public IdentityService(UserManager<ApplicationUser> userManager, RoleManager<IdentityRole<Guid>> _roleManager, IOptions<JwtOptions> jwtOptions, SignInManager<ApplicationUser> signInManager)
     {
-        userManager = _userManager;
+        _userManager = userManager;
+        _signInManager = signInManager;
         _jwtOptions = jwtOptions.Value;
 
         byte[] secret = Encoding.UTF8.GetBytes(_jwtOptions.Key);
@@ -38,7 +41,7 @@ public class IdentityService : IIdentityService
             Email = email
         };
 
-        var result = await userManager.CreateAsync(user, password);
+        var result = await _userManager.CreateAsync(user, password);
 
         if (result.Succeeded)
         {
@@ -50,7 +53,7 @@ public class IdentityService : IIdentityService
 
     public async Task<ErrorOr<string>> GetUserNameAsync(string userId)
     {
-        var user = await userManager.FindByIdAsync(userId);
+        var user = await _userManager.FindByIdAsync(userId);
 
         if (user == null)
         {
@@ -62,14 +65,14 @@ public class IdentityService : IIdentityService
 
     public async Task<bool> IsInRoleAsync(string userId, string role)
     {
-        var user = await userManager.FindByIdAsync(userId);
+        var user = await _userManager.FindByIdAsync(userId);
 
         if (user == null)
         {
             return false;
         }
 
-        return await userManager.IsInRoleAsync(user, role);
+        return await _userManager.IsInRoleAsync(user, role);
     }
 
     public async Task<bool> AuthorizeAsync(string userId, string policyName)
@@ -80,7 +83,7 @@ public class IdentityService : IIdentityService
 
     public async Task<ErrorOr<string>> GetUserIdAsync(string email)
     {
-        var user = await userManager.FindByEmailAsync(email);
+        var user = await _userManager.FindByEmailAsync(email);
 
         if (user == null)
         {
@@ -92,14 +95,14 @@ public class IdentityService : IIdentityService
 
     public async Task<ErrorOr<Success>> DeleteUserAsync(string userId)
     {
-        var user = await userManager.FindByIdAsync(userId);
+        var user = await _userManager.FindByIdAsync(userId);
 
         if (user == null)
         {
             return Error.NotFound(description: "User not found.");
         }
 
-        var result = await userManager.DeleteAsync(user);
+        var result = await _userManager.DeleteAsync(user);
 
         if (result.Succeeded)
         {
@@ -111,33 +114,33 @@ public class IdentityService : IIdentityService
 
     public async Task<ErrorOr<Success>> ConfirmEmail(string userId, string confirmationToken)
     {
-        var user = await userManager.FindByIdAsync(userId);
+        var user = await _userManager.FindByIdAsync(userId);
 
         if (user is null)
         {
             return Error.NotFound(description: "User not found");
         }
 
-        var result = await userManager.ConfirmEmailAsync(user, confirmationToken);
+        var result = await _userManager.ConfirmEmailAsync(user, confirmationToken);
 
         return result.Succeeded ? Result.Success : Error.Failure(description: "Account Confirmation Failed");
     }
 
     public async Task<ErrorOr<Success>> AssignRoleAsync(string userId, string role)
     {
-        var user = await userManager.FindByIdAsync(userId);
+        var user = await _userManager.FindByIdAsync(userId);
         if (user == null)
         {
             return Error.NotFound(description: "User not found.");
         }
 
-        var isInRole = await userManager.IsInRoleAsync(user, role);
+        var isInRole = await _userManager.IsInRoleAsync(user, role);
         if (isInRole)
         {
             return Error.Conflict(description: $"User is already in role '{role}'.");
         }
 
-        var result = await userManager.AddToRoleAsync(user, role);
+        var result = await _userManager.AddToRoleAsync(user, role);
         if (result.Succeeded)
         {
             return Result.Success;
@@ -148,39 +151,86 @@ public class IdentityService : IIdentityService
 
     public async Task<ErrorOr<string>> GenerateEmailConfirmationTokenAsync(string userId)
     {
-        var user = await userManager.FindByIdAsync(userId);
+        var user = await _userManager.FindByIdAsync(userId);
 
         if (user == null)
         {
             return Error.NotFound(description: "User not found.");
         }
 
-        var token = await userManager.GenerateEmailConfirmationTokenAsync(user);
+        var token = await _userManager.GenerateEmailConfirmationTokenAsync(user);
         return token;
+    }
+
+    public ChallengeResult SetupExternalAuthProvider(string provider, string redirectUrl)
+    {
+        var properties = _signInManager.ConfigureExternalAuthenticationProperties(provider, redirectUrl);
+        return new ChallengeResult(provider, properties);
+    }
+
+    public async Task<ErrorOr<Success>> HandleOAuth(HttpContext httpContext)
+    {
+        var info = await _signInManager.GetExternalLoginInfoAsync();
+        if (info == null)
+            return Error.NotFound("External login provider not found.");
+
+        var result = await _signInManager.ExternalLoginSignInAsync(info.LoginProvider, info.ProviderKey, isPersistent: false);
+
+        ApplicationUser user;
+        if (result.Succeeded)
+        {
+            var email = info.Principal.FindFirstValue(ClaimTypes.Email);
+            user = (await _userManager.FindByEmailAsync(email!))!;
+        }
+        else
+        {
+            var email = info.Principal.FindFirstValue(ClaimTypes.Email);
+            var firstName = info.Principal.FindFirstValue(ClaimTypes.GivenName);
+            var lastName = info.Principal.FindFirstValue(ClaimTypes.Surname);
+            user = new ApplicationUser
+            {
+                UserName = email,
+                Email = email,
+                FirstName = firstName!,
+                LastName = lastName!,
+                EmailConfirmed = true,
+                RefreshToken = "",
+            };
+
+            // Attempt to create the user
+            var identityResult = await _userManager.CreateAsync(user);
+            if (!identityResult.Succeeded)
+                return Error.Validation("One or more validation errors occurred while creating user account.");
+
+            // Link the external login to the newly created user
+            await _userManager.AddLoginAsync(user, info);
+        }
+        var tokens = await GenerateTokensAndUpdateUser(user);
+        SetTokenInCookie(tokens, httpContext);
+        return Result.Success;
     }
 
     public async Task<ErrorOr<bool>> SignIn(string email, string password, HttpContext httpContext)
     {
-        var user = await userManager.FindByEmailAsync(email);
+        var user = await _userManager.FindByEmailAsync(email);
 
         if (user == null)
         {
             return Error.Unauthorized(description: "Email or Password is incorrect");
         }
 
-        var isCorrectPassword = await userManager.CheckPasswordAsync(user, password);
+        var isCorrectPassword = await _userManager.CheckPasswordAsync(user, password);
 
-        if (isCorrectPassword)
-        {
-            var tokens = await GenerateTokensAndUpdateUser(user);
-            SetTokenInCookie(tokens, httpContext);
-            return true;
-        }
+        if (!isCorrectPassword) return Error.Unauthorized(description: "Email or Password is incorrect");
+        
+        var tokens = await GenerateTokensAndUpdateUser(user);
+        SetTokenInCookie(tokens, httpContext);
+        return true;
 
-        return Error.Unauthorized(description: "Email or Password is incorrect");
     }
 
 
+    #region private methods
 
     private void SetTokenInCookie(TokenResponse tokens, HttpContext httpContext)
     {
@@ -231,7 +281,7 @@ public class IdentityService : IIdentityService
         user.RefreshToken = Guid.NewGuid().ToString("N");
         user.RefreshTokenExpiryTime = DateTime.UtcNow.AddDays(_jwtOptions.RefreshTokenExpirationInDays);
 
-        await userManager.UpdateAsync(user);
+        await _userManager.UpdateAsync(user);
 
         return new TokenResponse(tokenValue, user.RefreshToken, user.RefreshTokenExpiryTime);
     }
@@ -269,4 +319,6 @@ public class IdentityService : IIdentityService
 
         return principal;
     }
+
+    #endregion
 }
