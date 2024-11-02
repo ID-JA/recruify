@@ -48,8 +48,8 @@ namespace Recruify.Api.Controllers
         [HttpGet("oauth/callback")]
         public async Task<IActionResult> OAuthCallback([FromQuery] string returnUrl)
         {
-            await identityService.HandleOAuth(HttpContext);
-            return Redirect(WebUtility.UrlDecode(returnUrl));
+          var result =  await identityService.HandleOAuth(HttpContext);
+          return result.Match(_ => Redirect(returnUrl), Problem)!;
         }
         
         [HttpGet("test")]

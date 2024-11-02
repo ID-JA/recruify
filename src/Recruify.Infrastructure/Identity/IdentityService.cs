@@ -196,13 +196,13 @@ public class IdentityService : IIdentityService
                 EmailConfirmed = true,
                 RefreshToken = "",
             };
-
-            // Attempt to create the user
+            List<Error> errors = [];
             var identityResult = await _userManager.CreateAsync(user);
             if (!identityResult.Succeeded)
-                return Error.Validation("One or more validation errors occurred while creating user account.");
+            {
+                return Error.Validation(description: identityResult.Errors.First().Description);
+            }
 
-            // Link the external login to the newly created user
             await _userManager.AddLoginAsync(user, info);
         }
         var tokens = await GenerateTokensAndUpdateUser(user);
@@ -226,7 +226,6 @@ public class IdentityService : IIdentityService
         var tokens = await GenerateTokensAndUpdateUser(user);
         SetTokenInCookie(tokens, httpContext);
         return true;
-
     }
 
 

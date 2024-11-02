@@ -48,7 +48,13 @@ public static class DependencyInjection
                 options.ClientId = configuration["Authentication:Google:ClientId"]!;
                 options.ClientSecret = configuration["Authentication:Google:ClientSecret"]!;
                 options.ClaimActions.MapJsonKey("picture", "picture");
+            })
+            .AddMicrosoftAccount(options =>
+            {
+                options.ClientId = configuration["Authentication:Microsoft:ClientId"]!;
+                options.ClientSecret = configuration["Authentication:Microsoft:ClientSecret"]!;
             });
+        
         services.AddAuthorizationBuilder();
         services.AddAuthorization();
 
