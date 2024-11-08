@@ -33,7 +33,7 @@ function SignInPage() {
   const mutation = useMutation<any, AxiosError, FormValues>({
     mutationKey: ["login"],
     mutationFn: async (data) => {
-      const res = await http.post(`/api/auth/login`, data)
+      const res = await http.post(`/api/auth/login?source=recruiter`, data)
       return res.data
     },
     onSuccess: () => {
@@ -61,12 +61,13 @@ function SignInPage() {
               className="w-full text-slate-600"
               variant="outline"
               onClick={() => {
-                const baseUrl = `${process.env.NEXT_PUBLIC_APP_BACKEND_URL}/api/auth/account/external-login`
+                const baseUrl = `${process.env.NEXT_PUBLIC_APP_BACKEND_URL}/api/auth/oauth`
                 const params = new URLSearchParams({
                   provider: "Google",
                   returnUrl: encodeURIComponent(
                     "http://localhost:3000/sign-in"
                   ),
+                  source: "recruiter", // TODO: this should support candidate as well
                 })
 
                 window.location.href = `${baseUrl}?${params.toString()}`

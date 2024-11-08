@@ -72,7 +72,7 @@ export function SessionProvider(props: SessionProviderProps) {
   useEffect(() => {
     const getSession = async () => {
       try {
-        const res = await http.get("/api/user/info")
+        const res = await http.get("/api/account")
         const data = res.data
 
         setSession(data)

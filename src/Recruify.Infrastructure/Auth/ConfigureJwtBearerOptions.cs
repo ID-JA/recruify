@@ -3,6 +3,7 @@ using Microsoft.Extensions.Options;
 using Microsoft.IdentityModel.Tokens;
 using System;
 using System.Collections.Generic;
+using System.IdentityModel.Tokens.Jwt;
 using System.Linq;
 using System.Security.Claims;
 using System.Text;
@@ -10,14 +11,9 @@ using System.Threading.Tasks;
 
 namespace Recruify.Infrastructure.Auth;
 
-public class ConfigureJwtBearerOptions : IConfigureNamedOptions<JwtBearerOptions>
+public class ConfigureJwtBearerOptions(IOptions<JwtOptions> options) : IConfigureNamedOptions<JwtBearerOptions>
 {
-    private readonly JwtOptions _options;
-
-    public ConfigureJwtBearerOptions(IOptions<JwtOptions> options)
-    {
-        _options = options.Value;
-    }
+    private readonly JwtOptions _options = options.Value;
 
     public void Configure(JwtBearerOptions options)
     {
@@ -26,25 +22,28 @@ public class ConfigureJwtBearerOptions : IConfigureNamedOptions<JwtBearerOptions
 
     public void Configure(string? name, JwtBearerOptions options)
     {
+        JwtSecurityTokenHandler.DefaultInboundClaimTypeMap.Add("firstName", ClaimTypes.GivenName);
+        JwtSecurityTokenHandler.DefaultInboundClaimTypeMap.Add("lastName", ClaimTypes.Surname);
+        
         if (name != JwtBearerDefaults.AuthenticationScheme)
         {
             return;
         }
 
-        byte[] key = Encoding.ASCII.GetBytes(_options.Key);
+        var key = Encoding.ASCII.GetBytes(_options.Key);
 
         options.RequireHttpsMetadata = false;
         options.SaveToken = true;
+
         options.TokenValidationParameters = new TokenValidationParameters
         {
+            ValidateIssuer = true,
+            ValidateAudience = true,
+            ValidateLifetime = true,
             ValidateIssuerSigningKey = true,
             IssuerSigningKey = new SymmetricSecurityKey(key),
-            ValidIssuer = "http://localhost:3000",
-            ValidateIssuer = true,
-            ValidateLifetime = true,
-            ValidAudience = "recruify",
-            ValidateAudience = true,
-            RoleClaimType = ClaimTypes.Role,
+            ValidIssuer = _options.Issuer,
+            ValidAudience = _options.Audience,
             ClockSkew = TimeSpan.Zero
         };
         options.Events = new JwtBearerEvents
@@ -60,17 +59,11 @@ public class ConfigureJwtBearerOptions : IConfigureNamedOptions<JwtBearerOptions
                 return Task.CompletedTask;
             },
             OnForbidden = _ => throw new UnauthorizedAccessException(),
-            OnMessageReceived = context =>
+            OnMessageReceived = ctx =>
             {
-                var accessToken = context.Request.Query["access_token"];
-
-                if (!string.IsNullOrEmpty(accessToken) &&
-                    context.HttpContext.Request.Path.StartsWithSegments("/notifications", StringComparison.OrdinalIgnoreCase))
-                {
-                    // Read the token out of the query string
-                    context.Token = accessToken;
-                }
-
+                ctx.Request.Cookies.TryGetValue("access-token", out var accessToken);
+                if (!string.IsNullOrEmpty(accessToken))
+                    ctx.Token = accessToken;
                 return Task.CompletedTask;
             }
         };

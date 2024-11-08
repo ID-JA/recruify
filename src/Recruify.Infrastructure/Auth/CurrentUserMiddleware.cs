@@ -3,11 +3,11 @@ using Recruify.Application.Common.Interfaces;
 
 namespace Recruify.Infrastructure.Auth;
 
-public class CurrentUserMiddleware(ICurrentUserInitializer _currentUserInitializer) : IMiddleware
+public class CurrentUserMiddleware(RequestDelegate next)
 {
-    public async Task InvokeAsync(HttpContext context, RequestDelegate next)
+    public async Task InvokeAsync(HttpContext context, ICurrentUserInitializer currentUserInitializer)
     {
-        _currentUserInitializer.SetCurrentUser(context.User);
+        currentUserInitializer.SetCurrentUser(context.User);
         await next(context);
     }
 }

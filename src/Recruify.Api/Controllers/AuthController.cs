@@ -25,9 +25,9 @@ namespace Recruify.Api.Controllers
         }
 
         [HttpPost("login")]
-        public async Task<IActionResult> LoginUser([FromBody] LoginUserRequest request)
+        public async Task<IActionResult> LoginUser([FromBody] LoginUserRequest request, [FromQuery] string source)
         {
-            var command = new LoginUserCommand(request.Email, request.Password);
+            var command = new LoginUserCommand(request.Email, request.Password, source);
 
             var result = await mediator.Send(command);
 
@@ -38,18 +38,29 @@ namespace Recruify.Api.Controllers
         }
 
         [HttpGet("oauth")]
-        public IActionResult OAuth([FromQuery] string provider, [FromQuery] string returnUrl)
+        public IActionResult OAuth([FromQuery] string provider, [FromQuery] string returnUrl, [FromQuery] string source)
         {
-            var redirectUrl = Url.Action(nameof(OAuthCallback), "Auth", new { returnUrl });
+            var redirectUrl = Url.Action(nameof(OAuthCallback), "Auth", new { returnUrl, source });
             var challengeResult = identityService.SetupExternalAuthProvider(provider, redirectUrl!);
             return challengeResult;
         }
 
         [HttpGet("oauth/callback")]
-        public async Task<IActionResult> OAuthCallback([FromQuery] string returnUrl)
+        public async Task<IActionResult> OAuthCallback([FromQuery] string returnUrl, [FromQuery] string source)
         {
-          var result =  await identityService.HandleOAuth(HttpContext);
-          return result.Match(_ => Redirect(returnUrl), Problem)!;
+          var result =  await identityService.HandleOAuth(source, HttpContext);
+          return result.Match(_ => Redirect(WebUtility.UrlDecode(returnUrl)), Problem)!;
+        }
+        
+        [HttpPost]
+        [Route("refresh-token")]
+        public async Task<IActionResult> Refresh(CancellationToken cancellationToken)
+        {
+            HttpContext.Request.Cookies.TryGetValue("access-token", out var accessToken);
+            HttpContext.Request.Cookies.TryGetValue("refresh-token", out var refreshToken);
+
+            var tokens = await identityService.RefreshTokenAsync(accessToken, refreshToken);
+            return Ok("refreshed");
         }
         
         [HttpGet("test")]

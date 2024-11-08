@@ -1,4 +1,5 @@
 ﻿using Microsoft.AspNetCore.Identity;
+using Recruify.Domain.Recruiters;
 
 namespace Recruify.Infrastructure.Identity;
 
@@ -9,4 +10,5 @@ public class ApplicationUser : IdentityUser<Guid>
 
     public string RefreshToken { get; set; } = default!;
     public DateTime RefreshTokenExpiryTime { get; set; }
+    
 }

@@ -1,5 +1,6 @@
 ﻿using Recruify.Application.Common.Interfaces;
 using System.Security.Claims;
+using Recruify.Domain.Enums;
 
 namespace Recruify.Infrastructure.Identity;
 
@@ -16,6 +17,12 @@ public class CurrentUser : ICurrentUser, ICurrentUserInitializer
         return IsAuthenticated()
             ? Guid.Parse(_user?.GetUserId() ?? Guid.Empty.ToString())
             : _userId;
+    }
+
+    public UserType GetUserRole()
+    {
+        var roleClaim = _user?.FindFirst(ClaimTypes.Role)?.Value;
+        return (UserType)Enum.Parse(typeof(UserType), roleClaim!);
     }
 
     public string? GetUserEmail() =>

@@ -45,11 +45,7 @@ async function AppMiddleware(req: NextRequest) {
   // If user is authenticated
   if (userClaims) {
     // Redirect to onboarding for Owners without a company
-    if (
-      userClaims.role === "Owner" &&
-      !userClaims.companyId &&
-      path !== "/onboarding"
-    ) {
+    if (!userClaims.companyId && path !== "/onboarding") {
       return NextResponse.redirect(new URL("/onboarding", req.url))
     }
 

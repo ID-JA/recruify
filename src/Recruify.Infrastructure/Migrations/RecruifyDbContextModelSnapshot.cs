@@ -17,7 +17,7 @@ namespace Recruify.Infrastructure.Migrations
         {
 #pragma warning disable 612, 618
             modelBuilder
-                .HasAnnotation("ProductVersion", "8.0.8")
+                .HasAnnotation("ProductVersion", "8.0.10")
                 .HasAnnotation("Relational:MaxIdentifierLength", 128);
 
             SqlServerModelBuilderExtensions.UseIdentityColumns(modelBuilder);
@@ -276,9 +276,8 @@ namespace Recruify.Infrastructure.Migrations
                     b.Property<Guid?>("CompanyId")
                         .HasColumnType("uniqueidentifier");
 
-                    b.Property<string>("IdentityUserId")
-                        .IsRequired()
-                        .HasColumnType("nvarchar(450)");
+                    b.Property<Guid>("IdentityUserId")
+                        .HasColumnType("uniqueidentifier");
 
                     b.Property<int?>("Role")
                         .HasColumnType("int");
@@ -474,6 +473,12 @@ namespace Recruify.Infrastructure.Migrations
                     b.HasOne("Recruify.Domain.Companies.Company", null)
                         .WithMany("Recruiters")
                         .HasForeignKey("CompanyId");
+
+                    b.HasOne("Recruify.Infrastructure.Identity.ApplicationUser", null)
+                        .WithOne("Recruiter")
+                        .HasForeignKey("Recruify.Domain.Recruiters.Recruiter", "IdentityUserId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
                 });
 
             modelBuilder.Entity("Recruify.Domain.Recruiters.RecruiterPermission", b =>
@@ -497,6 +502,12 @@ namespace Recruify.Infrastructure.Migrations
             modelBuilder.Entity("Recruify.Domain.Recruiters.Recruiter", b =>
                 {
                     b.Navigation("Permissions");
+                });
+
+            modelBuilder.Entity("Recruify.Infrastructure.Identity.ApplicationUser", b =>
+                {
+                    b.Navigation("Recruiter")
+                        .IsRequired();
                 });
 #pragma warning restore 612, 618
         }
