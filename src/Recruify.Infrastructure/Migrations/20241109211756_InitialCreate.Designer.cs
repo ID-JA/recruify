@@ -12,15 +12,15 @@ using Recruify.Infrastructure.Data;
 namespace Recruify.Infrastructure.Migrations
 {
     [DbContext(typeof(RecruifyDbContext))]
-    [Migration("20241017104845_UpdateUserEntity")]
-    partial class UpdateUserEntity
+    [Migration("20241109211756_InitialCreate")]
+    partial class InitialCreate
     {
         /// <inheritdoc />
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
-                .HasAnnotation("ProductVersion", "8.0.8")
+                .HasAnnotation("ProductVersion", "8.0.10")
                 .HasAnnotation("Relational:MaxIdentifierLength", 128);
 
             SqlServerModelBuilderExtensions.UseIdentityColumns(modelBuilder);
@@ -279,9 +279,8 @@ namespace Recruify.Infrastructure.Migrations
                     b.Property<Guid?>("CompanyId")
                         .HasColumnType("uniqueidentifier");
 
-                    b.Property<string>("IdentityUserId")
-                        .IsRequired()
-                        .HasColumnType("nvarchar(450)");
+                    b.Property<Guid>("IdentityUserId")
+                        .HasColumnType("uniqueidentifier");
 
                     b.Property<int?>("Role")
                         .HasColumnType("int");
@@ -477,6 +476,12 @@ namespace Recruify.Infrastructure.Migrations
                     b.HasOne("Recruify.Domain.Companies.Company", null)
                         .WithMany("Recruiters")
                         .HasForeignKey("CompanyId");
+
+                    b.HasOne("Recruify.Infrastructure.Identity.ApplicationUser", null)
+                        .WithOne()
+                        .HasForeignKey("Recruify.Domain.Recruiters.Recruiter", "IdentityUserId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
                 });
 
             modelBuilder.Entity("Recruify.Domain.Recruiters.RecruiterPermission", b =>

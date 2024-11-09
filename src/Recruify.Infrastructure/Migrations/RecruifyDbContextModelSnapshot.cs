@@ -475,7 +475,7 @@ namespace Recruify.Infrastructure.Migrations
                         .HasForeignKey("CompanyId");
 
                     b.HasOne("Recruify.Infrastructure.Identity.ApplicationUser", null)
-                        .WithOne("Recruiter")
+                        .WithOne()
                         .HasForeignKey("Recruify.Domain.Recruiters.Recruiter", "IdentityUserId")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
@@ -502,12 +502,6 @@ namespace Recruify.Infrastructure.Migrations
             modelBuilder.Entity("Recruify.Domain.Recruiters.Recruiter", b =>
                 {
                     b.Navigation("Permissions");
-                });
-
-            modelBuilder.Entity("Recruify.Infrastructure.Identity.ApplicationUser", b =>
-                {
-                    b.Navigation("Recruiter")
-                        .IsRequired();
                 });
 #pragma warning restore 612, 618
         }
