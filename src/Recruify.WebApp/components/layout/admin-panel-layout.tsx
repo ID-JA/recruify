@@ -1,12 +1,17 @@
 "use client"
 
-import { cn } from "@/lib/utils"
 import { useSidebarToggle } from "@/hooks/use-sidebar-toggle"
 import { useStore } from "@/hooks/use-store"
+import { Separator } from "@/components/ui/separator"
+import {
+  SidebarInset,
+  SidebarProvider,
+  SidebarTrigger,
+} from "@/components/ui/sidebar"
 
+import DynamicBreadcrumbs from "../dynamic-breadcrums"
 import { useSession } from "../SessionProvider"
-import { ScrollArea } from "../ui/scroll-area"
-import { Sidebar } from "./sidebar"
+import { AppSidebar } from "./app-sidebar"
 
 export default function AdminPanelLayout({
   children,
@@ -19,18 +24,16 @@ export default function AdminPanelLayout({
   if (!user || !sidebar) return null
 
   return (
-    <>
-      <Sidebar />
-      <main
-        className={cn(
-          "h-screen bg-gray-50 transition-[margin-left] duration-300 ease-in-out dark:bg-zinc-900",
-          sidebar?.isOpen === false ? "lg:ml-[90px]" : "lg:ml-72"
-        )}
-      >
-        <ScrollArea className="relative h-full w-full overflow-hidden">
-          {children}
-        </ScrollArea>
-      </main>
-    </>
+    <SidebarProvider>
+      <AppSidebar />
+      <SidebarInset>
+        <header className="sticky top-0 flex h-16 shrink-0 items-center gap-2 border-b bg-background px-4">
+          <SidebarTrigger className="-ml-1" />
+          <Separator orientation="vertical" className="mr-2 h-4" />
+          <DynamicBreadcrumbs />
+        </header>
+        <main className="flex flex-1 flex-col gap-4 p-4">{children}</main>
+      </SidebarInset>
+    </SidebarProvider>
   )
 }
