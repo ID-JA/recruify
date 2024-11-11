@@ -14,9 +14,9 @@ import { Icons } from "@/components/icons"
 
 function SignUpPage() {
   return (
-    <div className="h-screen w-full flex items-center justify-center">
+    <div className="flex h-screen w-full items-center justify-center">
       <Card className="relative w-full max-w-[400px]">
-        <Icons.logo className="mr-2 h-20 w-20 absolute -top-10 left-1/2 -translate-x-1/2" />
+        <Icons.logo className="absolute -top-10 left-1/2 mr-2 h-20 w-20 -translate-x-1/2" />
         <CardHeader className="space-y-1">
           <CardTitle className="text-2xl">Sign up</CardTitle>
           <CardDescription>
