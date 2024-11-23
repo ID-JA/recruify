@@ -1,7 +1,6 @@
-import "@/styles/globals.css"
+import "./globals.css"
 
 import { Metadata, Viewport } from "next"
-import Script from "next/script"
 import { Toaster } from "sonner"
 
 import { siteConfig } from "@/config/site"

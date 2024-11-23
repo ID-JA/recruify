@@ -1,14 +1,14 @@
-"use client";
+"use client"
 
-import { useEffect } from "react";
-import { motion, useAnimation } from "framer-motion";
+import { useEffect } from "react"
+import { motion, useAnimation } from "framer-motion"
 
 export function Dots({
   currentStep,
   total,
 }: {
-  currentStep: number;
-  total: number;
+  currentStep: number
+  total: number
 }) {
   return (
     <div className="flex items-center justify-center space-x-4">
@@ -16,7 +16,7 @@ export function Dots({
         <Dot key={i} currentStep={currentStep} step={i} />
       ))}
     </div>
-  );
+  )
 }
 
 function Dot({ currentStep, step }: { currentStep: number; step: number }) {
@@ -25,23 +25,23 @@ function Dot({ currentStep, step }: { currentStep: number; step: number }) {
       ? "active"
       : currentStep < step
         ? "inactive"
-        : "complete";
+        : "complete"
 
-  const controls = useAnimation();
+  const controls = useAnimation()
   useEffect(() => {
     if (status === "complete") {
       controls.start({
         scaleX: 1,
         transformOrigin: "left",
-      });
+      })
       setTimeout(() => {
         controls.start({
           scaleX: 0,
           transformOrigin: "right",
-        });
-      }, 500);
+        })
+      }, 500)
     }
-  }, [controls, status]);
+  }, [controls, status])
 
   return (
     <>
@@ -66,5 +66,5 @@ function Dot({ currentStep, step }: { currentStep: number; step: number }) {
         )}
       </motion.div>
     </>
-  );
+  )
 }

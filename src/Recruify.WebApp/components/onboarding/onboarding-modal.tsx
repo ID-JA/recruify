@@ -122,7 +122,7 @@ export function OnboardingModal() {
     <Dialog open={open}>
       <DialogContent
         className="overflow-hidden sm:max-w-[450px]"
-        hideCloseButton
+        withCloseButton={false}
       >
         {currentStep < steps.length ? (
           <>
