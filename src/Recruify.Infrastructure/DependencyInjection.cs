@@ -33,7 +33,7 @@ public static class DependencyInjection
 
         services.AddOptions<MailSettings>().BindConfiguration(nameof(MailSettings));
         services.AddOptions<JwtOptions>().BindConfiguration(nameof(JwtOptions));
-        
+
         services.AddCorsPolicy();
         services.AddAutoMapperProfile();
 
@@ -49,7 +49,7 @@ public static class DependencyInjection
             mc.AddProfile(new InfrastructureIdentityProfile());
             mc.AddProfile(new InfrastructureRecruiterProfile());
         });
-        
+
         services.AddSingleton(mappingConfig.CreateMapper());
 
     }
@@ -59,7 +59,7 @@ public static class DependencyInjection
         services.AddIdentity<ApplicationUser, IdentityRole<Guid>>()
             .AddEntityFrameworkStores<RecruifyDbContext>()
             .AddDefaultTokenProviders();
-        
+
         services.AddSingleton<IConfigureOptions<JwtBearerOptions>, ConfigureJwtBearerOptions>();
 
         services
@@ -88,35 +88,35 @@ public static class DependencyInjection
 
     #region Private Methods
 
-        public static void UseInfrastructure(this WebApplication app)
-        {
-            app.UseHttpsRedirection();
-            app.UseCors("CORS_POLICY");
-            app.UseAuthentication();
-            app.UseRouting();
-            app.UseAuthorization();
-            app.UseMiddleware<CurrentUserMiddleware>();
-            app.MapControllers();
-        }
+    public static void UseInfrastructure(this WebApplication app)
+    {
+        app.UseHttpsRedirection();
+        app.UseCors("CORS_POLICY");
+        app.UseAuthentication();
+        app.UseRouting();
+        app.UseAuthorization();
+        app.UseMiddleware<CurrentUserMiddleware>();
+        app.MapControllers();
+    }
 
-        private static void AddCorsPolicy(this IServiceCollection services) =>
-            services.AddCors(opt =>
-                opt.AddPolicy("CORS_POLICY", policy =>
-                    policy.AllowAnyHeader()
-                        .AllowAnyMethod()
-                        .AllowCredentials()
-                        .WithOrigins(["http://localhost:3000"])));
+    private static void AddCorsPolicy(this IServiceCollection services) =>
+        services.AddCors(opt =>
+            opt.AddPolicy("CORS_POLICY", policy =>
+                policy.AllowAnyHeader()
+                    .AllowAnyMethod()
+                    .AllowCredentials()
+                    .WithOrigins(["http://localhost:3000"])));
 
-        private static void RegisterServices(IServiceCollection services)
-        {
-            services.AddScoped(typeof(IRepository<>), typeof(EfRepository<>));
-            services.AddScoped(typeof(IReadRepositoryBase<>), typeof(EfRepository<>));
-            services.AddScoped<IIdentityService, IdentityService>();
-            services.AddTransient<IMailService, EmailSerivce>();
-            services.AddScoped<IRecruiterService, RecruiterService>();
-            services.AddScoped<ICurrentUser, CurrentUser>();
-            services.AddScoped(sp => (ICurrentUserInitializer)sp.GetRequiredService<ICurrentUser>());
-        }
+    private static void RegisterServices(IServiceCollection services)
+    {
+        services.AddScoped(typeof(IRepository<>), typeof(EfRepository<>));
+        services.AddScoped(typeof(IReadRepositoryBase<>), typeof(EfRepository<>));
+        services.AddScoped<IIdentityService, IdentityService>();
+        services.AddTransient<IMailService, EmailSerivce>();
+        services.AddScoped<IRecruiterService, RecruiterService>();
+        services.AddScoped<ICurrentUser, CurrentUser>();
+        services.AddScoped(sp => (ICurrentUserInitializer)sp.GetRequiredService<ICurrentUser>());
+    }
 
     #endregion
 }

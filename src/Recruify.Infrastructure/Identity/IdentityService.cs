@@ -57,7 +57,7 @@ public class IdentityService : IIdentityService
         };
 
         var result = await _userManager.CreateAsync(user, password);
-        
+
         if (result.Succeeded)
         {
             return user.Id;
@@ -167,7 +167,7 @@ public class IdentityService : IIdentityService
     public async Task<ErrorOr<string>> GenerateEmailConfirmationTokenAsync(string userId)
     {
         var user = await _userManager.FindByIdAsync(userId);
-     
+
         if (user == null)
         {
             return Error.NotFound(description: "User not found.");
@@ -221,19 +221,19 @@ public class IdentityService : IIdentityService
             switch (source)
             {
                 case "recruiter":
-                {
-                    var newRecruiter = new Recruiter(user.Id);
-                    await _recruiterRepository.AddAsync(newRecruiter);
-                    break;
-                }
+                    {
+                        var newRecruiter = new Recruiter(user.Id);
+                        await _recruiterRepository.AddAsync(newRecruiter);
+                        break;
+                    }
                 case "candidate":
                     // do something related to candidate    
                     break;
             }
-            
+
             await _userManager.AddLoginAsync(user, info);
         }
-        
+
         var tokens = await GenerateTokensAndUpdateUser(user, source);
         SetTokenInCookie(tokens, httpContext);
         return Result.Success;
@@ -242,33 +242,33 @@ public class IdentityService : IIdentityService
     public async Task<ErrorOr<Success>> RefreshTokenAsync(string accessToken, string refreshToken)
     {
         var userPrincipal = GetPrincipalFromToken(accessToken);
-        
+
         var userId = _userManager.GetUserId(userPrincipal.Value)!;
         var user = await _userManager.FindByIdAsync(userId);
-        
+
         if (user is null) return Error.Unauthorized();
 
         if (user.RefreshToken != refreshToken || user.RefreshTokenExpiryTime <= DateTime.UtcNow)
         {
-            return Error.Unauthorized(description:"Invalid Refresh Token");
+            return Error.Unauthorized(description: "Invalid Refresh Token");
         }
 
         var role = userPrincipal.Value.FindFirstValue(ClaimTypes.Role);
-         await GenerateTokensAndUpdateUser(user, role);
+        await GenerateTokensAndUpdateUser(user, role);
 
-         return Result.Success;
+        return Result.Success;
     }
 
     public async Task<ErrorOr<ApplicationUserDto>> GetUserById(string userId)
     {
         var user = await _userManager.FindByIdAsync(userId);
-        return user is not null ? _mapper.Map<ApplicationUserDto>(user) : Error.NotFound(description:"User not found.");
+        return user is not null ? _mapper.Map<ApplicationUserDto>(user) : Error.NotFound(description: "User not found.");
     }
 
-    public async Task<ErrorOr<bool>> SignIn(string email, string password, string source ,HttpContext httpContext)
+    public async Task<ErrorOr<bool>> SignIn(string email, string password, string source, HttpContext httpContext)
     {
         var user = await _userManager.FindByEmailAsync(email);
-        
+
         if (user == null)
         {
             return Error.Unauthorized(description: "Email or Password is incorrect");
@@ -277,7 +277,7 @@ public class IdentityService : IIdentityService
         var isCorrectPassword = await _userManager.CheckPasswordAsync(user, password);
 
         if (!isCorrectPassword) return Error.Unauthorized(description: "Email or Password is incorrect");
-        
+
         var tokens = await GenerateTokensAndUpdateUser(user, source);
         SetTokenInCookie(tokens, httpContext);
         return true;
@@ -286,39 +286,39 @@ public class IdentityService : IIdentityService
 
     #region private methods
 
-        private void SetTokenInCookie(TokenResponse tokens, HttpContext httpContext)
+    private void SetTokenInCookie(TokenResponse tokens, HttpContext httpContext)
+    {
+        httpContext.Response.Cookies.Append("access-token", tokens.Token, new CookieOptions
         {
-            httpContext.Response.Cookies.Append("access-token", tokens.Token, new CookieOptions
-            {
-                HttpOnly = true,
-                Expires = DateTime.UtcNow.AddMinutes(_jwtOptions.TokenExpirationInMinutes),
-                SameSite = SameSiteMode.None,
-                IsEssential = true,
-                Secure = true,
-            });
+            HttpOnly = true,
+            Expires = DateTime.UtcNow.AddMinutes(_jwtOptions.TokenExpirationInMinutes),
+            SameSite = SameSiteMode.None,
+            IsEssential = true,
+            Secure = true,
+        });
 
-            httpContext.Response.Cookies.Append("refresh-token", tokens.RefreshToken, new CookieOptions
-            {
-                HttpOnly = true,
-                Expires = DateTime.UtcNow.AddDays(_jwtOptions.RefreshTokenExpirationInDays),
-                SameSite = SameSiteMode.None,
-                IsEssential = true,
-                Secure = true,
-            });
-        }
-
-        private async Task<TokenResponse> GenerateTokensAndUpdateUser(ApplicationUser user, string source)
+        httpContext.Response.Cookies.Append("refresh-token", tokens.RefreshToken, new CookieOptions
         {
-            List<Claim> claims = [ 
-                new (ClaimTypes.NameIdentifier, user.Id.ToString()),
+            HttpOnly = true,
+            Expires = DateTime.UtcNow.AddDays(_jwtOptions.RefreshTokenExpirationInDays),
+            SameSite = SameSiteMode.None,
+            IsEssential = true,
+            Secure = true,
+        });
+    }
+
+    private async Task<TokenResponse> GenerateTokensAndUpdateUser(ApplicationUser user, string source)
+    {
+        List<Claim> claims = [
+            new (ClaimTypes.NameIdentifier, user.Id.ToString()),
                 new (ClaimTypes.Email, user.Email!),
                 new ("firstName", user.FirstName),
                 new ("lastName", user.LastName)
-            ];
+        ];
 
-            switch (source.ToLower())
-            {
-                case "recruiter":
+        switch (source.ToLower())
+        {
+            case "recruiter":
                 {
                     var spec = new RecruiterByIdentityIdSpec(user.Id);
                     var recruiter = await _recruiterRepository.FirstOrDefaultAsync(spec);
@@ -331,62 +331,62 @@ public class IdentityService : IIdentityService
 
                     break;
                 }
-                case "candidate":
-                    // Add claims specific to a candidate (optional)
-                    break;
-            }
-
-            var token = new JwtSecurityToken(
-                issuer: _jwtOptions.Issuer,
-                audience: _jwtOptions.Audience,
-                claims: claims,
-                expires: DateTime.UtcNow.AddMinutes(_jwtOptions.TokenExpirationInMinutes),
-                signingCredentials: _signingCredentials
-            );
-
-            var jwt = new JwtSecurityTokenHandler().WriteToken(token);
-            
-            user.RefreshToken = Guid.NewGuid().ToString("N");
-            user.RefreshTokenExpiryTime = DateTime.UtcNow.AddDays(_jwtOptions.RefreshTokenExpirationInDays);
-
-            await _userManager.UpdateAsync(user);
-
-            return new TokenResponse(jwt, user.RefreshToken, user.RefreshTokenExpiryTime);
+            case "candidate":
+                // Add claims specific to a candidate (optional)
+                break;
         }
 
-        private ErrorOr<ClaimsPrincipal> GetPrincipalFromToken(string token)
+        var token = new JwtSecurityToken(
+            issuer: _jwtOptions.Issuer,
+            audience: _jwtOptions.Audience,
+            claims: claims,
+            expires: DateTime.UtcNow.AddMinutes(_jwtOptions.TokenExpirationInMinutes),
+            signingCredentials: _signingCredentials
+        );
+
+        var jwt = new JwtSecurityTokenHandler().WriteToken(token);
+
+        user.RefreshToken = Guid.NewGuid().ToString("N");
+        user.RefreshTokenExpiryTime = DateTime.UtcNow.AddDays(_jwtOptions.RefreshTokenExpirationInDays);
+
+        await _userManager.UpdateAsync(user);
+
+        return new TokenResponse(jwt, user.RefreshToken, user.RefreshTokenExpiryTime);
+    }
+
+    private ErrorOr<ClaimsPrincipal> GetPrincipalFromToken(string token)
+    {
+        var tokenValidationParameters = new TokenValidationParameters
         {
-            var tokenValidationParameters = new TokenValidationParameters
-            {
-                ValidateIssuerSigningKey = true,
-                IssuerSigningKey = new SymmetricSecurityKey(Encoding.UTF8.GetBytes(_jwtOptions.Key)),
-                ValidateIssuer = true,
-                ValidateAudience = true,
-                ValidAudience = _jwtOptions.Audience,
-                ValidIssuer = _jwtOptions.Issuer,
-                RoleClaimType = ClaimTypes.Role,
-                ClockSkew = TimeSpan.Zero,
-                ValidateLifetime = false
-            };
+            ValidateIssuerSigningKey = true,
+            IssuerSigningKey = new SymmetricSecurityKey(Encoding.UTF8.GetBytes(_jwtOptions.Key)),
+            ValidateIssuer = true,
+            ValidateAudience = true,
+            ValidAudience = _jwtOptions.Audience,
+            ValidIssuer = _jwtOptions.Issuer,
+            RoleClaimType = ClaimTypes.Role,
+            ClockSkew = TimeSpan.Zero,
+            ValidateLifetime = false
+        };
 
-            var tokenHandler = new JwtSecurityTokenHandler();
+        var tokenHandler = new JwtSecurityTokenHandler();
 
-            var principal = tokenHandler.ValidateToken(
-                token,
-                tokenValidationParameters,
-                out var securityToken
-            );
+        var principal = tokenHandler.ValidateToken(
+            token,
+            tokenValidationParameters,
+            out var securityToken
+        );
 
-            if (securityToken is not JwtSecurityToken jwtSecurityToken ||
-                !jwtSecurityToken.Header.Alg.Equals(
-                    SecurityAlgorithms.HmacSha256,
-                    StringComparison.OrdinalIgnoreCase))
-            {
-                return Error.Validation(description: "invalid token");
-            }
-
-            return principal;
+        if (securityToken is not JwtSecurityToken jwtSecurityToken ||
+            !jwtSecurityToken.Header.Alg.Equals(
+                SecurityAlgorithms.HmacSha256,
+                StringComparison.OrdinalIgnoreCase))
+        {
+            return Error.Validation(description: "invalid token");
         }
+
+        return principal;
+    }
 
     #endregion
 }

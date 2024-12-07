@@ -48,10 +48,10 @@ namespace Recruify.Api.Controllers
         [HttpGet("oauth/callback")]
         public async Task<IActionResult> OAuthCallback([FromQuery] string returnUrl, [FromQuery] string source)
         {
-          var result =  await identityService.HandleOAuth(source, HttpContext);
-          return result.Match(_ => Redirect(WebUtility.UrlDecode(returnUrl)), Problem)!;
+            var result = await identityService.HandleOAuth(source, HttpContext);
+            return result.Match(_ => Redirect(WebUtility.UrlDecode(returnUrl)), Problem)!;
         }
-        
+
         [HttpPost]
         [Route("refresh-token")]
         public async Task<IActionResult> Refresh(CancellationToken cancellationToken)
@@ -62,7 +62,7 @@ namespace Recruify.Api.Controllers
             var tokens = await identityService.RefreshTokenAsync(accessToken, refreshToken);
             return Ok("refreshed");
         }
-        
+
         [HttpGet("test")]
         public IActionResult Get()
         {

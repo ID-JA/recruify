@@ -13,11 +13,12 @@ public class RecruiterPermission : EntityBase<Guid>
     public Guid CompanyId { get; private set; }
     public Company Company { get; } = null!;
 
-    public RecruiterPermission(Guid recruiterId, string permission, bool isAllowed)
+    public RecruiterPermission(Guid recruiterId, string permission, bool isAllowed, Guid companyId)
     {
         RecruiterId = recruiterId;
         Permission = Guard.Against.NullOrEmpty(permission, nameof(permission));
         IsAllowed = isAllowed;
+        CompanyId = companyId;
     }
 
     public void UpdatePermission(bool isAllowed)

@@ -10,5 +10,5 @@ public class ApplicationUser : IdentityUser<Guid>
 
     public string RefreshToken { get; set; } = default!;
     public DateTime RefreshTokenExpiryTime { get; set; }
-    
+
 }

@@ -23,7 +23,7 @@ public class GetCurrentUserQueryHandler(ICurrentUser currentUser, IRepository<Re
         var userResult = await identityService.GetUserById(userId.ToString());
         if (userResult.IsError)
             return Error.NotFound($"User with ID {userId} not found.");
-        
+
         var user = userResult.Value;
 
         return userRole switch

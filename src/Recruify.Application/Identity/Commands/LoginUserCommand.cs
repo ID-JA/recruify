@@ -12,7 +12,7 @@ public class LoginUserHandler(IIdentityService identityService, IHttpContextAcce
 {
     public async Task<ErrorOr<bool>> Handle(LoginUserCommand request, CancellationToken cancellationToken)
     {
-        var result = await identityService.SignIn(request.Email, request.Password, request.Source,httpContextAccessor.HttpContext!);
+        var result = await identityService.SignIn(request.Email, request.Password, request.Source, httpContextAccessor.HttpContext!);
 
         if (result.IsError) return result.Errors;
 

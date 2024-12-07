@@ -25,10 +25,10 @@ public class Recruiter : EntityBase<Guid>, IAggregateRoot
     {
         Guard.Against.Null(company, nameof(company));
         Guard.Against.Null(role, nameof(role));
-        
+
         CompanyId = company.Id;
         Role = role;
-        
+
         RegisterDomainEvent(new RecruiterAssignedToCompanyEvent(Id, company.Id));
     }
 

@@ -8,6 +8,7 @@ using System.Linq;
 using System.Security.Claims;
 using System.Text;
 using System.Threading.Tasks;
+using Microsoft.AspNetCore.Http;
 
 namespace Recruify.Infrastructure.Auth;
 
@@ -24,7 +25,7 @@ public class ConfigureJwtBearerOptions(IOptions<JwtOptions> options) : IConfigur
     {
         JwtSecurityTokenHandler.DefaultInboundClaimTypeMap.Add("firstName", ClaimTypes.GivenName);
         JwtSecurityTokenHandler.DefaultInboundClaimTypeMap.Add("lastName", ClaimTypes.Surname);
-        
+
         if (name != JwtBearerDefaults.AuthenticationScheme)
         {
             return;
@@ -53,7 +54,8 @@ public class ConfigureJwtBearerOptions(IOptions<JwtOptions> options) : IConfigur
                 context.HandleResponse();
                 if (!context.Response.HasStarted)
                 {
-                    throw new UnauthorizedAccessException();
+                    context.Response.StatusCode = 401;
+                    return context.Response.WriteAsync("Unauthorized");
                 }
 
                 return Task.CompletedTask;

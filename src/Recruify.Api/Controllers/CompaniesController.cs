@@ -8,11 +8,11 @@ namespace Recruify.Api.Controllers;
 
 public class CompaniesController(ISender sender) : BaseController
 {
-   [HttpPost("register")]
-   [Authorize]
-   public async Task<IActionResult> RegisterCompany([FromBody] RegisterCompanyRequest request)
-   {
-      var result = await sender.Send(new CreateCompanyCommand(request.Name, request.Industry, request.Size)); 
-      return result.Match(_ => Ok("Created Successfully"), Problem);
-   }
+    [HttpPost("register")]
+    [Authorize]
+    public async Task<IActionResult> RegisterCompany([FromBody] RegisterCompanyRequest request)
+    {
+        var result = await sender.Send(new CreateCompanyCommand(request.Name, request.Industry, request.Size));
+        return result.Match(_ => Ok("Created Successfully"), Problem);
+    }
 }

@@ -59,7 +59,7 @@ public class EmailSerivce(IOptions<MailSettings> mailSettings, ILogger<EmailSeri
             var context = new TemplateContext(model);
             return await template.RenderAsync(context);
         }
-        
+
         throw new InvalidOperationException("Failed to parse template.");
     }
 }

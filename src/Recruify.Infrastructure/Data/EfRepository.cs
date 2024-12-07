@@ -6,7 +6,7 @@ namespace Recruify.Infrastructure.Data;
 
 public class EfRepository<T> : RepositoryBase<T>, IReadRepositoryBase<T>, IRepository<T> where T : class, IAggregateRoot
 {
-  public EfRepository(RecruifyDbContext dbContext) : base(dbContext)
-  {
-  }
+    public EfRepository(RecruifyDbContext dbContext) : base(dbContext)
+    {
+    }
 }
